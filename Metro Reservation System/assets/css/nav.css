@@ -1,0 +1,11 @@
+
+.navbar-brand {
+    font-size: 1.5em; /* Adjust the size as needed */
+    font-weight: 2px ;
+}
+
+.navbar-nav {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
