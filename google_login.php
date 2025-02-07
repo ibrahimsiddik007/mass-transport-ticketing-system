@@ -1,9 +1,6 @@
 <?php
 session_start();
 require_once 'google_config.php';
-require_once 'google-api-php-client--PHP8.3/vendor/autoload.php'; // Include the Google API client library
-
-use Google\Service\Oauth2 as Google_Service_Oauth2;
 include 'db.php'; // Include your database connection file
 
 if (isset($_GET['code'])) {
@@ -18,7 +15,7 @@ if (isset($_GET['code'])) {
     $name = $google_account_info->name;
 
     // Set default profile image
-    $default_profile_image = 'images/default_profile_account_photo.jpg';
+    $default_profile_image = 'images/default_profile_image.jpg';
 
     // Check if the user already exists
     $stmt = $conn->prepare("SELECT * FROM users WHERE google_id = ? OR email = ?");
@@ -38,8 +35,6 @@ if (isset($_GET['code'])) {
         $_SESSION['user_name'] = $name;
         $_SESSION['user_email'] = $email;
         $_SESSION['profile_image'] = $user['profile_image'] ?: $default_profile_image;
-
-        header('Location: index.php');
     } else {
         // New user, set default profile image
         $stmt = $conn->prepare("INSERT INTO users (google_id, email, name, profile_image) VALUES (?, ?, ?, ?)");
@@ -50,8 +45,15 @@ if (isset($_GET['code'])) {
         $_SESSION['user_name'] = $name;
         $_SESSION['user_email'] = $email;
         $_SESSION['profile_image'] = $default_profile_image;
+    }
 
-        header('Location: phone_input.php');
+    // Redirect to the intended page or profile page
+    if (isset($_SESSION['redirect_to'])) {
+        $redirect_to = $_SESSION['redirect_to'];
+        unset($_SESSION['redirect_to']);
+        header("Location: $redirect_to");
+    } else {
+        header('Location: profile.php');
     }
     exit;
 } else {

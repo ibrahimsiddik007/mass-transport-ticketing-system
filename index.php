@@ -9,7 +9,7 @@
     <style>
         .carousel-item img {
             max-width: 100%;
-            max-height: 700px;
+            max-height: 400px;
             object-fit: cover;
             opacity: 0.9;
         }
@@ -19,12 +19,37 @@
             padding: 10px;
             width: auto;
             max-width: 50%;
-            margin: 450px 400px ; 
+            margin: 150px 400px;
         }
+
+        .notice-container {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            overflow: hidden;
+            position: relative;
+            white-space: nowrap;
+            
+        }
+.notice {
+            display: inline-block;
+            animation: scroll 15s linear infinite; /* Slower animation */
+        }
+        @keyframes scroll {
+            0% { transform: translateX(125%); } /* Start immediately */
+            100% { transform: translateX(-100%); }
+        
         </style>
 </head>
 <body>
     <?php include 'nav.php'; ?>
+
+        <!-- Notice Section -->
+        <div class="notice-container">
+        <div class="notice">
+            <strong>Notice:</strong> Please make sure that your payment is done under 15 minutes otherwise you will not be able to select your desired seat.
+        </div>
+    </div>
 
     <!-- Image Slider -->
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">

@@ -1,39 +1,182 @@
 <?php
 session_start();
+include 'db.php'; // Include your database connection file
+
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
 }
+
+$user_id = $_SESSION['user_id'];
+$stmt = $conn->prepare("SELECT name, email, profile_image, address, phone FROM users WHERE id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($username, $email, $profile_image, $address, $phone_number);
+$stmt->fetch();
+$stmt->close();
+
+$needs_completion = empty($address) || empty($phone_number);
+
+// Fetch user receipts
+$receipts = [];
+$stmt = $conn->prepare("SELECT transaction_id, start_location, end_location, fare, created_at FROM transactions WHERE user_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($transactionId, $startLocation, $endLocation, $fare, $createdAt);
+while ($stmt->fetch()) {
+    $receipts[] = [
+        'transaction_id' => $transactionId,
+        'start_location' => $startLocation,
+        'end_location' => $endLocation,
+        'fare' => $fare,
+        'created_at' => $createdAt
+    ];
+}
+$stmt->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile</title>
+    <title>Profile</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .profile-card {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #fff;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .profile-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .profile-image {
+            transition: opacity 0.3s ease-in-out;
+        }
+        .receipt-table {
+            display: none;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .receipt-section {
+            margin-top: 30px;
+        }
+        .btn-toggle {
+            margin-top: 20px;
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            color: #fff;
+            border: none;
+        }
+        .btn-toggle:hover {
+            background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+    <script>
+        function toggleReceipts() {
+            var receiptTable = document.getElementById('receipt-table');
+            if (receiptTable.style.display === 'none') {
+                receiptTable.style.display = 'table';
+            } else {
+                receiptTable.style.display = 'none';
+            }
+        }
+        function toggleEditForm() {
+            var profileInfo = document.getElementById('profile-info');
+            var editForm = document.getElementById('edit-form');
+            if (editForm.style.display === 'none') {
+                editForm.style.display = 'block';
+                profileInfo.style.display = 'none';
+            } else {
+                editForm.style.display = 'none';
+                profileInfo.style.display = 'block';
+            }
+        }
+    </script>
 </head>
 <body>
     <?php include 'nav.php'; ?>
     <div class="container">
-        <h2 class="text-center mt-5">Edit Profile</h2>
-        <div class="row justify-content-center">
+        <h2 class="text-center mt-5">Profile</h2>
+        <?php if ($needs_completion): ?>
+            <div class="alert alert-warning text-center">
+                Please complete your profile information.
+            </div>
+        <?php endif; ?>
+        <div class="row">
             <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
+                <div class="card mb-4 profile-card">
+                    <div class="card-body text-center" id="profile-info">
+                        <?php if ($profile_image): ?>
+                            <img src="<?php echo $profile_image; ?>" class="rounded-circle mb-3 profile-image" width="150" height="150" alt="Profile Image">
+                        <?php else: ?>
+                            <img src="default_profile_image.jpg" class="rounded-circle mb-3 profile-image" width="150" height="150" alt="Default Profile Image">
+                        <?php endif; ?>
+                        <h4>Name: <?php echo htmlspecialchars($username); ?></h4>
+                        <p>Email: <?php echo htmlspecialchars($email); ?></p>
+                        <p>Address: <?php echo htmlspecialchars($address); ?></p>
+                        <p>Phone Number: <?php echo htmlspecialchars($phone_number); ?></p>
+                        <button class="btn btn-light" onclick="toggleEditForm()"><i class="fas fa-edit"></i> Edit</button>
+                    </div>
+                    <div class="card-body edit-form" id="edit-form" style="display: none;">
                         <form action="update_profile.php" method="POST" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="profile_image">Profile Image</label>
-                                <input type="file" class="form-control" id="profile_image" name="profile_image" required>
+                                <input type="file" class="form-control" id="profile_image" name="profile_image">
+
+                                <label for="address">Address</label>
+                                <input type="text" class="form-control" name="address" id="address" value="<?php echo htmlspecialchars($address); ?>" required>
+
+                                <label for="phone_number">Phone Number</label>
+                                <input type="text" class="form-control" name="phone_number" id="phone_number" value="<?php echo htmlspecialchars($phone_number); ?>" required>
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
+                            <button type="submit" class="btn btn-light btn-block"><i class="fas fa-save"></i> Update Profile</button>
                         </form>
                     </div>
                 </div>
             </div>
+            <div class="col-md-6">
+                <button class="btn btn-toggle btn-block" onclick="toggleReceipts()"><i class="fas fa-receipt"></i> Show Receipts</button>
+                <div class="receipt-section">
+                    <table class="table table-striped receipt-table" id="receipt-table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Start Location</th>
+                                <th>End Location</th>
+                                <th>Fare (BDT)</th>
+                                <th>Date</th>
+                                <th>Receipt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($receipts as $receipt): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($receipt['transaction_id']); ?></td>
+                                    <td><?php echo htmlspecialchars($receipt['start_location']); ?></td>
+                                    <td><?php echo htmlspecialchars($receipt['end_location']); ?></td>
+                                    <td><?php echo htmlspecialchars($receipt['fare']); ?></td>
+                                    <td><?php echo htmlspecialchars($receipt['created_at']); ?></td>
+                                    <td><a href="receipts/<?php echo htmlspecialchars($receipt['transaction_id']); ?>.png" download class="btn btn-primary"><i class="fas fa-download"></i> Download</a></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

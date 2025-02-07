@@ -13,6 +13,20 @@ if (session_status() == PHP_SESSION_NONE) {
       <li class="nav-item active">
         <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="metro.php" id="metro-link">Metro</a>
+        <script>
+          document.getElementById('metro-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            <?php if (!isset($_SESSION['user_id'])): ?>
+              <?php $_SESSION['redirect_to'] = 'metro.php'; ?>
+              window.location.href = 'login.php';
+            <?php else: ?>
+              window.location.href = 'metro.php';
+            <?php endif; ?>
+          });
+        </script>
+      </li>
       <!-- Add more nav items here -->
     </ul>
     <ul class="navbar-nav ml-auto">
