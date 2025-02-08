@@ -79,6 +79,39 @@ $stmt->close();
             from { opacity: 0; }
             to { opacity: 1; }
         }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        .dark-mode .profile-card {
+            background: linear-gradient(135deg, #333333 0%, #444444 100%);
+            color: #ffffff;
+        }
+
+        .dark-mode .btn-toggle {
+            background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
+            color: #ffffff;
+        }
+
+        .dark-mode .receipt-table {
+            background-color: #1f1f1f;
+            color: #ffffff;
+        }
+
+        .dark-mode .receipt-table thead {
+            background-color: #333333;
+        }
+
+        .dark-mode .receipt-table tbody tr {
+            background-color: #1f1f1f;
+        }
+
+        .dark-mode .receipt-table tbody tr:hover {
+            background-color: #333333;
+        }
     </style>
     <script>
         function toggleReceipts() {
@@ -118,7 +151,7 @@ $stmt->close();
                         <?php if ($profile_image): ?>
                             <img src="<?php echo $profile_image; ?>" class="rounded-circle mb-3 profile-image" width="150" height="150" alt="Profile Image">
                         <?php else: ?>
-                            <img src="default_profile_image.jpg" class="rounded-circle mb-3 profile-image" width="150" height="150" alt="Default Profile Image">
+                            <img src="images\default_profile_account_photo.jpg" class="rounded-circle mb-3 profile-image" width="150" height="150" alt="Default Profile Image">
                         <?php endif; ?>
                         <h4>Name: <?php echo htmlspecialchars($username); ?></h4>
                         <p>Email: <?php echo htmlspecialchars($email); ?></p>

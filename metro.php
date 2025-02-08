@@ -2,14 +2,18 @@
 session_start();
 include 'db.php'; // Include your database connection file
 
-// Reset payment completed flag
-$_SESSION['payment_completed'] = false;
-
+// Check if the user is not logged in
 if (!isset($_SESSION['user_id'])) {
-    $_SESSION['redirect_to'] = 'metro.php';
+    // Set the redirect URL to metro.php only if it's not already set
+    if (!isset($_SESSION['redirect_to'])) {
+        $_SESSION['redirect_to'] = 'metro.php';
+    }
     header('Location: login.php');
     exit;
 }
+
+// Reset payment completed flag
+$_SESSION['payment_completed'] = false;
 
 // Fetch station names
 $stations = [];

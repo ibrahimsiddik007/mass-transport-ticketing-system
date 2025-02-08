@@ -8,7 +8,7 @@ if (isset($_SESSION['user_id'])) {
         unset($_SESSION['redirect_to']);
         header("Location: $redirect_to");
     } else {
-        header('Location: profile.php');
+        header('Location: index.php');
     }
     exit;
 }
@@ -25,6 +25,60 @@ $url = $client->createAuthUrl();
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Sign-In CSS -->
     <style>
+        :root {
+            --bg-light: #ffffff;
+            --bg-dark: #2c2c2c;
+            --text-light: #000000;
+            --text-dark: #e0e0e0;
+            --hover-light: #007bff;
+            --hover-dark: #007bff;
+            --card-bg-dark: #3a3a3a;
+            --footer-bg-dark: #3a3a3a;
+            --notice-bg-dark: #444444;
+            --carousel-caption-bg-dark: rgba(255, 255, 255, 0.7);
+            --carousel-caption-text-dark: #000000;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+
+        .dark-mode {
+            --bg-light: var(--bg-dark);
+            --text-light: var(--text-dark);
+        }
+
+        .card {
+            transition: transform 0.9s, margin 0.9s;
+        }
+
+        .card:hover {
+            transform: scale(1.07);
+            transition: transform 0.1s;
+            margin: 5px;
+        }
+
+        .dark-mode .card {
+            background-color: var(--card-bg-dark);
+            color: var(--text-dark);
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .footer.dark-mode {
+            background-color: var(--footer-bg-dark);
+            color: var(--text-dark);
+        }
+
+        .text-center.mt-5 {
+            margin-bottom: 30px;
+        }
+
         .g-signin2 {
             margin: 0 auto;
             display: block;
@@ -92,6 +146,10 @@ $url = $client->createAuthUrl();
             <div class="col-md-6">
                 <div class="card mb-4">
                     <div class="card-body">
+                        <?php if (isset($_SESSION['error'])): ?>
+                            <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['error']) ?></div>
+                            <?php unset($_SESSION['error']); ?>
+                        <?php endif; ?>
                         <form action="manual_login.php" method="POST">
                             <div class="form-group">
                                 <label for="email">Email address</label>
@@ -113,17 +171,26 @@ $url = $client->createAuthUrl();
                                 Sign in with Google
                             </button>
                         </form>
-                        </form>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 d-none d-md-block">
-                <img src="images/login/login image.jpg" alt="Login Image" class="login-image">
+                <img src="images/login/login image.jpg" alt="Login Image" class="login-image" style="max-width: 70%; max-height: 400px; margin-top: 20px;">
             </div>
         </div>
     </div>
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentTheme = localStorage.getItem('theme') || 'light';
+
+            if (currentTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        });
+    </script>
 </body>
 </html>

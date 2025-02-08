@@ -1,3 +1,8 @@
+<?php
+session_start();
+include 'db.php'; // Include your database connection file
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,20 +11,52 @@
     <title>Mass Transport Ticketing System</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --bg-light: #ffffff;
+            --bg-dark: #2c2c2c;
+            --text-light: #000000;
+            --text-dark: #e0e0e0;
+            --hover-light: #007bff;
+            --hover-dark: #007bff;
+            --card-bg-dark: #3a3a3a;
+            --footer-bg-dark: #3a3a3a;
+            --notice-bg-dark: #444444;
+            --carousel-caption-bg-dark: rgba(255, 255, 255, 0.7);
+            --carousel-caption-text-dark: #000000;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+
+        .dark-mode {
+            --bg-light: var(--bg-dark);
+            --text-light: var(--text-dark);
+        }
+
         .carousel-item img {
             max-width: 100%;
             max-height: 400px;
             object-fit: cover;
             opacity: 0.9;
         }
+
         .carousel-caption {
-            background: rgba(0, 0, 0, 0.5); 
-            border-radius: 15px; 
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
             padding: 10px;
             width: auto;
             max-width: 50%;
             margin: 150px 400px;
+        }
+
+        .carousel-caption.dark-mode {
+            background: var(--carousel-caption-bg-dark);
+            color: var(--carousel-caption-text-dark);
         }
 
         .notice-container {
@@ -29,23 +66,54 @@
             overflow: hidden;
             position: relative;
             white-space: nowrap;
-            
         }
-.notice {
+
+        .notice-container.dark-mode {
+            background-color: var(--notice-bg-dark);
+            color: var(--text-dark);
+        }
+
+        .notice {
             display: inline-block;
-            animation: scroll 15s linear infinite; /* Slower animation */
+            animation: scroll 15s linear infinite;
         }
+
         @keyframes scroll {
-            0% { transform: translateX(125%); } /* Start immediately */
+            0% { transform: translateX(125%); }
             100% { transform: translateX(-100%); }
-        
-        </style>
+        }
+
+        .card {
+            transition: transform 0.9s, margin 0.9s;
+        }
+
+        .card:hover {
+            transform: scale(1.3);
+            transition: transform 0.9s;
+            margin: 10px;
+        }
+
+        .dark-mode .card {
+            background-color: var(--card-bg-dark);
+            color: var(--text-dark);
+        }
+
+        .footer {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+
+        .footer.dark-mode {
+            background-color: var(--footer-bg-dark);
+            color: var(--text-dark);
+        }
+    </style>
 </head>
 <body>
     <?php include 'nav.php'; ?>
 
-        <!-- Notice Section -->
-        <div class="notice-container">
+    <!-- Notice Section -->
+    <div class="notice-container">
         <div class="notice">
             <strong>Notice:</strong> Please make sure that your payment is done under 15 minutes otherwise you will not be able to select your desired seat.
         </div>
@@ -56,24 +124,22 @@
         <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-            
         </ol>
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="images\metro.jpg" class="d-block w-100" alt="Image 1">
+                <img src="images/metro.jpg" class="d-block w-100" alt="Image 1">
                 <div class="carousel-caption d-none d-md-block">
                     <h4>Metro</h4>
-                    <p>Experience the comfort of metro travel with the most updated technology to ensure your journey through the captial Dhaka</p>
+                    <p>Experience the comfort of metro travel with the most updated technology to ensure your journey through the capital Dhaka</p>
                 </div>
             </div>
             <div class="carousel-item">
-                <img src="images\train.jpg" class="d-block w-100" alt="Image 2">
+                <img src="images/train.jpg" class="d-block w-100" alt="Image 2">
                 <div class="carousel-caption d-none d-md-block">
                     <h4>Train</h4>
                     <p>Fast and reliable train services connecting major cities across the country, ensuring a comfortable and timely journey.</p>
                 </div>
             </div>
-
         </div>
         <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -85,23 +151,10 @@
         </a>
     </div>
 
-
-
     <!-- Why Choose Us Section -->
-    </style>
     <section class="py-5">
         <div class="container">
             <h2 class="text-center mb-4">Why Choose Us</h2>
-            <style>
-                .card {
-                    transition: transform 0.9s, margin 0.9s;
-                }
-                .card:hover {
-                    transform: scale(1.3);
-                    transition: transform 0.9s;
-                    margin: 10px;
-                }
-            </style>
             <div class="row">
                 <div class="col-md-3">
                     <div class="card mb-4 shadow-sm h-100">
@@ -139,33 +192,22 @@
         </div>
     </section>
 
-   
-
-
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-
-                
-
-
-
-
-
-                <!-- Footer -->
-                <footer class="bg-dark text-white py-4">
-                    <div class="container text-center">
-                        <p>&copy; 2024 Mass Transport Ticketing System. All rights reserved.</p>
-                        <p>Contact us: <a href="mailto:support@masstransport.com" class="text-white">support@masstransport.com</a></p>
-                        <p>Follow us on:
-                            <a href="#" class="text-white ml-2">Facebook</a> |
-                            <a href="#" class="text-white ml-2">Twitter</a> |
-                            <a href="#" class="text-white ml-2">Instagram</a>
-                        </p>
-                    </div>
-                </footer>
-
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 footer">
+        <div class="container text-center">
+            <p>&copy; 2024 Mass Transport Ticketing System. All rights reserved.</p>
+            <p>Contact us: <a href="mailto:support@masstransport.com" class="text-white">support@masstransport.com</a></p>
+            <p>Follow us on:
+                <a href="#" class="text-white ml-2">Facebook</a> |
+                <a href="#" class="text-white ml-2">Twitter</a> |
+                <a href="#" class="text-white ml-2">Instagram</a>
+            </p>
+        </div>
+    </footer>
 </body>
 </html>

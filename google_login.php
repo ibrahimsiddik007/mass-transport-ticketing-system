@@ -33,7 +33,7 @@ if (isset($_GET['code'])) {
         // Set session with existing profile image or default if not set
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $name;
-        $_SESSION['user_email'] = $email;
+        $_SESSION['email'] = $email;
         $_SESSION['profile_image'] = $user['profile_image'] ?: $default_profile_image;
     } else {
         // New user, set default profile image
@@ -53,7 +53,15 @@ if (isset($_GET['code'])) {
         unset($_SESSION['redirect_to']);
         header("Location: $redirect_to");
     } else {
-        header('Location: profile.php');
+        echo '<script>
+            const redirectURL = localStorage.getItem("redirectURL");
+            if (redirectURL) {
+                localStorage.removeItem("redirectURL");
+                window.location.href = redirectURL;
+            } else {
+                window.location.href = "profile.php";
+            }
+        </script>';
     }
     exit;
 } else {

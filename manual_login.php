@@ -1,30 +1,66 @@
 <?php
 session_start();
 include 'db.php'; // Include your database connection file
+ob_start(); // Start output buffering
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT id, password FROM users WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->bind_result($user_id, $hashed_password);
-    $stmt->fetch();
-    $stmt->close();
+    // Debug: Output the entered email and password
+    echo "Entered email: " . htmlspecialchars($email) . "<br>";
+    echo "Entered password: " . htmlspecialchars($password) . "<br>";
 
-    if (password_verify($password, $hashed_password)) {
-        $_SESSION['user_id'] = $user_id;
-        if (isset($_SESSION['redirect_to'])) {
-            $redirect_to = $_SESSION['redirect_to'];
-            unset($_SESSION['redirect_to']);
-            header("Location: $redirect_to");
-        } else {
-            header('Location: profile.php');
+    // Validate user credentials
+     
+
+    // Check if database connection is established
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    echo "Database connection established.<br>";
+
+    // Prepare and execute the SQL statement
+    $sql = "SELECT * FROM users WHERE email='$email'";
+    $result = mysqli_query($conn, $sql);
+    $num = mysqli_num_rows($result);
+    echo "SQL statement executed.<br>";
+
+    if ($num == 1) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            // Debug: Output fetched values
+            echo "Fetched userName: " . htmlspecialchars($row['name']) . "<br>";
+            echo "Fetched hashedPassword: " . htmlspecialchars($row['password']) . "<br>";
+
+            // Debug: Output entered password and hashed password before verification
+            echo "Entered password: " . htmlspecialchars($password) . "<br>";
+            echo "Hashed password from DB: " . htmlspecialchars($row['password']) . "<br>";
+
+            if (password_verify($password, $row['password'])) {
+                echo "Password verified.<br>";
+
+                // Set session variables
+                $_SESSION['user_id'] = $row['id'];
+                $_SESSION['email'] = $email;
+                $_SESSION['user_name'] = $row['name'];
+
+                // Redirect to profile page
+                header('Location: profile.php');
+                exit;
+            } else {
+                echo "Invalid email or password.<br>";
+                $_SESSION['error'] = "Invalid email or password.";
+                header('Location: login.php');
+                exit;
+            }
         }
-        exit;
     } else {
-        echo "Invalid email or password.";
+        echo "Invalid email or password.<br>";
+        $_SESSION['error'] = "Invalid email or password.";
+        header('Location: login.php');
+        exit;
     }
 }
+
+ob_end_flush(); // Flush the output buffer
 ?>
