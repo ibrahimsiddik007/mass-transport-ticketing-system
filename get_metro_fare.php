@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $endLocation = $_POST['end_point'];
 
     // Calculate fare based on start and end locations
-    $stmt = $conn->prepare("SELECT fare FROM ticket_routes WHERE start_point = ? AND end_point = ?");
+    $stmt = $conn1->prepare("SELECT fare FROM ticket_routes WHERE start_point = ? AND end_point = ?");
     if ($stmt) {
         $stmt->bind_param("ss", $startLocation, $endLocation);
         $stmt->execute();

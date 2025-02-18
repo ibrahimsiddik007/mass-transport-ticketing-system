@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
-$stmt = $conn->prepare("SELECT name, email, profile_image, address, phone FROM users WHERE id = ?");
+$stmt = $conn1->prepare("SELECT name, email, profile_image, address, phone FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $stmt->bind_result($username, $email, $profile_image, $address, $phone_number);
@@ -19,7 +19,7 @@ $needs_completion = empty($address) || empty($phone_number);
 
 // Fetch user receipts
 $receipts = [];
-$stmt = $conn->prepare("SELECT transaction_id, start_location, end_location, fare, created_at FROM transactions WHERE user_id = ?");
+$stmt = $conn1->prepare("SELECT transaction_id, start_location, end_location, fare, created_at FROM transactions WHERE user_id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $stmt->bind_result($transactionId, $startLocation, $endLocation, $fare, $createdAt);

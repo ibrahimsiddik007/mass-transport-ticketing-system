@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 04, 2025 at 05:03 PM
+-- Generation Time: Feb 18, 2025 at 04:06 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -320,12 +320,12 @@ INSERT INTO `ticket_routes` (`id`, `start_point`, `end_point`, `fare`) VALUES
 --
 
 CREATE TABLE `transactions` (
-  `id` int(11) NOT NULL,
+  `transaction_id` varchar(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `start_location` varchar(255) NOT NULL,
   `end_location` varchar(255) NOT NULL,
-  `mobile_number` varchar(15) NOT NULL,
   `fare` decimal(10,2) NOT NULL,
-  `transaction_id` varchar(255) NOT NULL,
+  `status` enum('pending','completed','canceled') NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -333,14 +333,77 @@ CREATE TABLE `transactions` (
 -- Dumping data for table `transactions`
 --
 
-INSERT INTO `transactions` (`id`, `start_location`, `end_location`, `mobile_number`, `fare`, `transaction_id`, `created_at`) VALUES
-(1, 'Kawran_Bazar', 'Kazi_Para', '01719707877', 10.00, 'txn_678c045fdca9c', '2025-01-18 14:43:27'),
-(2, 'Uttara_Center', 'Kawran_Bazar', '01521774951', 55.00, 'txn_678c05b387c40', '2025-01-18 14:49:07'),
-(3, 'Mirpur_10', 'Dhaka_University', '01719707877', 91.00, 'txn_678c05ee55f0e', '2025-01-18 14:50:06'),
-(4, 'Mirpur_11', 'Kazi_Para', '01719707877', 10.00, 'txn_678c06fd3baaa', '2025-01-18 14:54:37'),
-(5, 'Agargaon', 'Uttara_Center', '01521774951', 29.00, 'txn_678c098b67139', '2025-01-18 15:05:31'),
-(6, 'Pallabi', 'Kawran_Bazar', '01719707877', 98.00, 'txn_678c0a5225e32', '2025-01-18 15:08:50'),
-(7, 'Kazi_Para', 'Kawran_Bazar', '01521774951', 10.00, 'txn_678c0d44ac901', '2025-01-18 15:21:24');
+INSERT INTO `transactions` (`transaction_id`, `user_id`, `start_location`, `end_location`, `fare`, `status`, `created_at`) VALUES
+('1', 12, 'Uttara_South', 'Secretariat', 12.00, '', '2025-02-06 12:40:30'),
+('10', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:44:58'),
+('11', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:45:01'),
+('12', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:45:04'),
+('13', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:45:07'),
+('14', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:46:30'),
+('15', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:46:36'),
+('16', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:46:38'),
+('17', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:46:40'),
+('18', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:47:08'),
+('19', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:47:10'),
+('2', 12, 'Uttara_South', 'Secretariat', 12.00, '', '2025-02-06 12:41:16'),
+('20', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:47:14'),
+('21', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:47:19'),
+('22', 12, 'Pallabi', 'Dhaka_University', 59.00, '', '2025-02-06 12:49:31'),
+('23', 12, 'Pallabi', 'Dhaka_University', 59.00, '', '2025-02-06 12:49:34'),
+('24', 12, 'Pallabi', 'Dhaka_University', 59.00, '', '2025-02-06 12:49:37'),
+('25', 12, 'Pallabi', 'Dhaka_University', 59.00, '', '2025-02-06 12:49:42'),
+('26', 12, 'Pallabi', 'Dhaka_University', 59.00, '', '2025-02-06 12:51:19'),
+('27', 12, 'Pallabi', 'Dhaka_University', 59.00, '', '2025-02-06 12:51:23'),
+('28', 12, 'Mirpur_10', 'Uttara_North', 57.00, '', '2025-02-06 12:57:06'),
+('29', 12, 'Uttara_North', 'Dhaka_University', 83.00, '', '2025-02-06 12:57:48'),
+('3', 12, 'Uttara_South', 'Secretariat', 12.00, '', '2025-02-06 12:41:26'),
+('30', 12, 'Uttara_North', 'Dhaka_University', 83.00, '', '2025-02-06 12:58:46'),
+('31', 12, 'Uttara_North', 'Motijheel', 32.00, '', '2025-02-06 12:59:08'),
+('32', 12, 'Uttara_North', 'Motijheel', 32.00, '', '2025-02-06 12:59:46'),
+('33', 12, 'Uttara_North', 'Motijheel', 32.00, '', '2025-02-06 13:01:16'),
+('34', 12, 'Uttara_North', 'Motijheel', 32.00, '', '2025-02-06 13:01:32'),
+('35', 12, 'Uttara_North', 'Motijheel', 32.00, '', '2025-02-06 13:02:37'),
+('36', 12, 'Uttara_North', 'Motijheel', 32.00, '', '2025-02-06 13:03:15'),
+('37', 12, 'Uttara_North', 'Motijheel', 32.00, '', '2025-02-06 13:03:36'),
+('38', 12, 'Mirpur_11', 'Dhaka_University', 87.00, '', '2025-02-06 13:06:26'),
+('39', 12, 'Uttara_South', 'Motijheel', 36.00, '', '2025-02-06 13:24:29'),
+('4', 12, 'Uttara_South', 'Secretariat', 12.00, '', '2025-02-06 12:42:37'),
+('40', 12, 'Mirpur_10', 'Agargaon', 82.00, '', '2025-02-06 13:26:20'),
+('41', 12, 'Agargaon', 'Uttara_North', 21.00, '', '2025-02-06 13:28:51'),
+('42', 12, 'Farmgate', 'Bijoy_Sharani', 31.00, '', '2025-02-06 13:31:28'),
+('43', 12, 'Farmgate', 'Bijoy_Sharani', 31.00, '', '2025-02-06 13:32:58'),
+('5', 12, 'Uttara_South', 'Secretariat', 12.00, '', '2025-02-06 12:42:40'),
+('6', 12, 'Pallabi', 'Uttara_North', 57.00, '', '2025-02-06 12:42:51'),
+('7', 12, 'Pallabi', 'Uttara_North', 57.00, '', '2025-02-06 12:42:55'),
+('8', 12, 'Pallabi', 'Uttara_North', 57.00, '', '2025-02-06 12:42:58'),
+('9', 12, 'Pallabi', 'Uttara_North', 57.00, '', '2025-02-06 12:44:46'),
+('txn_2mgvspC', 12, 'Bijoy_Sharani', 'Uttara_North', 43.00, '', '2025-02-06 13:50:52'),
+('txn_3s1mzSR', 12, 'ShewraPara', 'Dhaka_University', 67.00, '', '2025-02-06 14:01:00'),
+('txn_67a500a', 12, 'Farmgate', 'Dhaka_University', 73.00, '', '2025-02-06 13:34:22'),
+('txn_67a5010', 12, 'Kawran_Bazar', 'Shahbagh', 83.00, '', '2025-02-06 13:35:50'),
+('txn_A9a7nBZ', 12, 'Mirpur_11', 'Dhaka_University', 87.00, '', '2025-02-06 14:13:13'),
+('txn_BXnSTfP', 12, 'ShewraPara', 'Dhaka_University', 67.00, '', '2025-02-06 14:00:44'),
+('txn_C6vFazY', 13, 'Uttara_North', 'Mirpur_10', 57.00, '', '2025-02-08 10:50:20'),
+('txn_CGZrLAN', 13, 'Kazi_Para', 'Bijoy_Sharani', 73.00, '', '2025-02-09 10:54:48'),
+('txn_DcBb1fx', 13, 'Pallabi', 'Farmgate', 63.00, '', '2025-02-08 09:46:23'),
+('txn_dh0ngYm', 12, 'Agargaon', 'Dhaka_University', 55.00, '', '2025-02-06 13:46:38'),
+('txn_DT4IJ0W', 19, 'Kazi_Para', 'Uttara_North', 33.00, '', '2025-02-08 14:09:41'),
+('txn_EtgSkGZ', 13, 'Uttara_North', 'Pallabi', 57.00, '', '2025-02-08 07:19:34'),
+('txn_fhPC1wt', 12, 'Mirpur_11', 'Dhaka_University', 87.00, '', '2025-02-06 14:06:15'),
+('txn_gNkDp2b', 12, 'Dhaka_University', 'Kawran_Bazar', 42.00, '', '2025-02-06 13:41:36'),
+('txn_HtAViQh', 12, 'Farmgate', 'Uttara_North', 67.00, '', '2025-02-06 13:59:00'),
+('txn_i8x2cgV', 12, 'Agargaon', 'Uttara_North', 21.00, '', '2025-02-06 13:55:01'),
+('txn_Mv4oNGA', 13, 'Uttara_North', 'Bijoy_Sharani', 43.00, '', '2025-02-08 07:20:24'),
+('txn_P9LVYIq', 12, 'ShewraPara', 'Dhaka_University', 67.00, '', '2025-02-06 14:00:33'),
+('txn_q2SDIsd', 13, 'Uttara_North', 'ShewraPara', 95.00, '', '2025-02-08 10:11:01'),
+('txn_q4IKZw2', 13, 'Mirpur_11', 'Kazi_Para', 10.00, '', '2025-02-09 10:21:57'),
+('txn_RNkm8fU', 12, 'Kazi_Para', 'Motijheel', 52.00, '', '2025-02-06 13:57:15'),
+('txn_TiHAzve', 13, 'Uttara_North', 'Agargaon', 21.00, '', '2025-02-08 10:41:56'),
+('txn_TjzXUl0', 12, 'Shahbagh', 'Uttara_North', 58.00, '', '2025-02-06 13:55:33'),
+('txn_UZDsVGw', 12, 'Agargaon', 'Dhaka_University', 55.00, '', '2025-02-06 13:48:38'),
+('txn_xpS7QMF', 12, 'Pallabi', 'Secretariat', 54.00, '', '2025-02-06 13:44:58'),
+('txn_ZCsl8MI', 12, 'Agargaon', 'Dhaka_University', 55.00, '', '2025-02-06 13:48:54'),
+('txn_zKJf6nZ', 12, 'Kawran_Bazar', 'Dhaka_University', 42.00, '', '2025-02-06 13:38:58');
 
 -- --------------------------------------------------------
 
@@ -355,15 +418,17 @@ CREATE TABLE `users` (
   `google_id` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `profile_image` varchar(255) DEFAULT NULL,
-  `phone` varchar(20) DEFAULT NULL
+  `phone` varchar(20) DEFAULT NULL,
+  `Address` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `password`, `google_id`, `name`, `profile_image`, `phone`) VALUES
-(5, 'ibrahimsiddik007@gmail.com', '', '114164509074598760418', 'Ibrahim', 'https://lh3.googleusercontent.com/a/ACg8ocKjH7-W65VOR7OjUgYcQVbWFoP7JjKPdnY9sCfRPGb479HIzL5T=s96-c', '01601750278');
+INSERT INTO `users` (`id`, `email`, `password`, `google_id`, `name`, `profile_image`, `phone`, `Address`) VALUES
+(19, 'faiyanswapnil@gmail.com', '$2y$10$D5ayv7Y7C.p5RCpkmIyc4Om7nbDBPZmQdybmoVuHR/zRHSpQHdaXO', NULL, 'Faiyan Islam Swapnil', 'uploaded_profile_images/1f0e3dad99908345f7439f8ffabdffc4.jpg', '01711111111', 'Thanar Mor'),
+(20, 'ibrahimsiddik007@gmail.com', '', '114164509074598760418', 'Ibrahim', 'uploaded_profile_images/98f13708210194c475687be6106a3b84.jpg', '01700000000', 'Dhaka,Bashundhara R/A,House-28');
 
 --
 -- Indexes for dumped tables
@@ -385,7 +450,7 @@ ALTER TABLE `ticket_routes`
 -- Indexes for table `transactions`
 --
 ALTER TABLE `transactions`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`transaction_id`);
 
 --
 -- Indexes for table `users`
@@ -411,16 +476,10 @@ ALTER TABLE `ticket_routes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=241;
 
 --
--- AUTO_INCREMENT for table `transactions`
---
-ALTER TABLE `transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $phone_number = $_POST['phone_number'];
     $user_id = $_SESSION['user_id'];
 
-    $stmt = $conn->prepare("UPDATE users SET address = ?, phone = ? WHERE id = ?");
+    $stmt = $conn1->prepare("UPDATE users SET address = ?, phone = ? WHERE id = ?");
     $stmt->bind_param("ssi", $address, $phone_number, $user_id);
     $stmt->execute();
     $stmt->close();

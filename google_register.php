@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $profile_image = $_POST['profile_image'];
 
     // Check if the user already exists
-    $stmt = $conn->prepare("SELECT * FROM users WHERE google_id = ? OR email = ?");
+    $stmt = $conn1->prepare("SELECT * FROM users WHERE google_id = ? OR email = ?");
     $stmt->bind_param("ss", $google_id, $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo json_encode(['new_user' => false]);
     } else {
         // New user, insert into database
-        $stmt = $conn->prepare("INSERT INTO users (google_id, email, name, profile_image) VALUES (?, ?, ?, ?)");
+        $stmt = $conn1->prepare("INSERT INTO users (google_id, email, name, profile_image) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("ssss", $google_id, $email, $name, $profile_image);
         $stmt->execute();
         $_SESSION['user_id'] = $stmt->insert_id;

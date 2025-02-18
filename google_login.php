@@ -18,7 +18,7 @@ if (isset($_GET['code'])) {
     $default_profile_image = 'images/default_profile_image.jpg';
 
     // Check if the user already exists
-    $stmt = $conn->prepare("SELECT * FROM users WHERE google_id = ? OR email = ?");
+    $stmt = $conn1->prepare("SELECT * FROM users WHERE google_id = ? OR email = ?");
     $stmt->bind_param("ss", $google_id, $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -26,7 +26,7 @@ if (isset($_GET['code'])) {
 
     if ($user) {
         // Always update user's profile data
-        $stmt = $conn->prepare("UPDATE users SET google_id = ?, name = ? WHERE email = ?");
+        $stmt = $conn1->prepare("UPDATE users SET google_id = ?, name = ? WHERE email = ?");
         $stmt->bind_param("sss", $google_id, $name, $email);
         $stmt->execute();
 
@@ -37,7 +37,7 @@ if (isset($_GET['code'])) {
         $_SESSION['profile_image'] = $user['profile_image'] ?: $default_profile_image;
     } else {
         // New user, set default profile image
-        $stmt = $conn->prepare("INSERT INTO users (google_id, email, name, profile_image) VALUES (?, ?, ?, ?)");
+        $stmt = $conn1->prepare("INSERT INTO users (google_id, email, name, profile_image) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("ssss", $google_id, $email, $name, $default_profile_image);
         $stmt->execute();
 

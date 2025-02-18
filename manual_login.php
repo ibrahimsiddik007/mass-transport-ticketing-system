@@ -15,14 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
      
 
     // Check if database connection is established
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+    if ($conn1->connect_error) {
+        die("Connection failed: " . $conn1->connect_error);
     }
     echo "Database connection established.<br>";
 
     // Prepare and execute the SQL statement
     $sql = "SELECT * FROM users WHERE email='$email'";
-    $result = mysqli_query($conn, $sql);
+    $result = mysqli_query($conn1, $sql);
     $num = mysqli_num_rows($result);
     echo "SQL statement executed.<br>";
 

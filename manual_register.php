@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $profile_image = 'images\default_profile_account_photo.jpg';
 
     // Check if the user already exists
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt = $conn1->prepare("SELECT * FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "User already exists!";
     } else {
         // New user, insert into database
-        $stmt = $conn->prepare("INSERT INTO users (name, email, password, phone, address,profile_image) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt = $conn1->prepare("INSERT INTO users (name, email, password, phone, address,profile_image) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("ssssss", $name, $email, $password, $phone, $address, $profile_image);
         $stmt->execute();
         $_SESSION['user_id'] = $stmt->insert_id;

@@ -18,7 +18,7 @@ $_SESSION['payment_completed'] = false;
 // Fetch station names
 $stations = [];
 $sql = "SELECT s_name FROM stations";
-$result = $conn->query($sql);
+$result = $conn1->query($sql);
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
         $stations[] = $row['s_name'];

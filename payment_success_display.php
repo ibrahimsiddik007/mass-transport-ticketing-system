@@ -21,9 +21,9 @@ if (!isset($_GET['transaction_id'])) {
 }
 
 $transactionId = $_GET['transaction_id'];
-$stmt = $conn->prepare("SELECT start_location, end_location, fare, created_at FROM transactions WHERE transaction_id = ?");
+$stmt = $conn1->prepare("SELECT start_location, end_location, fare, created_at FROM transactions WHERE transaction_id = ?");
 if ($stmt === false) {
-    die('Prepare failed: ' . htmlspecialchars($conn->error));
+    die('Prepare failed: ' . htmlspecialchars($conn1->error));
 }
 $stmt->bind_param("s", $transactionId);
 $stmt->execute();

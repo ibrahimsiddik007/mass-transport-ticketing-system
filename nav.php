@@ -26,13 +26,27 @@ if (session_status() == PHP_SESSION_NONE) {
             }
           });
         </script>
+              <li class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'train.php' ? 'active' : ''; ?>">
+        <a class="nav-link" href="train.php" id="train-link">Train</a>
+        <script>
+          document.getElementById('train-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            if (!<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>) {
+              localStorage.setItem('redirectURL', 'metro.php');
+              window.location.href = 'login.php';
+            } else {
+              window.location.href = 'train.php';
+            }
+          });
+        </script>
+
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
       <?php if (isset($_SESSION['user_id'])): ?>
         <li class="nav-item">
           <a class="nav-link" href="profile.php">
-            <img src="<?php echo htmlspecialchars($_SESSION['profile_image']); ?>" alt="Profile Image" class="profile-img">
+            <img src="<?php echo htmlspecialchars($_SESSION['profile_image']); ?>" alt="profile_image" class="profile-img">
             Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?>
           </a>
         </li>

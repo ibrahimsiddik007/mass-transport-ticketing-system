@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $local_image_path = $upload_dir . $image_filename;
 
         if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $local_image_path)) {
-            $stmt = $conn->prepare("UPDATE users SET profile_image = ? WHERE id = ?");
+            $stmt = $conn1->prepare("UPDATE users SET profile_image = ? WHERE id = ?");
             $stmt->bind_param("si", $local_image_path, $_SESSION['user_id']);
             $stmt->execute();
 
@@ -32,14 +32,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (isset($_POST['address'])) {
         $address = $_POST['address'];
-        $stmt = $conn->prepare("UPDATE users SET address = ? WHERE id = ?");
+        $stmt = $conn1->prepare("UPDATE users SET address = ? WHERE id = ?");
         $stmt->bind_param("si", $address, $_SESSION['user_id']);
         $stmt->execute();
     }
 
     if (isset($_POST['phone_number'])) {
         $phone_number = $_POST['phone_number'];
-        $stmt = $conn->prepare("UPDATE users SET phone = ? WHERE id = ?");
+        $stmt = $conn1->prepare("UPDATE users SET phone = ? WHERE id = ?");
         $stmt->bind_param("si", $phone_number, $_SESSION['user_id']);
         $stmt->execute();
     }

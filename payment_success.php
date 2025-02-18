@@ -37,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $createdAt = date('Y-m-d H:i:s');
 
     // Fetch user details
-    $stmt = $conn->prepare("SELECT name, email, phone FROM users WHERE id = ?");
+    $stmt = $conn1->prepare("SELECT name, email, phone FROM users WHERE id = ?");
     if ($stmt === false) {
-        die('Prepare failed: ' . htmlspecialchars($conn->error));
+        die('Prepare failed: ' . htmlspecialchars($conn1->error));
     }
     $stmt->bind_param("i", $userId);
     $stmt->execute();
@@ -48,9 +48,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->close();
 
     // Save transaction details
-    $stmt = $conn->prepare("INSERT INTO transactions (transaction_id, user_id, start_location, end_location, fare, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn1->prepare("INSERT INTO transactions (transaction_id, user_id, start_location, end_location, fare, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)");
     if ($stmt === false) {
-        die('Prepare failed: ' . htmlspecialchars($conn->error));
+        die('Prepare failed: ' . htmlspecialchars($conn1->error));
     }
     $status = 'success';
     $stmt->bind_param("sssssss", $transactionId, $userId, $startLocation, $endLocation, $fare, $status, $createdAt);
