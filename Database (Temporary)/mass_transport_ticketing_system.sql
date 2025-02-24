@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 18, 2025 at 04:06 PM
+-- Generation Time: Feb 25, 2025 at 12:00 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -334,76 +334,13 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`transaction_id`, `user_id`, `start_location`, `end_location`, `fare`, `status`, `created_at`) VALUES
-('1', 12, 'Uttara_South', 'Secretariat', 12.00, '', '2025-02-06 12:40:30'),
-('10', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:44:58'),
-('11', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:45:01'),
-('12', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:45:04'),
-('13', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:45:07'),
-('14', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:46:30'),
-('15', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:46:36'),
-('16', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:46:38'),
-('17', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:46:40'),
-('18', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:47:08'),
-('19', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:47:10'),
-('2', 12, 'Uttara_South', 'Secretariat', 12.00, '', '2025-02-06 12:41:16'),
-('20', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:47:14'),
-('21', 12, 'Mirpur_10', 'Secretariat', 91.00, '', '2025-02-06 12:47:19'),
-('22', 12, 'Pallabi', 'Dhaka_University', 59.00, '', '2025-02-06 12:49:31'),
-('23', 12, 'Pallabi', 'Dhaka_University', 59.00, '', '2025-02-06 12:49:34'),
-('24', 12, 'Pallabi', 'Dhaka_University', 59.00, '', '2025-02-06 12:49:37'),
-('25', 12, 'Pallabi', 'Dhaka_University', 59.00, '', '2025-02-06 12:49:42'),
-('26', 12, 'Pallabi', 'Dhaka_University', 59.00, '', '2025-02-06 12:51:19'),
-('27', 12, 'Pallabi', 'Dhaka_University', 59.00, '', '2025-02-06 12:51:23'),
-('28', 12, 'Mirpur_10', 'Uttara_North', 57.00, '', '2025-02-06 12:57:06'),
-('29', 12, 'Uttara_North', 'Dhaka_University', 83.00, '', '2025-02-06 12:57:48'),
-('3', 12, 'Uttara_South', 'Secretariat', 12.00, '', '2025-02-06 12:41:26'),
-('30', 12, 'Uttara_North', 'Dhaka_University', 83.00, '', '2025-02-06 12:58:46'),
-('31', 12, 'Uttara_North', 'Motijheel', 32.00, '', '2025-02-06 12:59:08'),
-('32', 12, 'Uttara_North', 'Motijheel', 32.00, '', '2025-02-06 12:59:46'),
-('33', 12, 'Uttara_North', 'Motijheel', 32.00, '', '2025-02-06 13:01:16'),
-('34', 12, 'Uttara_North', 'Motijheel', 32.00, '', '2025-02-06 13:01:32'),
-('35', 12, 'Uttara_North', 'Motijheel', 32.00, '', '2025-02-06 13:02:37'),
-('36', 12, 'Uttara_North', 'Motijheel', 32.00, '', '2025-02-06 13:03:15'),
-('37', 12, 'Uttara_North', 'Motijheel', 32.00, '', '2025-02-06 13:03:36'),
-('38', 12, 'Mirpur_11', 'Dhaka_University', 87.00, '', '2025-02-06 13:06:26'),
-('39', 12, 'Uttara_South', 'Motijheel', 36.00, '', '2025-02-06 13:24:29'),
-('4', 12, 'Uttara_South', 'Secretariat', 12.00, '', '2025-02-06 12:42:37'),
-('40', 12, 'Mirpur_10', 'Agargaon', 82.00, '', '2025-02-06 13:26:20'),
-('41', 12, 'Agargaon', 'Uttara_North', 21.00, '', '2025-02-06 13:28:51'),
-('42', 12, 'Farmgate', 'Bijoy_Sharani', 31.00, '', '2025-02-06 13:31:28'),
-('43', 12, 'Farmgate', 'Bijoy_Sharani', 31.00, '', '2025-02-06 13:32:58'),
-('5', 12, 'Uttara_South', 'Secretariat', 12.00, '', '2025-02-06 12:42:40'),
-('6', 12, 'Pallabi', 'Uttara_North', 57.00, '', '2025-02-06 12:42:51'),
-('7', 12, 'Pallabi', 'Uttara_North', 57.00, '', '2025-02-06 12:42:55'),
-('8', 12, 'Pallabi', 'Uttara_North', 57.00, '', '2025-02-06 12:42:58'),
-('9', 12, 'Pallabi', 'Uttara_North', 57.00, '', '2025-02-06 12:44:46'),
-('txn_2mgvspC', 12, 'Bijoy_Sharani', 'Uttara_North', 43.00, '', '2025-02-06 13:50:52'),
-('txn_3s1mzSR', 12, 'ShewraPara', 'Dhaka_University', 67.00, '', '2025-02-06 14:01:00'),
-('txn_67a500a', 12, 'Farmgate', 'Dhaka_University', 73.00, '', '2025-02-06 13:34:22'),
-('txn_67a5010', 12, 'Kawran_Bazar', 'Shahbagh', 83.00, '', '2025-02-06 13:35:50'),
-('txn_A9a7nBZ', 12, 'Mirpur_11', 'Dhaka_University', 87.00, '', '2025-02-06 14:13:13'),
-('txn_BXnSTfP', 12, 'ShewraPara', 'Dhaka_University', 67.00, '', '2025-02-06 14:00:44'),
-('txn_C6vFazY', 13, 'Uttara_North', 'Mirpur_10', 57.00, '', '2025-02-08 10:50:20'),
-('txn_CGZrLAN', 13, 'Kazi_Para', 'Bijoy_Sharani', 73.00, '', '2025-02-09 10:54:48'),
-('txn_DcBb1fx', 13, 'Pallabi', 'Farmgate', 63.00, '', '2025-02-08 09:46:23'),
-('txn_dh0ngYm', 12, 'Agargaon', 'Dhaka_University', 55.00, '', '2025-02-06 13:46:38'),
-('txn_DT4IJ0W', 19, 'Kazi_Para', 'Uttara_North', 33.00, '', '2025-02-08 14:09:41'),
-('txn_EtgSkGZ', 13, 'Uttara_North', 'Pallabi', 57.00, '', '2025-02-08 07:19:34'),
-('txn_fhPC1wt', 12, 'Mirpur_11', 'Dhaka_University', 87.00, '', '2025-02-06 14:06:15'),
-('txn_gNkDp2b', 12, 'Dhaka_University', 'Kawran_Bazar', 42.00, '', '2025-02-06 13:41:36'),
-('txn_HtAViQh', 12, 'Farmgate', 'Uttara_North', 67.00, '', '2025-02-06 13:59:00'),
-('txn_i8x2cgV', 12, 'Agargaon', 'Uttara_North', 21.00, '', '2025-02-06 13:55:01'),
-('txn_Mv4oNGA', 13, 'Uttara_North', 'Bijoy_Sharani', 43.00, '', '2025-02-08 07:20:24'),
-('txn_P9LVYIq', 12, 'ShewraPara', 'Dhaka_University', 67.00, '', '2025-02-06 14:00:33'),
-('txn_q2SDIsd', 13, 'Uttara_North', 'ShewraPara', 95.00, '', '2025-02-08 10:11:01'),
-('txn_q4IKZw2', 13, 'Mirpur_11', 'Kazi_Para', 10.00, '', '2025-02-09 10:21:57'),
-('txn_RNkm8fU', 12, 'Kazi_Para', 'Motijheel', 52.00, '', '2025-02-06 13:57:15'),
-('txn_TiHAzve', 13, 'Uttara_North', 'Agargaon', 21.00, '', '2025-02-08 10:41:56'),
-('txn_TjzXUl0', 12, 'Shahbagh', 'Uttara_North', 58.00, '', '2025-02-06 13:55:33'),
-('txn_UZDsVGw', 12, 'Agargaon', 'Dhaka_University', 55.00, '', '2025-02-06 13:48:38'),
-('txn_xpS7QMF', 12, 'Pallabi', 'Secretariat', 54.00, '', '2025-02-06 13:44:58'),
-('txn_ZCsl8MI', 12, 'Agargaon', 'Dhaka_University', 55.00, '', '2025-02-06 13:48:54'),
-('txn_zKJf6nZ', 12, 'Kawran_Bazar', 'Dhaka_University', 42.00, '', '2025-02-06 13:38:58');
+('txn_53qmAby', 20, 'Uttara_South', 'Dhaka_University', 17.00, '', '2025-02-24 17:15:59'),
+('txn_5pD37rO', 20, 'Uttara_South', 'Dhaka_University', 17.00, '', '2025-02-24 17:09:17'),
+('txn_Er1qnBH', 20, 'Uttara_Center', 'Shahbagh', 58.00, '', '2025-02-24 17:00:47'),
+('txn_H3Jrtmh', 20, 'Uttara_South', 'Dhaka_University', 17.00, '', '2025-02-24 17:07:41'),
+('txn_HZVKjOm', 20, 'Uttara_Center', 'Dhaka_University', 15.00, '', '2025-02-24 17:06:35'),
+('txn_kGrmNI1', 20, 'Uttara_Center', 'Shahbagh', 58.00, '', '2025-02-24 17:06:05'),
+('txn_qvQi8Ib', 20, 'Uttara_South', 'Dhaka_University', 17.00, '', '2025-02-24 17:10:52');
 
 -- --------------------------------------------------------
 

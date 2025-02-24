@@ -131,5 +131,6 @@ $google_login_url = $client->createAuthUrl();
             });
         });
     </script>
+    
 </body>
 </html>

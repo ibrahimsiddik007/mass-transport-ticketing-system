@@ -1,10 +1,23 @@
 <?php
+session_start();
 include 'db.php';
 
-// This will mark reservations as cancelled if older than 15 minutes and still 'pending'.
-$sql = "UPDATE reservations
-        SET status = 'cancelled'
-        WHERE status = 'pending'
-          AND TIMESTAMPDIFF(MINUTE, reservation_time, NOW()) >= 15";
-$conn2->query($sql);
+if (!isset($_SESSION['user_id'])) {
+    echo 'error';
+    exit;
+}
+
+$userId = $_SESSION['user_id'];
+
+// Delete pending reservations
+$query = "DELETE FROM reservations WHERE user_id = ? AND status = 'pending' AND expiry_time > NOW()";
+$stmt = $conn2->prepare($query);
+$stmt->bind_param("i", $userId);
+if ($stmt->execute()) {
+    echo 'ok';
+} else {
+    echo 'error';
+}
+
+$stmt->close();
 ?>

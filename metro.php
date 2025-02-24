@@ -51,7 +51,7 @@ if ($result->num_rows > 0) {
         }
         body {
             color: #fff;
-            animation: fadeIn 2s ease-in-out;
+            animation: fadeIn 1.5s ease-in-out;
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -160,5 +160,6 @@ if ($result->num_rows > 0) {
             $('#startLocation, #endLocation').change(updateFare);
         });
     </script>
+    
 </body>
 </html>

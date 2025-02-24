@@ -192,5 +192,6 @@ $url = $client->createAuthUrl();
             }
         });
     </script>
+    
 </body>
 </html>

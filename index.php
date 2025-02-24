@@ -28,6 +28,11 @@ include 'db.php'; // Include your database connection file
         }
 
         body {
+            color: #fff;
+            animation: fadeIn 3s ease-in-out;
+        }
+
+        body {
             background-color: var(--bg-light);
             color: var(--text-light);
             transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
@@ -124,6 +129,7 @@ include 'db.php'; // Include your database connection file
         <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
         </ol>
         <div class="carousel-inner">
             <div class="carousel-item active">
@@ -138,6 +144,13 @@ include 'db.php'; // Include your database connection file
                 <div class="carousel-caption d-none d-md-block">
                     <h4>Train</h4>
                     <p>Fast and reliable train services connecting major cities across the country, ensuring a comfortable and timely journey.</p>
+                </div>
+            </div>
+        <div class="carousel-item">
+                <img src="images/bus.jpg" class="d-block w-100" alt="Image 3">
+                <div class="carousel-caption d-none d-md-block">
+                    <h4>Bus</h4>
+                    <p>Our bus services offer extensive routes covering the whole Dhaka City.</p>
                 </div>
             </div>
         </div>
@@ -197,17 +210,6 @@ include 'db.php'; // Include your database connection file
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4 footer">
-        <div class="container text-center">
-            <p>&copy; 2024 Mass Transport Ticketing System. All rights reserved.</p>
-            <p>Contact us: <a href="mailto:support@masstransport.com" class="text-white">support@masstransport.com</a></p>
-            <p>Follow us on:
-                <a href="#" class="text-white ml-2">Facebook</a> |
-                <a href="#" class="text-white ml-2">Twitter</a> |
-                <a href="#" class="text-white ml-2">Instagram</a>
-            </p>
-        </div>
-    </footer>
+    
 </body>
 </html>

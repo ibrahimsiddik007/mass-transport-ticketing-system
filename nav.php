@@ -26,20 +26,34 @@ if (session_status() == PHP_SESSION_NONE) {
             }
           });
         </script>
-              <li class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'train.php' ? 'active' : ''; ?>">
+      </li>
+      <li class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'train.php' ? 'active' : ''; ?>">
         <a class="nav-link" href="train.php" id="train-link">Train</a>
         <script>
           document.getElementById('train-link').addEventListener('click', function(event) {
             event.preventDefault();
             if (!<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>) {
-              localStorage.setItem('redirectURL', 'metro.php');
+              localStorage.setItem('redirectURL', 'train.php');
               window.location.href = 'login.php';
             } else {
               window.location.href = 'train.php';
             }
           });
         </script>
-
+      </li>
+      <li class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'bus.php' ? 'active' : ''; ?>">
+        <a class="nav-link" href="bus.php" id="bus-link">Bus</a>
+        <script>
+          document.getElementById('bus-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            if (!<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>) {
+              localStorage.setItem('redirectURL', 'bus.php');
+              window.location.href = 'login.php';
+            } else {
+              window.location.href = 'bus.php';
+            }
+          });
+        </script>
       </li>
     </ul>
     <ul class="navbar-nav ml-auto">
