@@ -17,9 +17,9 @@ $stmt->close();
 
 $needs_completion = empty($address) || empty($phone_number);
 
-// Fetch user receipts
+// Fetch user receipts for metro transactions
 $receipts = [];
-$stmt = $conn1->prepare("SELECT transaction_id, start_location, end_location, fare, created_at FROM transactions WHERE user_id = ?");
+$stmt = $conn1->prepare("SELECT transaction_id, start_location, end_location, fare, created_at FROM transactions WHERE user_id = ? ORDER BY created_at DESC");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $stmt->bind_result($transactionId, $startLocation, $endLocation, $fare, $createdAt);
@@ -29,10 +29,39 @@ while ($stmt->fetch()) {
         'start_location' => $startLocation,
         'end_location' => $endLocation,
         'fare' => $fare,
-        'created_at' => $createdAt
+        'created_at' => $createdAt,
+        'type' => 'metro'
     ];
 }
 $stmt->close();
+
+// Fetch user receipts for train transactions
+$stmt = $conn2->prepare("
+    SELECT tt.transaction_id, t.start_point, t.end_point, t.fare, tt.payment_time 
+    FROM train_transactions tt 
+    JOIN trains t ON tt.train_id = t.train_id 
+    WHERE tt.user_id = ? 
+    ORDER BY tt.payment_time DESC
+");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($transactionId, $startPoint, $endPoint, $fare, $createdAt);
+while ($stmt->fetch()) {
+    $receipts[] = [
+        'transaction_id' => $transactionId,
+        'start_location' => $startPoint,
+        'end_location' => $endPoint,
+        'fare' => $fare,
+        'created_at' => $createdAt,
+        'type' => 'train'
+    ];
+}
+$stmt->close();
+
+// Sort receipts by created_at in descending order
+usort($receipts, function($a, $b) {
+    return strtotime($b['created_at']) - strtotime($a['created_at']);
+});
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -187,6 +216,7 @@ $stmt->close();
                                 <th>End Location</th>
                                 <th>Fare (BDT)</th>
                                 <th>Date</th>
+                                <th>Type</th>
                                 <th>Receipt</th>
                             </tr>
                         </thead>
@@ -198,7 +228,14 @@ $stmt->close();
                                     <td><?php echo htmlspecialchars($receipt['end_location']); ?></td>
                                     <td><?php echo htmlspecialchars($receipt['fare']); ?></td>
                                     <td><?php echo htmlspecialchars($receipt['created_at']); ?></td>
-                                    <td><a href="receipts/<?php echo htmlspecialchars($receipt['transaction_id']); ?>.png" download class="btn btn-primary"><i class="fas fa-download"></i> Download</a></td>
+                                    <td><?php echo htmlspecialchars($receipt['type']); ?></td>
+                                    <td>
+                                        <?php if ($receipt['type'] == 'metro'): ?>
+                                            <a href="metro_generate_receipt.php?transaction_id=<?php echo htmlspecialchars($receipt['transaction_id']); ?>" download class="btn btn-primary"><i class="fas fa-download"></i> Download</a>
+                                        <?php elseif ($receipt['type'] == 'train'): ?>
+                                            <a href="train_generate_receipt.php?transaction_id=<?php echo htmlspecialchars($receipt['transaction_id']); ?>" download class="btn btn-primary"><i class="fas fa-download"></i> Download</a>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

@@ -13,7 +13,7 @@ $transaction_id = $_GET['transaction_id'];
 
 // Fetch transaction details
 $stmt = $conn2->prepare("SELECT t.*, tr.train_name, tr.start_point, tr.end_point, r.compartment_id, r.seat_number, r.reservation_date, tr.train_name 
-                         FROM transactions t
+                         FROM train_transactions t
                          JOIN reservations r ON t.train_id = r.train_id
                          JOIN trains tr ON r.train_id = tr.train_id
                          WHERE t.transaction_id = ?");

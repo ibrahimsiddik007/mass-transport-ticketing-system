@@ -15,11 +15,15 @@ if (!isset($_SESSION['user_id'])) {
 $_SESSION['payment_completed'] = false;
 $pdo = $conn3;
 
-// Get unique destinations for the dropdown
+// Get unique origins and destinations for the dropdown
+$origins_stmt = $pdo->query("SELECT DISTINCT origin FROM routes ORDER BY origin");
+$origins = $origins_stmt->fetch_all(MYSQLI_ASSOC);
+
 $destinations_stmt = $pdo->query("SELECT DISTINCT destination FROM routes ORDER BY destination");
 $destinations = $destinations_stmt->fetch_all(MYSQLI_ASSOC);
 
 // Initialize filters
+$origin_filter = isset($_GET['origin']) ? $_GET['origin'] : '';
 $destination_filter = isset($_GET['destination']) ? $_GET['destination'] : '';
 
 // Build the query with filters
@@ -29,6 +33,10 @@ $query = "
     JOIN buses b ON b.id = (SELECT id FROM buses WHERE r.id % 3 + 1 = buses.id LIMIT 1)
     WHERE 1=1
 ";
+
+if ($origin_filter) {
+    $query .= " AND r.origin = '$origin_filter'";
+}
 
 if ($destination_filter) {
     $query .= " AND r.destination = '$destination_filter'";
@@ -141,7 +149,18 @@ $routes = $stmt->fetch_all(MYSQLI_ASSOC);
     <div class="container">
         <form method="GET" class="mb-4">
             <div class="form-row">
-                <div class="form-group col-md-10">
+                <div class="form-group col-md-5">
+                    <label for="origin">Origin</label>
+                    <select id="origin" name="origin" class="form-control">
+                        <option value="">Choose...</option>
+                        <?php foreach ($origins as $origin): ?>
+                            <option value="<?php echo $origin['origin']; ?>" <?php if ($origin['origin'] == $origin_filter) echo 'selected'; ?>>
+                                <?php echo $origin['origin']; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="form-group col-md-5">
                     <label for="destination">Destination</label>
                     <select id="destination" name="destination" class="form-control">
                         <option value="">Choose...</option>
@@ -174,7 +193,7 @@ $routes = $stmt->fetch_all(MYSQLI_ASSOC);
                 <?php endforeach; ?>
             <?php else: ?>
                 <div class="col-12">
-                    <p class="text-center">No routes found for the selected destination.</p>
+                    <p class="text-center">No routes found for the selected origin and destination.</p>
                 </div>
             <?php endif; ?>
         </div>

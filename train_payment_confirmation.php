@@ -11,7 +11,7 @@ $transaction_id = $_SESSION['transaction_id'];
 
 // Fetch transaction details
 $stmt = $conn2->prepare("SELECT t.*, tr.train_name, tr.start_point, tr.end_point, r.compartment_id, r.seat_number, r.reservation_date, tr.train_name 
-                         FROM transactions t
+                         FROM train_transactions t
                          JOIN reservations r ON t.train_id = r.train_id
                          JOIN trains tr ON r.train_id = tr.train_id
                          WHERE t.transaction_id = ?");
@@ -51,6 +51,7 @@ if (!$transaction) {
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(0, 0, 0, 0.1);
+            max-width: 500px; /* Set max width for the card */
         }
         .card:hover {
             transform: scale(1.05);
@@ -96,6 +97,16 @@ if (!$transaction) {
             border-color: #9a67ea;
             transform: scale(1.05);
         }
+        .review-card {
+            background: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        body.dark-mode .review-card {
+            background: #2e2e2e; /* Solid dark background color */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -105,26 +116,36 @@ if (!$transaction) {
 <body>
     <?php include 'nav.php'; ?>
     <div class="container mt-5">
-        <div class="card">
-            <div class="card-body text-center">
-                <h3 class="card-title"><i class="fas fa-check-circle"></i> Payment Successful</h3>
-                <p class="card-text">Your payment has been successfully processed.</p>
-                <p class="card-text"><strong>Transaction ID:</strong> <?php echo $transaction['transaction_id']; ?></p>
-                <p class="card-text"><strong>User Name:</strong> <?php echo $_SESSION['user_name']; ?></p>
-                <p class="card-text"><strong>Train:</strong> <?php echo $transaction['train_name']; ?></p>
-                <p class="card-text"><strong>Start Point:</strong> <?php echo $transaction['start_point']; ?></p>
-                <p class="card-text"><strong>End Point:</strong> <?php echo $transaction['end_point']; ?></p>
-                <p class="card-text"><strong>Compartment Number:</strong> <?php echo $transaction['compartment_id']; ?></p>
-                <p class="card-text"><strong>Seat Numbers:</strong> <?php echo $transaction['seat_number']; ?></p>
-                <p class="card-text"><strong>Reservation Date:</strong> <?php echo $transaction['reservation_date']; ?></p>
-                <p class="card-text"><strong>Amount Paid:</strong> BDT <?php echo $transaction['amount']; ?></p>
-                <p class="card-text"><strong>Payment Time:</strong> <?php echo $transaction['payment_time']; ?></p>
-                <a href="train_generate_receipt.php?transaction_id=<?php echo $transaction['transaction_id']; ?>" class="btn btn-primary btn-block"><i class="fas fa-download"></i> Download Receipt</a>
-                <a href="train.php" class="btn btn-secondary btn-block"><i class="fas fa-arrow-left"></i> Back to Train</a>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h3 class="card-title"><i class="fas fa-check-circle"></i> Payment Successful</h3>
+                        <p class="card-text">Your payment has been successfully processed.</p>
+                        <p class="card-text"><strong>Transaction ID:</strong> <?php echo htmlspecialchars($transaction['transaction_id']); ?></p>
+                        <p class="card-text"><strong>User Name:</strong> <?php echo htmlspecialchars($_SESSION['user_name']); ?></p>
+                        <p class="card-text"><strong>Train:</strong> <?php echo htmlspecialchars($transaction['train_name']); ?></p>
+                        <p class="card-text"><strong>Start Point:</strong> <?php echo htmlspecialchars($transaction['start_point']); ?></p>
+                        <p class="card-text"><strong>End Point:</strong> <?php echo htmlspecialchars($transaction['end_point']); ?></p>
+                        <p class="card-text"><strong>Compartment Number:</strong> <?php echo htmlspecialchars($transaction['compartment_id']); ?></p>
+                        <p class="card-text"><strong>Seat Numbers:</strong> <?php echo htmlspecialchars($transaction['seat_number']); ?></p>
+                        <p class="card-text"><strong>Reservation Date:</strong> <?php echo htmlspecialchars($transaction['reservation_date']); ?></p>
+                        <p class="card-text"><strong>Amount Paid:</strong> BDT <?php echo htmlspecialchars($transaction['amount']); ?></p>
+                        <p class="card-text"><strong>Payment Time:</strong> <?php echo htmlspecialchars($transaction['payment_time']); ?></p>
+                        <a href="train_generate_receipt.php?transaction_id=<?php echo htmlspecialchars($transaction['transaction_id']); ?>" class="btn btn-primary btn-block"><i class="fas fa-download"></i> Download Receipt</a>
+                        <a href="train.php" class="btn btn-secondary btn-block"><i class="fas fa-arrow-left"></i> Back to Train</a>
+                    </div>
+                </div>
+                <div class="card review-card mt-4">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Like our service?</h5>
+                        <p class="card-text">Please leave a review and let us know your thoughts.</p>
+                        <a href="review.php" class="btn btn-success btn-block"><i class="fas fa-star"></i> Leave a Review</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
     <script>
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');

@@ -41,16 +41,30 @@ if (session_status() == PHP_SESSION_NONE) {
           });
         </script>
       </li>
-      <li class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'bus.php' ? 'active' : ''; ?>">
-        <a class="nav-link" href="bus.php" id="bus-link">Bus</a>
+      <li class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'bus_select_type.php' ? 'active' : ''; ?>">
+        <a class="nav-link" href="bus_select_type.php" id="bus-link">Bus</a>
         <script>
           document.getElementById('bus-link').addEventListener('click', function(event) {
             event.preventDefault();
             if (!<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>) {
-              localStorage.setItem('redirectURL', 'bus.php');
+              localStorage.setItem('redirectURL', 'bus_select_type.php');
               window.location.href = 'login.php';
             } else {
-              window.location.href = 'bus.php';
+              window.location.href = 'bus_select_type.php';
+            }
+          });
+        </script>
+      </li>
+      <li class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'chat.php' ? 'active' : ''; ?>">
+        <a class="nav-link" href="chat.php" id="chat-link">Live Chat</a>
+        <script>
+          document.getElementById('chat-link').addEventListener('click', function(event) {
+            event.preventDefault();
+            if (!<?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>) {
+              localStorage.setItem('redirectURL', 'chat.php');
+              window.location.href = 'login.php';
+            } else {
+              window.location.href = 'chat.php';
             }
           });
         </script>
@@ -60,8 +74,8 @@ if (session_status() == PHP_SESSION_NONE) {
       <?php if (isset($_SESSION['user_id'])): ?>
         <li class="nav-item">
           <a class="nav-link" href="profile.php">
-            <img src="<?php echo htmlspecialchars($_SESSION['profile_image']); ?>" alt="profile_image" class="profile-img">
-            Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?>
+            <img src="<?php echo isset($_SESSION['profile_image']) ? htmlspecialchars($_SESSION['profile_image']) : 'default_profile_image.png'; ?>" alt="profile_image" class="profile-img">
+            <?php echo htmlspecialchars($_SESSION['user_name']); ?>
           </a>
         </li>
         <li class="nav-item">
@@ -77,7 +91,7 @@ if (session_status() == PHP_SESSION_NONE) {
       <?php endif; ?>
       <?php if (basename($_SERVER['PHP_SELF']) == 'index.php'): ?>
         <li class="nav-item">
-          <button class="btn btn-secondary" id="theme-toggle">Toggle Theme</button>
+          <button class="btn btn-secondary" id="theme-toggle">Change Theme</button>
         </li>
       <?php endif; ?>
     </ul>

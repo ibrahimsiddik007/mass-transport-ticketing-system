@@ -1,5 +1,6 @@
 <?php
 session_start();
+date_default_timezone_set('Asia/Dhaka'); // Set your timezone
 include 'db.php'; // Include your database connection file
 
 if (!isset($_SESSION['user_id'])) {
@@ -53,6 +54,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     header('Location: payment_success.php?success=true');
     exit;
 }
+
+// Fetch transaction details
+if (isset($_SESSION['transaction_id'])) {
+    $transaction_id = $_SESSION['transaction_id'];
+    $stmt = $conn1->prepare("SELECT * FROM transactions WHERE transaction_id = ?");
+    $stmt->bind_param("s", $transaction_id);
+    $stmt->execute();
+    $transaction = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+} else {
+    header('Location: metro.php');
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -81,6 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(0, 0, 0, 0.1);
+            max-width: 500px; /* Set max width for the card */
         }
         .card:hover {
             transform: scale(1.05);
@@ -126,6 +141,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border-color: #9a67ea;
             transform: scale(1.05);
         }
+        .review-card {
+            background: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        body.dark-mode .review-card {
+            background: #2e2e2e; /* Solid dark background color */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -135,12 +160,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <?php include 'nav.php'; ?>
     <div class="container mt-5">
-        <div class="card">
-            <div class="card-body text-center">
-                <h3 class="card-title"><i class="fas fa-check-circle"></i> Payment Successful</h3>
-                <p class="card-text">Your payment has been successfully processed.</p>
-                <a href="generate_receipt.php" class="btn btn-primary btn-block"><i class="fas fa-download"></i> Download Receipt</a>
-                <a href="metro.php" class="btn btn-secondary btn-block"><i class="fas fa-arrow-left"></i> Back to Metro</a>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h3 class="card-title"><i class="fas fa-check-circle"></i> Payment Successful</h3>
+                        <p class="card-text">Your payment has been successfully processed.</p>
+                        <p class="card-text"><strong>Transaction ID:</strong> <?php echo htmlspecialchars($transaction['transaction_id']); ?></p>
+                        <p class="card-text"><strong>User Name:</strong> <?php echo htmlspecialchars($_SESSION['user_name']); ?></p>
+                        <p class="card-text"><strong>Start Location:</strong> <?php echo htmlspecialchars($transaction['start_location']); ?></p>
+                        <p class="card-text"><strong>End Location:</strong> <?php echo htmlspecialchars($transaction['end_location']); ?></p>
+                        <p class="card-text"><strong>Fare:</strong> BDT <?php echo htmlspecialchars($transaction['fare']); ?></p>
+                        <p class="card-text"><strong>Payment Time:</strong> <?php echo htmlspecialchars($transaction['created_at']); ?></p>
+                        <a href="metro_generate_receipt.php?transaction_id=<?php echo htmlspecialchars($transaction['transaction_id']); ?>" class="btn btn-primary btn-block"><i class="fas fa-download"></i> Download Receipt</a>
+                        <a href="metro.php" class="btn btn-secondary btn-block"><i class="fas fa-arrow-left"></i> Back to Metro</a>
+                    </div>
+                </div>
+                <div class="card review-card mt-4">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Like our service?</h5>
+                        <p class="card-text">Please leave a review and let us know your thoughts.</p>
+                        <a href="review.php" class="btn btn-success btn-block"><i class="fas fa-star"></i> Leave a Review</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -159,6 +201,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Note: Ensure there's an element with ID 'dark-mode-toggle' in nav.php or elsewhere
         document.getElementById('dark-mode-toggle')?.addEventListener('click', toggleDarkMode);
     </script>
-    <?php include 'footer.php'; ?>
 </body>
 </html>

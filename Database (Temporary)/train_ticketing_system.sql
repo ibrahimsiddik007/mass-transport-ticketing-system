@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 24, 2025 at 11:59 PM
+-- Generation Time: Mar 08, 2025 at 12:11 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -280,7 +280,19 @@ INSERT INTO `reservations` (`id`, `user_id`, `train_id`, `compartment_id`, `seat
 (277, 20, 1, 201, 15, '2025-02-26', '2025-02-24 21:48:50', 'paid', '2025-02-25 04:03:50'),
 (278, 20, 1, 201, 16, '2025-02-26', '2025-02-24 21:48:50', 'paid', '2025-02-25 04:03:50'),
 (279, 20, 1, 201, 17, '2025-02-26', '2025-02-24 21:48:50', 'paid', '2025-02-25 04:03:50'),
-(280, 20, 1, 201, 18, '2025-02-26', '2025-02-24 21:48:50', 'paid', '2025-02-25 04:03:50');
+(280, 20, 1, 201, 18, '2025-02-26', '2025-02-24 21:48:50', 'paid', '2025-02-25 04:03:50'),
+(284, 20, 1, 201, 1, '2025-03-06', '2025-03-04 16:56:43', 'paid', '2025-03-04 23:11:43'),
+(285, 20, 1, 201, 2, '2025-03-06', '2025-03-04 16:56:43', 'paid', '2025-03-04 23:11:43'),
+(286, 22, 11, 301, 1, '2025-03-20', '2025-03-07 18:56:53', 'paid', '2025-03-08 01:11:53'),
+(287, 22, 11, 301, 2, '2025-03-20', '2025-03-07 18:56:53', 'paid', '2025-03-08 01:11:53'),
+(288, 22, 19, 381, 1, '2025-03-26', '2025-03-07 19:03:53', 'paid', '2025-03-08 01:18:53'),
+(289, 22, 19, 381, 2, '2025-03-26', '2025-03-07 19:03:53', 'paid', '2025-03-08 01:18:53'),
+(290, 22, 19, 381, 3, '2025-03-26', '2025-03-07 19:03:53', 'paid', '2025-03-08 01:18:53'),
+(291, 22, 19, 381, 4, '2025-03-26', '2025-03-07 19:03:53', 'paid', '2025-03-08 01:18:53'),
+(292, 22, 11, 301, 3, '2025-03-20', '2025-03-07 19:20:54', 'paid', '2025-03-08 01:35:54'),
+(293, 22, 11, 301, 4, '2025-03-20', '2025-03-07 19:20:54', 'paid', '2025-03-08 01:35:54'),
+(294, 22, 11, 301, 5, '2025-03-20', '2025-03-07 19:20:54', 'paid', '2025-03-08 01:35:54'),
+(295, 22, 11, 301, 6, '2025-03-20', '2025-03-07 19:20:54', 'paid', '2025-03-08 01:35:54');
 
 -- --------------------------------------------------------
 
@@ -10376,10 +10388,10 @@ INSERT INTO `trains` (`train_id`, `train_name`, `start_point`, `end_point`, `dep
 -- --------------------------------------------------------
 
 --
--- Table structure for table `transactions`
+-- Table structure for table `train_transactions`
 --
 
-CREATE TABLE `transactions` (
+CREATE TABLE `train_transactions` (
   `transaction_id` varchar(255) NOT NULL,
   `user_id` int(11) NOT NULL,
   `amount` int(11) NOT NULL,
@@ -10391,15 +10403,19 @@ CREATE TABLE `transactions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `transactions`
+-- Dumping data for table `train_transactions`
 --
 
-INSERT INTO `transactions` (`transaction_id`, `user_id`, `amount`, `compartment_ID`, `train_id`, `Seats`, `payment_time`, `Departure_Time`) VALUES
+INSERT INTO `train_transactions` (`transaction_id`, `user_id`, `amount`, `compartment_ID`, `train_id`, `Seats`, `payment_time`, `Departure_Time`) VALUES
 ('txn67bcc982ccbb7', 20, 500, 201, 1, '1, 2, 3', '2025-02-24 20:33:22', '07:00:00'),
 ('txn67bcdf10998d2', 20, 500, 201, 1, '4, 5, 6', '2025-02-24 22:05:20', '07:00:00'),
 ('txn_67bce35554bff', 20, 500, 201, 1, '7, 8, 9', '0000-00-00 00:00:00', '07:00:00'),
 ('txn_67bce4318442f', 20, 500, 201, 1, '10, 11, 12', '0000-00-00 00:00:00', '07:00:00'),
-('txn_67bce94844d1a', 20, 500, 201, 1, '13, 14, 15, 16, 17, 18', '2025-02-24 22:48:56', '07:00:00');
+('txn_67bce94844d1a', 20, 500, 201, 1, '13, 14, 15, 16, 17, 18', '2025-02-24 22:48:56', '07:00:00'),
+('txn_67c730ed45a35', 20, 500, 201, 1, '1, 2', '2025-03-04 17:57:17', '07:00:00'),
+('txn_67cb417d5e01b', 22, 900, 301, 11, '1, 2', '2025-03-07 19:57:01', '09:00:00'),
+('txn_fiZUDOH', 22, 650, 381, 19, '1, 2, 3, 4', '2025-03-07 20:04:01', '13:00:00'),
+('txn_GLaQrsi', 22, 900, 301, 11, '3, 4, 5, 6', '2025-03-07 20:20:59', '09:00:00');
 
 --
 -- Indexes for dumped tables
@@ -10438,9 +10454,9 @@ ALTER TABLE `trains`
   ADD PRIMARY KEY (`train_id`);
 
 --
--- Indexes for table `transactions`
+-- Indexes for table `train_transactions`
 --
-ALTER TABLE `transactions`
+ALTER TABLE `train_transactions`
   ADD PRIMARY KEY (`transaction_id`);
 
 --
@@ -10457,7 +10473,7 @@ ALTER TABLE `compartments`
 -- AUTO_INCREMENT for table `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=284;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=296;
 
 --
 -- AUTO_INCREMENT for table `seats`

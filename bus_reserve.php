@@ -71,30 +71,12 @@ if (isset($_POST['reserve'])) {
             $just_reserved = true; // Show payment button
         }
     }
-}
 
-// If user clicks "Confirm Payment"
-if (isset($_POST['confirm_payment'])) {
-    $seat_numbers = $_POST['confirm_seat_numbers'];
-
-    foreach ($seat_numbers as $seat_number) {
-        // Confirm the reservation
-        $confirm_query = "UPDATE reservations 
-                          SET is_confirmed = 1 
-                          WHERE route_id = $route_id AND seat_number = $seat_number";
-        mysqli_query($conn3, $confirm_query);
-
-        // Get the reservation time
-        $time_query = "SELECT reserved_at 
-                       FROM reservations 
-                       WHERE route_id = $route_id AND seat_number = $seat_number";
-        $time_result = mysqli_query($conn3, $time_query);
-        $start_time = mysqli_fetch_assoc($time_result)['reserved_at'];
-        $end_time = date('Y-m-d H:i:s', strtotime($start_time . ' + 5 hours'));
-
-        $message = "Paid {$route['fare']} BDT for seat $seat_number! Travel between $start_time and $end_time.";
-        $message_type = "success";
-    }
+    // Redirect to reservation pending page
+    $_SESSION['reserved_seats'] = $seat_numbers;
+    $_SESSION['route_id'] = $route_id;
+    header("Location: bus_reservation_pending.php");
+    exit;
 }
 
 // Set up seat layout
@@ -257,8 +239,7 @@ $rows = ceil($total_seats / ($seats_per_side * 2));
                         </div>
                     </div>
                     <div class="form-group">
-                        <input type="text" name="user_name" class="form-control" placeholder="Your Name" required>
-                    </div>
+
                     <button type="submit" name="reserve" class="btn btn-primary btn-block">Book Seat</button>
                 </form>
 

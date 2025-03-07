@@ -5,7 +5,7 @@ include 'db.php'; // Include your database connection file
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head>  
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mass Transport Ticketing System</title>
@@ -25,11 +25,19 @@ include 'db.php'; // Include your database connection file
             --notice-bg-dark: #444444;
             --carousel-caption-bg-dark: rgba(255, 255, 255, 0.7);
             --carousel-caption-text-dark: #000000;
+            --reviews-bg-dark: #1e1e1e;
+            --contact-bg-dark: #1e1e1e;
+            --input-bg-dark: #3a3a3a;
+            --input-text-dark: #e0e0e0;
+            --input-border-dark: #555555;
+            --section-bg-light-1: #f8f9fa;
+            --section-bg-light-2: #e9ecef;
+            --section-bg-dark-1: #343a40;
+            --section-bg-dark-2: #495057;
         }
 
         body {
             color: #fff;
-            animation: fadeIn 3s ease-in-out;
         }
 
         body {
@@ -89,12 +97,12 @@ include 'db.php'; // Include your database connection file
         }
 
         .card {
-            transition: transform 0.9s, margin 0.9s;
+            transition: transform 0.5s, margin 0.5s;
         }
 
         .card:hover {
-            transform: scale(1.3);
-            transition: transform 0.9s;
+            transform: scale(1.05);
+            transition: transform 0.3s;
             margin: 10px;
         }
 
@@ -112,6 +120,54 @@ include 'db.php'; // Include your database connection file
             background-color: var(--footer-bg-dark);
             color: var(--text-dark);
         }
+
+        .reviews-section {
+            background-color: var(--section-bg-light-1);
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .dark-mode .reviews-section {
+            background-color: var(--section-bg-dark-1);
+        }
+
+        .contact-section {
+            background-color: var(--section-bg-light-2);
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .dark-mode .contact-section {
+            background-color: var(--section-bg-dark-2);
+        }
+
+        .dark-mode .form-control {
+            background-color: var(--input-bg-dark);
+            color: var(--input-text-dark);
+            border-color: var(--input-border-dark);
+        }
+
+        .dark-mode .form-control::placeholder {
+            color: var(--input-text-dark);
+        }
+
+        .form-group i {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 10px;
+            color: #aaa;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-control {
+            padding-left: 30px;
+        }
+
+        .alert {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -125,7 +181,7 @@ include 'db.php'; // Include your database connection file
     </div>
 
     <!-- Image Slider -->
-    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="2000">
         <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -205,11 +261,98 @@ include 'db.php'; // Include your database connection file
         </div>
     </section>
 
+    <!-- User Reviews Section -->
+    <section class="py-5 reviews-section">
+        <div class="container">
+            <h2 class="text-center mb-4">See what our users say about our service</h2>
+            <div class="row">
+                <?php
+                $query = "SELECT reviews.*, users.name FROM reviews JOIN users ON reviews.user_id = users.id ORDER BY reviews.created_at DESC LIMIT 5";
+                $result = mysqli_query($conn1, $query);
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $formatted_date = date('Y-m-d h:i A', strtotime($row['created_at']));
+                    echo '<div class="col-md-4">';
+                    echo '<div class="card mb-4 shadow-sm h-100">';
+                    echo '<div class="card-body">';
+                    echo '<h5 class="card-title"><i class="fas fa-user"></i> ' . htmlspecialchars($row['name']) . '</h5>';
+                    echo '<p class="card-text">' . htmlspecialchars($row['comment']) . '</p>';
+                    echo '<p class="card-text"><small class="text-muted"><i class="fas fa-clock"></i> ' . htmlspecialchars($formatted_date) . '</small></p>';
+                    echo '</div>';
+                    echo '</div>';
+                    echo '</div>';
+                }
+                ?>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section class="py-5 contact-section">
+        <div class="container">
+            <h2 class="text-center mb-4">Contact Us</h2>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="alert alert-success" role="alert" id="successMessage">
+                        Your message was sent successfully!
+                    </div>
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-body">
+                            <form id="contactForm">
+                                <div class="form-group">
+                                    <i class="fas fa-user"></i>
+                                    <label for="name">Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <i class="fas fa-envelope"></i>
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <i class="fas fa-phone"></i>
+                                    <label for="phone">Phone Number</label>
+                                    <input type="text" class="form-control" id="phone" name="phone" required>
+                                </div>
+                                <div class="form-group">
+                                    <i class="fas fa-comment"></i>
+                                    <label for="message">Message</label>
+                                    <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#contactForm').on('submit', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: 'contact_process.php',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        if (response.trim() === 'success') {
+                            $('#successMessage').show();
+                            $('#contactForm')[0].reset();
+                        } else {
+                            alert('There was an error sending your message. Please try again.');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 
+    <?php include 'footer.php'; ?>
     
 </body>
 </html>

@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $update_stmt->execute();
 
         // Insert transaction details into transactions table
-        $transaction_id = 'txn_' . uniqid(); // Generate a unique transaction ID with prefix
+        $transaction_id = 'txn_' .substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 7);
         $payment_time = date('Y-m-d H:i:s'); // Get the current date and time
         $amount = $reservation['fare'];
         $compartment_ID = $reservation['compartment_id'];
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $seats = $seat_numbers_str;
         $departure_time = $reservation['departure_time'];
 
-        $insert_stmt = $conn2->prepare("INSERT INTO transactions (transaction_id, user_id, amount, compartment_ID, train_ID, seats, payment_time, departure_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $insert_stmt = $conn2->prepare("INSERT INTO train_transactions (transaction_id, user_id, amount, compartment_ID, train_ID, seats, payment_time, departure_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $insert_stmt->bind_param("siiiisss", $transaction_id, $user_id, $amount, $compartment_ID, $train_id, $seats, $payment_time, $departure_time);
         $insert_stmt->execute();
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 25, 2025 at 12:00 AM
+-- Generation Time: Mar 08, 2025 at 12:10 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,19 +24,86 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `stations`
+-- Table structure for table `admin_users`
 --
 
-CREATE TABLE `stations` (
+CREATE TABLE `admin_users` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admin_users`
+--
+
+INSERT INTO `admin_users` (`id`, `username`, `password`) VALUES
+(1, '2211632', 'ibrahim');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chat_messages`
+--
+
+CREATE TABLE `chat_messages` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_admin` tinyint(1) DEFAULT 0,
+  `is_read` tinyint(1) DEFAULT 0,
+  `name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `chat_messages`
+--
+
+INSERT INTO `chat_messages` (`id`, `user_id`, `message`, `created_at`, `is_admin`, `is_read`, `name`) VALUES
+(1, 19, 'hello', '2025-03-07 23:09:33', 0, 1, 'Faiyan Islam Swapnil'),
+(2, 19, 'hi', '2025-03-07 23:09:49', 1, 0, 'system');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `contacts`
+--
+
+CREATE TABLE `contacts` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `phone` varchar(20) NOT NULL,
+  `message` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `contacts`
+--
+
+INSERT INTO `contacts` (`id`, `name`, `email`, `phone`, `message`, `created_at`) VALUES
+(1, 'MD Ibrahim Siddik', 'ibrahimsiddik007@gmail.com', '01601750278', 'How can I avail the service?', '2025-03-07 15:37:59'),
+(2, 'MD Ibrahim Siddik', 'ibrahimsiddik007@gmail.com', '01601750278', 'Testing purpose', '2025-03-07 15:40:19'),
+(3, 'MD Ibrahim Siddik', 'ibrahimsiddik007@gmail.com', '01601750278', 'test', '2025-03-07 15:48:09');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `metro_stations`
+--
+
+CREATE TABLE `metro_stations` (
   `id` int(11) NOT NULL,
   `s_name` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `stations`
+-- Dumping data for table `metro_stations`
 --
 
-INSERT INTO `stations` (`id`, `s_name`) VALUES
+INSERT INTO `metro_stations` (`id`, `s_name`) VALUES
 (1, 'Uttara_North'),
 (2, 'Uttara_Center'),
 (3, 'Uttara_South'),
@@ -53,6 +120,29 @@ INSERT INTO `stations` (`id`, `s_name`) VALUES
 (14, 'Dhaka_University'),
 (15, 'Secretariat'),
 (16, 'Motijheel');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reviews`
+--
+
+CREATE TABLE `reviews` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `rating` int(11) NOT NULL CHECK (`rating` between 1 and 5),
+  `comment` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `reviews`
+--
+
+INSERT INTO `reviews` (`id`, `user_id`, `rating`, `comment`, `created_at`) VALUES
+(1, 22, 4, 'The service was good.', '2025-03-07 14:45:11'),
+(2, 22, 4, 'test', '2025-03-07 15:57:28'),
+(3, 22, 3, 'testing time zone', '2025-03-07 21:01:16');
 
 -- --------------------------------------------------------
 
@@ -334,13 +424,26 @@ CREATE TABLE `transactions` (
 --
 
 INSERT INTO `transactions` (`transaction_id`, `user_id`, `start_location`, `end_location`, `fare`, `status`, `created_at`) VALUES
+('txn_31FfJXN', 22, 'Pallabi', 'Farmgate', 63.00, '', '2025-03-04 17:47:59'),
 ('txn_53qmAby', 20, 'Uttara_South', 'Dhaka_University', 17.00, '', '2025-02-24 17:15:59'),
 ('txn_5pD37rO', 20, 'Uttara_South', 'Dhaka_University', 17.00, '', '2025-02-24 17:09:17'),
+('txn_AgKetL9', 22, 'Pallabi', 'Dhaka_University', 59.00, '', '2025-03-07 20:56:48'),
+('txn_Bb6tRom', 22, 'Uttara_South', 'Mirpur_10', 52.00, '', '2025-03-04 12:34:34'),
+('txn_dwyFT6Q', 22, 'Uttara_South', 'Mirpur_11', 57.00, '', '2025-03-04 12:38:30'),
 ('txn_Er1qnBH', 20, 'Uttara_Center', 'Shahbagh', 58.00, '', '2025-02-24 17:00:47'),
+('txn_gw9yfqT', 22, 'Kazi_Para', 'Secretariat', 98.00, '', '2025-03-07 21:00:55'),
 ('txn_H3Jrtmh', 20, 'Uttara_South', 'Dhaka_University', 17.00, '', '2025-02-24 17:07:41'),
 ('txn_HZVKjOm', 20, 'Uttara_Center', 'Dhaka_University', 15.00, '', '2025-02-24 17:06:35'),
 ('txn_kGrmNI1', 20, 'Uttara_Center', 'Shahbagh', 58.00, '', '2025-02-24 17:06:05'),
-('txn_qvQi8Ib', 20, 'Uttara_South', 'Dhaka_University', 17.00, '', '2025-02-24 17:10:52');
+('txn_MGmYKTl', 20, 'Uttara_Center', 'Pallabi', 78.00, '', '2025-03-04 11:55:59'),
+('txn_qIeMSvn', 22, 'Uttara_Center', 'ShewraPara', 56.00, '', '2025-03-04 12:11:34'),
+('txn_qvQi8Ib', 20, 'Uttara_South', 'Dhaka_University', 17.00, '', '2025-02-24 17:10:52'),
+('txn_sHhundK', 22, 'Mirpur_11', 'Secretariat', 27.00, '', '2025-03-07 19:25:36'),
+('txn_TZjKkpi', 22, 'Uttara_North', 'Bijoy_Sharani', 43.00, '', '2025-03-06 13:08:33'),
+('txn_wYj10Qu', 22, 'Bijoy_Sharani', 'Shahbagh', 64.00, '', '2025-03-04 12:47:19'),
+('txn_XaFpGi6', 22, 'Uttara_North', 'Kazi_Para', 33.00, '', '2025-03-06 13:07:44'),
+('txn_ywWz8S4', 22, 'Agargaon', 'Dhaka_University', 55.00, '', '2025-03-04 12:45:28'),
+('txn_Zgk4ceb', 22, 'Uttara_South', 'Dhaka_University', 17.00, '', '2025-03-07 19:15:20');
 
 -- --------------------------------------------------------
 
@@ -365,17 +468,43 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `email`, `password`, `google_id`, `name`, `profile_image`, `phone`, `Address`) VALUES
 (19, 'faiyanswapnil@gmail.com', '$2y$10$D5ayv7Y7C.p5RCpkmIyc4Om7nbDBPZmQdybmoVuHR/zRHSpQHdaXO', NULL, 'Faiyan Islam Swapnil', 'uploaded_profile_images/1f0e3dad99908345f7439f8ffabdffc4.jpg', '01711111111', 'Thanar Mor'),
-(20, 'ibrahimsiddik007@gmail.com', '', '114164509074598760418', 'Ibrahim', 'uploaded_profile_images/98f13708210194c475687be6106a3b84.jpg', '01700000000', 'Dhaka,Bashundhara R/A,House-28');
+(22, 'ibrahimsiddik007@gmail.com', '', '114164509074598760418', 'Ibrahim', 'uploaded_profile_images/b6d767d2f8ed5d21a44b0e5886680cb9.jpg', '01700000000', 'Dhaka,Bashundhara R/A,House-28');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `stations`
+-- Indexes for table `admin_users`
 --
-ALTER TABLE `stations`
+ALTER TABLE `admin_users`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `chat_messages`
+--
+ALTER TABLE `chat_messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `contacts`
+--
+ALTER TABLE `contacts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `metro_stations`
+--
+ALTER TABLE `metro_stations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `reviews`
+--
+ALTER TABLE `reviews`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `ticket_routes`
@@ -401,10 +530,34 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `stations`
+-- AUTO_INCREMENT for table `admin_users`
 --
-ALTER TABLE `stations`
+ALTER TABLE `admin_users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `chat_messages`
+--
+ALTER TABLE `chat_messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `contacts`
+--
+ALTER TABLE `contacts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `metro_stations`
+--
+ALTER TABLE `metro_stations`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+
+--
+-- AUTO_INCREMENT for table `reviews`
+--
+ALTER TABLE `reviews`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `ticket_routes`
@@ -416,7 +569,23 @@ ALTER TABLE `ticket_routes`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `chat_messages`
+--
+ALTER TABLE `chat_messages`
+  ADD CONSTRAINT `chat_messages_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `reviews`
+--
+ALTER TABLE `reviews`
+  ADD CONSTRAINT `reviews_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
