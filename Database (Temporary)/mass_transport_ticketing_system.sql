@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 08, 2025 at 12:10 AM
+-- Generation Time: Mar 09, 2025 at 01:03 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -62,7 +62,9 @@ CREATE TABLE `chat_messages` (
 
 INSERT INTO `chat_messages` (`id`, `user_id`, `message`, `created_at`, `is_admin`, `is_read`, `name`) VALUES
 (1, 19, 'hello', '2025-03-07 23:09:33', 0, 1, 'Faiyan Islam Swapnil'),
-(2, 19, 'hi', '2025-03-07 23:09:49', 1, 0, 'system');
+(2, 19, 'hi', '2025-03-07 23:09:49', 1, 0, 'system'),
+(3, 22, 'hello', '2025-03-08 23:14:32', 0, 0, 'Ibrahim'),
+(4, 22, 'hii', '2025-03-08 23:24:58', 1, 0, 'system');
 
 -- --------------------------------------------------------
 
@@ -86,7 +88,31 @@ CREATE TABLE `contacts` (
 INSERT INTO `contacts` (`id`, `name`, `email`, `phone`, `message`, `created_at`) VALUES
 (1, 'MD Ibrahim Siddik', 'ibrahimsiddik007@gmail.com', '01601750278', 'How can I avail the service?', '2025-03-07 15:37:59'),
 (2, 'MD Ibrahim Siddik', 'ibrahimsiddik007@gmail.com', '01601750278', 'Testing purpose', '2025-03-07 15:40:19'),
-(3, 'MD Ibrahim Siddik', 'ibrahimsiddik007@gmail.com', '01601750278', 'test', '2025-03-07 15:48:09');
+(3, 'MD Ibrahim Siddik', 'ibrahimsiddik007@gmail.com', '01601750278', 'test', '2025-03-07 15:48:09'),
+(4, 'Arafat', 'arafat@gmail.com', '01711111111', 'Testing', '2025-03-08 18:23:49');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `demo_accounts`
+--
+
+CREATE TABLE `demo_accounts` (
+  `id` int(11) NOT NULL,
+  `account_type` varchar(255) NOT NULL,
+  `account_number` varchar(20) NOT NULL,
+  `pin` varchar(10) NOT NULL,
+  `balance` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `demo_accounts`
+--
+
+INSERT INTO `demo_accounts` (`id`, `account_type`, `account_number`, `pin`, `balance`) VALUES
+(1, 'bkash', '01601750278', '1234', 199700.00),
+(2, 'rocket', '01601750278', '1234', 19980.00),
+(3, 'card', '12345678', '123', 19990.00);
 
 -- --------------------------------------------------------
 
@@ -132,17 +158,17 @@ CREATE TABLE `reviews` (
   `user_id` int(11) NOT NULL,
   `rating` int(11) NOT NULL CHECK (`rating` between 1 and 5),
   `comment` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `display_order` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `reviews`
 --
 
-INSERT INTO `reviews` (`id`, `user_id`, `rating`, `comment`, `created_at`) VALUES
-(1, 22, 4, 'The service was good.', '2025-03-07 14:45:11'),
-(2, 22, 4, 'test', '2025-03-07 15:57:28'),
-(3, 22, 3, 'testing time zone', '2025-03-07 21:01:16');
+INSERT INTO `reviews` (`id`, `user_id`, `rating`, `comment`, `created_at`, `display_order`) VALUES
+(1, 22, 4, 'The service was good.', '2025-03-07 14:45:11', 0),
+(2, 22, 4, 'test', '2025-03-07 15:57:28', 1);
 
 -- --------------------------------------------------------
 
@@ -494,6 +520,12 @@ ALTER TABLE `contacts`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `demo_accounts`
+--
+ALTER TABLE `demo_accounts`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `metro_stations`
 --
 ALTER TABLE `metro_stations`
@@ -539,12 +571,18 @@ ALTER TABLE `admin_users`
 -- AUTO_INCREMENT for table `chat_messages`
 --
 ALTER TABLE `chat_messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `contacts`
 --
 ALTER TABLE `contacts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `demo_accounts`
+--
+ALTER TABLE `demo_accounts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
