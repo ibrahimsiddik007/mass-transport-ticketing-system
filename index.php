@@ -267,7 +267,7 @@ include 'db.php'; // Include your database connection file
             <h2 class="text-center mb-4">See what our users say about our service</h2>
             <div class="row">
                 <?php
-                $query = "SELECT reviews.*, users.name FROM reviews JOIN users ON reviews.user_id = users.id ORDER BY reviews.created_at DESC LIMIT 5";
+                $query = "SELECT reviews.*, users.name FROM reviews JOIN users ON reviews.user_id = users.id ORDER BY reviews.display_order ASC LIMIT 5";
                 $result = mysqli_query($conn1, $query);
                 while ($row = mysqli_fetch_assoc($result)) {
                     $formatted_date = date('Y-m-d h:i A', strtotime($row['created_at']));
@@ -290,6 +290,7 @@ include 'db.php'; // Include your database connection file
     <section class="py-5 contact-section">
         <div class="container">
             <h2 class="text-center mb-4">Contact Us</h2>
+            <p class="text-center">We are always ready to hear from you</p>
             <div class="row justify-content-center">
                 <div class="col-md-6">
                     <div class="alert alert-success" role="alert" id="successMessage">

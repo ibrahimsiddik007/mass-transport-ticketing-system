@@ -5,27 +5,42 @@ include 'db.php'; // Include your database connection file
 // Check if the user is not logged in
 if (!isset($_SESSION['user_id'])) {
     if (!isset($_SESSION['redirect_to'])) {
-        $_SESSION['redirect_to'] = 'bus_select_type.php';
+        $_SESSION['redirect_to'] = 'bus_selected_local.php';
     }
     header('Location: login.php');
     exit;
 }
 
+// Check if origin and destination are set
+if (!isset($_POST['origin']) || !isset($_POST['destination'])) {
+    header('Location: bus_select_local_route.php');
+    exit;
+}
 
-// Clear the payment completed flag
-unset($_SESSION['payment_completed']);
+$origin = $_POST['origin'];
+$destination = $_POST['destination'];
 
+// Fetch buses based on the selected origin and destination
+$query = "SELECT * FROM local_buses WHERE origin = ? AND destination = ?";
+$stmt = $conn3->prepare($query);
+$stmt->bind_param("ss", $origin, $destination);
+$stmt->execute();
+$result = $stmt->get_result();
 
+$buses = [];
+while ($row = $result->fetch_assoc()) {
+    $buses[] = $row;
+}
+
+$_SESSION['payment_completed'] = false;
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Bus Type - Mass Transport Ticketing System</title>
+    <title>Select Bus - Mass Transport Ticketing System</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -56,6 +71,7 @@ unset($_SESSION['payment_completed']);
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 300px; /* Make the card smaller */
         }
         body.dark-mode .card {
             background: rgba(18, 18, 18, 0.5);
@@ -100,52 +116,57 @@ unset($_SESSION['payment_completed']);
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        .icon {
+            font-size: 50px;
+            color: #007bff;
+            animation: bounce 2s infinite;
+        }
+        body.dark-mode .icon {
+            color: #bb86fc;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
     </style>
 </head>
 <body>
     <?php include 'nav.php'; ?>
     <div class="container">
-        <h1>Select Bus Type</h1>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Long Route Across Bangladesh</h5>
-                        <a href="long_route.php" class="btn btn-primary">Select</a>
+        <h1>Select Bus</h1>
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-bus icon"></i>
+                <form id="busForm" method="POST" action="bus_payment_gateway.php">
+                    <div class="form-group">
+                        <label for="bus">Select Bus:</label>
+                        <select class="form-control" id="bus" name="bus" required>
+                            <option value="">Select Bus</option>
+                            <?php foreach ($buses as $bus) { ?>
+                                <option value="<?php echo htmlspecialchars($bus['id']); ?>"><?php echo htmlspecialchars($bus['bus_name']); ?></option>
+                            <?php } ?>
+                        </select>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Inside Dhaka Local Routes</h5>
-                        <a href="bus_select_local_route.php" class="btn btn-primary">Select</a>
+                    <div class="form-group">
+                        <label for="payment_gateway">Select Payment Gateway:</label>
+                        <select class="form-control" id="payment_gateway" name="payment_gateway" required>
+                            <option value="">Select Payment Gateway</option>
+                            <option value="bkash">bKash</option>
+                            <option value="rocket">Rocket</option>
+                            <option value="card">Card Payment</option>
+                        </select>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">Travel across different cities in Bangladesh.
-                            Currently available routes are: 
-                            <ul>
-                                <li>Dhaka to Chittagong</li>
-                                <li>Dhaka to Sylhet</li>
-                                <li>Dhaka to Khulna</li>
-                                <li>Dhaka to Rajshahi</li>
-                            </ul>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">Travel within Dhaka city. No route-based ticketing. Customers will be able to get into any bus to their desired destination within 3 hours of purchase.</p>
-                    </div>
-                </div>
+                    <input type="hidden" name="origin" value="<?php echo htmlspecialchars($origin); ?>">
+                    <input type="hidden" name="destination" value="<?php echo htmlspecialchars($destination); ?>">
+                    <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+                </form>
             </div>
         </div>
     </div>

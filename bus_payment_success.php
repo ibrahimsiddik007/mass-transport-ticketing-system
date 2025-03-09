@@ -4,28 +4,48 @@ include 'db.php'; // Include your database connection file
 
 // Check if the user is not logged in
 if (!isset($_SESSION['user_id'])) {
-    if (!isset($_SESSION['redirect_to'])) {
-        $_SESSION['redirect_to'] = 'bus_select_type.php';
-    }
     header('Location: login.php');
     exit;
 }
 
+$transaction_id = $_GET['transaction_id'];
 
-// Clear the payment completed flag
-unset($_SESSION['payment_completed']);
+// Fetch transaction details
+$query = "SELECT * FROM bus_transactions WHERE transaction_id = ?";
+$stmt = $conn3->prepare($query);
+$stmt->bind_param("s", $transaction_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$transaction = $result->fetch_assoc();
+
+if (!$transaction) {
+    echo "Transaction not found.";
+    exit;
+}
+
+// Generate QR code
+require 'phpqrcode/qrlib.php';
+
+$qrContent = 'Transaction ID: ' . $transaction['transaction_id'] . "\n" .
+             'Name: ' . $_SESSION['user_name'] . "\n" .
+             'Fare: ' . $transaction['amount'] . " BDT\n" .
+             'Origin: ' . $transaction['origin'] . "\n" .
+             'Destination: ' . $transaction['destination'] . "\n" .
+             'Bus: ' . $transaction['bus_name'];
+
+$qrFilePath = 'qrcodes/' . $transaction_id . '.png';
+QRcode::png($qrContent, $qrFilePath, QR_ECLEVEL_L, 5);
 
 
+$_SESSION['payment_completed'] = true;
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Bus Type - Mass Transport Ticketing System</title>
+    <title>Payment Success - Mass Transport Ticketing System</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -56,6 +76,7 @@ unset($_SESSION['payment_completed']);
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 300px; /* Make the card smaller */
         }
         body.dark-mode .card {
             background: rgba(18, 18, 18, 0.5);
@@ -100,52 +121,41 @@ unset($_SESSION['payment_completed']);
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        .icon {
+            font-size: 50px;
+            color: #007bff;
+            animation: bounce 2s infinite;
+        }
+        body.dark-mode .icon {
+            color: #bb86fc;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
     </style>
 </head>
 <body>
     <?php include 'nav.php'; ?>
     <div class="container">
-        <h1>Select Bus Type</h1>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Long Route Across Bangladesh</h5>
-                        <a href="long_route.php" class="btn btn-primary">Select</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Inside Dhaka Local Routes</h5>
-                        <a href="bus_select_local_route.php" class="btn btn-primary">Select</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">Travel across different cities in Bangladesh.
-                            Currently available routes are: 
-                            <ul>
-                                <li>Dhaka to Chittagong</li>
-                                <li>Dhaka to Sylhet</li>
-                                <li>Dhaka to Khulna</li>
-                                <li>Dhaka to Rajshahi</li>
-                            </ul>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">Travel within Dhaka city. No route-based ticketing. Customers will be able to get into any bus to their desired destination within 3 hours of purchase.</p>
-                    </div>
-                </div>
+        <h1>Payment Successful</h1>
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-check-circle icon"></i>
+                <p class="card-text">Transaction ID: <?php echo htmlspecialchars($transaction['transaction_id']); ?></p>
+                <p class="card-text">Bus: <?php echo htmlspecialchars($transaction['bus_name']); ?></p>
+                <p class="card-text">Fare: <?php echo htmlspecialchars($transaction['amount']); ?> BDT</p>
+                <p class="card-text">Origin: <?php echo htmlspecialchars($transaction['origin']); ?></p>
+                <p class="card-text">Destination: <?php echo htmlspecialchars($transaction['destination']); ?></p>
+                <img src="qrcodes/<?php echo htmlspecialchars($transaction['transaction_id']); ?>.png" alt="QR Code">
+                <a href="bus_download_receipt.php?transaction_id=<?php echo htmlspecialchars($transaction['transaction_id']); ?>" class="btn btn-primary">Download Receipt</a>
             </div>
         </div>
     </div>
@@ -164,6 +174,16 @@ unset($_SESSION['payment_completed']);
             if (localStorage.getItem('dark-mode') === 'true') {
                 document.body.classList.add('dark-mode');
             }
+
+            // Prevent going back to the previous page
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }
+
+            // Redirect to bus_select_local_route if user tries to go back
+            window.addEventListener('popstate', function(event) {
+                window.location.href = 'bus_select_type.php';
+            });
         });
 
         // Note: Ensure there's an element with ID 'dark-mode-toggle' in nav.php or elsewhere

@@ -5,27 +5,29 @@ include 'db.php'; // Include your database connection file
 // Check if the user is not logged in
 if (!isset($_SESSION['user_id'])) {
     if (!isset($_SESSION['redirect_to'])) {
-        $_SESSION['redirect_to'] = 'bus_select_type.php';
+        $_SESSION['redirect_to'] = 'bus_select_local_route.php';
     }
     header('Location: login.php');
     exit;
 }
 
+// Fetch all origins
+$query = "SELECT DISTINCT origin FROM local_routes";
+$result = $conn3->query($query);
+$origins = [];
+while ($row = $result->fetch_assoc()) {
+    $origins[] = $row['origin'];
+}
 
-// Clear the payment completed flag
-unset($_SESSION['payment_completed']);
-
-
+$_SESSION['payment_completed'] = false;
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Bus Type - Mass Transport Ticketing System</title>
+    <title>Select Local Route - Mass Transport Ticketing System</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -56,6 +58,7 @@ unset($_SESSION['payment_completed']);
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 300px; /* Make the card smaller */
         }
         body.dark-mode .card {
             background: rgba(18, 18, 18, 0.5);
@@ -100,52 +103,52 @@ unset($_SESSION['payment_completed']);
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        .icon {
+            font-size: 50px;
+            color: #007bff;
+            animation: bounce 2s infinite;
+        }
+        body.dark-mode .icon {
+            color: #bb86fc;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
     </style>
 </head>
 <body>
     <?php include 'nav.php'; ?>
     <div class="container">
-        <h1>Select Bus Type</h1>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Long Route Across Bangladesh</h5>
-                        <a href="long_route.php" class="btn btn-primary">Select</a>
+        <h1>Select Route (inside Dhaka only)</h1>
+        <div class="card">
+            <div class="card-body text-center">
+                <i class="fas fa-bus icon"></i>
+                <form id="routeForm" method="POST" action="bus_selected_local.php">
+                    <div class="form-group">
+                        <label for="origin">Select Origin:</label>
+                        <select class="form-control" id="origin" name="origin" required>
+                            <option value="">Select Origin</option>
+                            <?php foreach ($origins as $origin) { ?>
+                                <option value="<?php echo htmlspecialchars($origin); ?>"><?php echo htmlspecialchars($origin); ?></option>
+                            <?php } ?>
+                        </select>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Inside Dhaka Local Routes</h5>
-                        <a href="bus_select_local_route.php" class="btn btn-primary">Select</a>
+                    <div class="form-group">
+                        <label for="destination">Select Destination:</label>
+                        <select class="form-control" id="destination" name="destination" required>
+                            <option value="">Select Destination</option>
+                        </select>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">Travel across different cities in Bangladesh.
-                            Currently available routes are: 
-                            <ul>
-                                <li>Dhaka to Chittagong</li>
-                                <li>Dhaka to Sylhet</li>
-                                <li>Dhaka to Khulna</li>
-                                <li>Dhaka to Rajshahi</li>
-                            </ul>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">Travel within Dhaka city. No route-based ticketing. Customers will be able to get into any bus to their desired destination within 3 hours of purchase.</p>
-                    </div>
-                </div>
+                    <button type="submit" class="btn btn-primary">Next</button>
+                </form>
             </div>
         </div>
     </div>
@@ -164,6 +167,29 @@ unset($_SESSION['payment_completed']);
             if (localStorage.getItem('dark-mode') === 'true') {
                 document.body.classList.add('dark-mode');
             }
+
+            $('#origin').on('change', function() {
+                const origin = $(this).val();
+                if (origin) {
+                    $.ajax({
+                        url: 'bus_fetch_local_destination.php',
+                        method: 'GET',
+                        data: { origin: origin },
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#destination').empty().append('<option value="">Select Destination</option>');
+                            data.forEach(function(destination) {
+                                $('#destination').append('<option value="' + destination + '">' + destination + '</option>');
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error fetching destinations:', error);
+                        }
+                    });
+                } else {
+                    $('#destination').empty().append('<option value="">Select Destination</option>');
+                }
+            });
         });
 
         // Note: Ensure there's an element with ID 'dark-mode-toggle' in nav.php or elsewhere

@@ -30,7 +30,7 @@ while ($stmt->fetch()) {
         'end_location' => $endLocation,
         'fare' => $fare,
         'created_at' => $createdAt,
-        'type' => 'metro'
+        'type' => 'Metro'
     ];
 }
 $stmt->close();
@@ -53,7 +53,29 @@ while ($stmt->fetch()) {
         'end_location' => $endPoint,
         'fare' => $fare,
         'created_at' => $createdAt,
-        'type' => 'train'
+        'type' => 'Train'
+    ];
+}
+$stmt->close();
+
+// Fetch user receipts for bus transactions
+$stmt = $conn3->prepare("
+    SELECT transaction_id,origin,destination,amount,payment_time 
+    FROM bus_transactions 
+    WHERE user_id = ?
+    ORDER BY payment_time DESC
+");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($transactionId, $origin, $destination, $amount, $paymentTime);
+while ($stmt->fetch()) {
+    $receipts[] = [
+        'transaction_id' => $transactionId,
+        'start_location' => $origin,
+        'end_location' => $destination,
+        'fare' => $amount,
+        'created_at' => $paymentTime,
+        'type' => 'Local Bus'
     ];
 }
 $stmt->close();
@@ -63,6 +85,7 @@ usort($receipts, function($a, $b) {
     return strtotime($b['created_at']) - strtotime($a['created_at']);
 });
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -230,10 +253,12 @@ usort($receipts, function($a, $b) {
                                     <td><?php echo htmlspecialchars($receipt['created_at']); ?></td>
                                     <td><?php echo htmlspecialchars($receipt['type']); ?></td>
                                     <td>
-                                        <?php if ($receipt['type'] == 'metro'): ?>
+                                        <?php if ($receipt['type'] == 'Metro'): ?>
                                             <a href="metro_generate_receipt.php?transaction_id=<?php echo htmlspecialchars($receipt['transaction_id']); ?>" download class="btn btn-primary"><i class="fas fa-download"></i> Download</a>
-                                        <?php elseif ($receipt['type'] == 'train'): ?>
+                                        <?php elseif ($receipt['type'] == 'Train'): ?>
                                             <a href="train_generate_receipt.php?transaction_id=<?php echo htmlspecialchars($receipt['transaction_id']); ?>" download class="btn btn-primary"><i class="fas fa-download"></i> Download</a>
+                                        <?php elseif ($receipt['type'] == 'Local Bus'): ?>
+                                            <a href="bus_download_receipt.php?transaction_id=<?php echo htmlspecialchars($receipt['transaction_id']); ?>" download class="btn btn-primary"><i class="fas fa-download"></i> Download</a>
                                         <?php endif; ?>
                                     </td>
                                 </tr>

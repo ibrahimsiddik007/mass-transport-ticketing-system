@@ -5,27 +5,52 @@ include 'db.php'; // Include your database connection file
 // Check if the user is not logged in
 if (!isset($_SESSION['user_id'])) {
     if (!isset($_SESSION['redirect_to'])) {
-        $_SESSION['redirect_to'] = 'bus_select_type.php';
+        $_SESSION['redirect_to'] = 'bus_card_payment.php';
     }
     header('Location: login.php');
     exit;
 }
 
+// Check if origin and destination are set
+if (!isset($_GET['origin']) || !isset($_GET['destination'])) {
+    header('Location: bus_selected_local.php');
+    exit;
+}
 
-// Clear the payment completed flag
-unset($_SESSION['payment_completed']);
+// Check if payment is already completed
+if (isset($_SESSION['payment_completed']) && $_SESSION['payment_completed'] === true) {
+    header('Location: bus_select_type.php');
+    exit;
+}
 
+$origin = $_GET['origin'];
+$destination = $_GET['destination'];
 
+// Fetch bus details by joining local_buses and local_routes based on origin and destination
+$query = "
+    SELECT local_buses.bus_name, local_routes.fare 
+    FROM local_buses 
+    JOIN local_routes ON local_buses.origin = local_routes.origin AND local_buses.destination = local_routes.destination
+    WHERE local_routes.origin = ? AND local_routes.destination = ?
+";
+$stmt = $conn3->prepare($query);
+$stmt->bind_param("ss", $origin, $destination);
+$stmt->execute();
+$result = $stmt->get_result();
+$bus = $result->fetch_assoc();
+
+if (!$bus) {
+    echo "No bus found for the selected route.";
+    exit;
+}
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Select Bus Type - Mass Transport Ticketing System</title>
+    <title>Card Payment - Mass Transport Ticketing System</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -51,11 +76,11 @@ unset($_SESSION['payment_completed']);
             margin: 20px auto;
             animation: fadeIn 2s ease-in-out;
             transition: transform 0.3s, box-shadow 0.3s;
-            background: rgba(255, 255, 255, 0.1);
+            background: #ffffff;
             border-radius: 10px;
-            backdrop-filter: blur(10px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid #007bff;
+            width: 300px; /* Make the card smaller */
         }
         body.dark-mode .card {
             background: rgba(18, 18, 18, 0.5);
@@ -100,52 +125,60 @@ unset($_SESSION['payment_completed']);
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        .icon {
+            font-size: 50px;
+            color: #007bff;
+            animation: bounce 2s infinite;
+        }
+        body.dark-mode .icon {
+            color: #bb86fc;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-30px);
+            }
+            60% {
+                transform: translateY(-15px);
+            }
+        }
+        .visa-logo {
+            width: 50px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
     <?php include 'nav.php'; ?>
     <div class="container">
-        <h1>Select Bus Type</h1>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Long Route Across Bangladesh</h5>
-                        <a href="long_route.php" class="btn btn-primary">Select</a>
+        <h1>Card Payment</h1>
+        <div class="card">
+            <div class="card-body text-center">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa Logo" class="visa-logo">
+                <p class="card-text">Bus: <?php echo htmlspecialchars($bus['bus_name']); ?></p>
+                <p class="card-text">Fare: <?php echo htmlspecialchars($bus['fare']); ?> BDT</p>
+                <form id="paymentForm" method="POST" action="bus_payment_process.php">
+                    <div class="form-group">
+                        <label for="card_number">Card Number:</label>
+                        <input type="text" class="form-control" id="account_number" name="account_number" required>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Inside Dhaka Local Routes</h5>
-                        <a href="bus_select_local_route.php" class="btn btn-primary">Select</a>
+                    <div class="form-group">
+                        <label for="card_expiry">Expiry Date:</label>
+                        <input type="text" class="form-control" id="card_expiry" name="card_expiry" placeholder="MM/YY" required>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">Travel across different cities in Bangladesh.
-                            Currently available routes are: 
-                            <ul>
-                                <li>Dhaka to Chittagong</li>
-                                <li>Dhaka to Sylhet</li>
-                                <li>Dhaka to Khulna</li>
-                                <li>Dhaka to Rajshahi</li>
-                            </ul>
-                        </p>
+                    <div class="form-group">
+                        <label for="card_cvc">CVC:</label>
+                        <input type="text" class="form-control" id="pin" name="pin" required>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">Travel within Dhaka city. No route-based ticketing. Customers will be able to get into any bus to their desired destination within 3 hours of purchase.</p>
-                    </div>
-                </div>
+                    <input type="hidden" name="bus_name" value="<?php echo htmlspecialchars($bus['bus_name']); ?>">
+                    <input type="hidden" name="origin" value="<?php echo htmlspecialchars($origin); ?>">
+                    <input type="hidden" name="destination" value="<?php echo htmlspecialchars($destination); ?>">
+                    <input type="hidden" name="payment_method" value="card">
+                    <input type="hidden" name="amount" value="<?php echo htmlspecialchars($bus['fare']); ?>">
+                    <button type="submit" class="btn btn-primary">Pay with Card</button>
+                </form>
             </div>
         </div>
     </div>
