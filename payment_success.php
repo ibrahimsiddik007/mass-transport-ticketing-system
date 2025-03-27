@@ -3,6 +3,7 @@ session_start();
 date_default_timezone_set('Asia/Dhaka'); // Set your timezone
 include 'db.php'; // Include your database connection file
 
+
 if (!isset($_SESSION['user_id'])) {
     $_SESSION['redirect_to'] = 'metro.php';
     header('Location: login.php');
@@ -22,6 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $startLocation = $_POST['startLocation'];
     $endLocation = $_POST['endLocation'];
     $fare = $_POST['fare'];
+    $account_type = $_POST['payment_method'];
+    $accountNumber = $_POST['account_number'];
+    $pin = $_POST['pin'];
 
     // Simulate payment success
     $paymentStatus = "success";
@@ -35,8 +39,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get current timestamp
     $createdAt = date('Y-m-d H:i:s');
 
+
+        // Validate payment details
+$stmt = $conn1->prepare("SELECT balance FROM demo_accounts WHERE account_type = ? AND account_number = ? AND pin = ?");
+$stmt->bind_param("sss", $account_type, $accountNumber, $pin);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    echo "<script>alert('Invalid account details or insufficient balance.'); window.location.href='payment.php';</script>";
+    exit;
+}
+
+$row = $result->fetch_assoc();
+$currentBalance = $row['balance'];
+
+
+
+// Deduct the fare from the account balance
+$newBalance = $currentBalance - $fare;
+$stmt = $conn1->prepare("UPDATE demo_accounts SET balance = ? WHERE account_type = ? AND account_number = ?");
+$stmt->bind_param("dss", $newBalance, $account_type, $accountNumber);
+$stmt->execute();
+
+
     // Save transaction details
-    $stmt = $conn1->prepare("INSERT INTO transactions (transaction_id, user_id, start_location, end_location, fare, status, created_at) VALUES (?, ?, ?, ?, ?, 'paid', ?)");
+    $stmt = $conn1->prepare("INSERT INTO transactions (transaction_id, user_id, start_location, end_location, fare, created_at) VALUES (?, ?, ?, ?, ?, ?)");
     if ($stmt === false) {
         die('Prepare failed: ' . htmlspecialchars($conn1->error));
     }
@@ -47,8 +75,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $stmt->close();
 
+
+
     // Store transaction ID in session for receipt generation
     $_SESSION['transaction_id'] = $transactionId;
+
+    // Set payment completed flag
+    $_SESSION['payment_completed'] = true;
 
     // Redirect to payment success page
     header('Location: payment_success.php?success=true');
@@ -197,6 +230,8 @@ if (isset($_SESSION['transaction_id'])) {
                 document.body.classList.add('dark-mode');
             }
         });
+
+        window.history.forward();
 
         // Note: Ensure there's an element with ID 'dark-mode-toggle' in nav.php or elsewhere
         document.getElementById('dark-mode-toggle')?.addEventListener('click', toggleDarkMode);

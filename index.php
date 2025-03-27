@@ -38,6 +38,7 @@ include 'db.php'; // Include your database connection file
 
         body {
             color: #fff;
+            font-family: Arial, sans-serif;
         }
 
         body {
@@ -88,7 +89,7 @@ include 'db.php'; // Include your database connection file
 
         .notice {
             display: inline-block;
-            animation: scroll 15s linear infinite;
+            animation: scroll 20s linear infinite;
         }
 
         @keyframes scroll {
@@ -176,7 +177,7 @@ include 'db.php'; // Include your database connection file
     <!-- Notice Section -->
     <div class="notice-container">
         <div class="notice">
-            <strong>Notice:</strong> Please make sure that your payment is done under 15 minutes otherwise you will not be able to select your desired seat.
+            <strong>Notice:</strong> Please make sure that your payment is done under 15 minutes otherwise you will not be able to select your desired seat. •• System may contain bugs if it persists don't hesitate to contact with Live Chat •• Thank you for visiting us ••
         </div>
     </div>
 

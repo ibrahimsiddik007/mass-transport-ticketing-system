@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 09, 2025 at 01:03 AM
+-- Generation Time: Mar 24, 2025 at 04:31 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -63,8 +63,33 @@ CREATE TABLE `chat_messages` (
 INSERT INTO `chat_messages` (`id`, `user_id`, `message`, `created_at`, `is_admin`, `is_read`, `name`) VALUES
 (1, 19, 'hello', '2025-03-07 23:09:33', 0, 1, 'Faiyan Islam Swapnil'),
 (2, 19, 'hi', '2025-03-07 23:09:49', 1, 0, 'system'),
-(3, 22, 'hello', '2025-03-08 23:14:32', 0, 0, 'Ibrahim'),
-(4, 22, 'hii', '2025-03-08 23:24:58', 1, 0, 'system');
+(3, 22, 'hello', '2025-03-08 23:14:32', 0, 1, 'Ibrahim'),
+(4, 22, 'hii', '2025-03-08 23:24:58', 1, 1, 'system'),
+(5, 22, 'tell me what are you doing?', '2025-03-09 00:04:38', 1, 1, 'system'),
+(6, 22, 'is everything okay on your end?', '2025-03-09 00:04:55', 0, 1, 'Ibrahim'),
+(7, 22, 'yeah it is okay', '2025-03-09 00:05:02', 1, 1, 'system'),
+(8, 22, 'thank you for saying that', '2025-03-09 00:05:11', 1, 1, 'system'),
+(9, 22, 'i have successfully implemented the file', '2025-03-09 00:05:27', 0, 1, 'Ibrahim'),
+(10, 22, 'yeahhhhhhhhh', '2025-03-09 00:05:34', 1, 1, 'system'),
+(11, 22, 'kudos', '2025-03-09 00:05:41', 1, 1, 'system'),
+(12, 22, 'wowww', '2025-03-09 00:07:02', 0, 1, 'Ibrahim'),
+(13, 19, 'lalal', '2025-03-09 00:07:17', 1, 0, 'system'),
+(14, 22, 'hehehe', '2025-03-09 00:07:25', 0, 1, 'Ibrahim'),
+(15, 22, 'hello', '2025-03-24 00:26:56', 1, 1, 'system'),
+(16, 22, 'hi', '2025-03-24 00:27:03', 0, 1, 'Ibrahim'),
+(17, 22, 'how to do this', '2025-03-24 00:27:11', 0, 1, 'Ibrahim'),
+(18, 22, 'test done', '2025-03-24 00:27:23', 1, 1, 'system'),
+(19, 22, 'test done', '2025-03-24 00:35:42', 0, 1, 'Ibrahim'),
+(20, 22, 'again', '2025-03-24 00:36:04', 1, 1, 'system'),
+(21, 22, 'test', '2025-03-24 00:36:41', 1, 1, 'system'),
+(22, 22, 'hi', '2025-03-24 00:37:00', 0, 1, 'Ibrahim'),
+(23, 22, 'hi', '2025-03-24 00:53:39', 1, 1, 'system'),
+(24, 22, 'test', '2025-03-24 00:53:56', 1, 1, 'system'),
+(25, 22, 'test 2', '2025-03-24 00:54:14', 1, 1, 'system'),
+(26, 22, 'test 3', '2025-03-24 00:55:05', 1, 1, 'system'),
+(27, 22, 'thanks', '2025-03-24 00:56:06', 0, 1, 'Ibrahim'),
+(28, 22, 'welcome', '2025-03-24 00:56:13', 1, 1, 'system'),
+(29, 22, 'again welcome', '2025-03-24 00:56:29', 1, 1, 'system');
 
 -- --------------------------------------------------------
 
@@ -110,9 +135,9 @@ CREATE TABLE `demo_accounts` (
 --
 
 INSERT INTO `demo_accounts` (`id`, `account_type`, `account_number`, `pin`, `balance`) VALUES
-(1, 'bkash', '01601750278', '1234', 199700.00),
-(2, 'rocket', '01601750278', '1234', 19980.00),
-(3, 'card', '12345678', '123', 19990.00);
+(1, 'bkash', '01601750278', '1234', 199346.00),
+(2, 'rocket', '01601750278', '1234', 19844.00),
+(3, 'card', '12345678', '123', 19966.00);
 
 -- --------------------------------------------------------
 
@@ -441,7 +466,6 @@ CREATE TABLE `transactions` (
   `start_location` varchar(255) NOT NULL,
   `end_location` varchar(255) NOT NULL,
   `fare` decimal(10,2) NOT NULL,
-  `status` enum('pending','completed','canceled') NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -449,27 +473,42 @@ CREATE TABLE `transactions` (
 -- Dumping data for table `transactions`
 --
 
-INSERT INTO `transactions` (`transaction_id`, `user_id`, `start_location`, `end_location`, `fare`, `status`, `created_at`) VALUES
-('txn_31FfJXN', 22, 'Pallabi', 'Farmgate', 63.00, '', '2025-03-04 17:47:59'),
-('txn_53qmAby', 20, 'Uttara_South', 'Dhaka_University', 17.00, '', '2025-02-24 17:15:59'),
-('txn_5pD37rO', 20, 'Uttara_South', 'Dhaka_University', 17.00, '', '2025-02-24 17:09:17'),
-('txn_AgKetL9', 22, 'Pallabi', 'Dhaka_University', 59.00, '', '2025-03-07 20:56:48'),
-('txn_Bb6tRom', 22, 'Uttara_South', 'Mirpur_10', 52.00, '', '2025-03-04 12:34:34'),
-('txn_dwyFT6Q', 22, 'Uttara_South', 'Mirpur_11', 57.00, '', '2025-03-04 12:38:30'),
-('txn_Er1qnBH', 20, 'Uttara_Center', 'Shahbagh', 58.00, '', '2025-02-24 17:00:47'),
-('txn_gw9yfqT', 22, 'Kazi_Para', 'Secretariat', 98.00, '', '2025-03-07 21:00:55'),
-('txn_H3Jrtmh', 20, 'Uttara_South', 'Dhaka_University', 17.00, '', '2025-02-24 17:07:41'),
-('txn_HZVKjOm', 20, 'Uttara_Center', 'Dhaka_University', 15.00, '', '2025-02-24 17:06:35'),
-('txn_kGrmNI1', 20, 'Uttara_Center', 'Shahbagh', 58.00, '', '2025-02-24 17:06:05'),
-('txn_MGmYKTl', 20, 'Uttara_Center', 'Pallabi', 78.00, '', '2025-03-04 11:55:59'),
-('txn_qIeMSvn', 22, 'Uttara_Center', 'ShewraPara', 56.00, '', '2025-03-04 12:11:34'),
-('txn_qvQi8Ib', 20, 'Uttara_South', 'Dhaka_University', 17.00, '', '2025-02-24 17:10:52'),
-('txn_sHhundK', 22, 'Mirpur_11', 'Secretariat', 27.00, '', '2025-03-07 19:25:36'),
-('txn_TZjKkpi', 22, 'Uttara_North', 'Bijoy_Sharani', 43.00, '', '2025-03-06 13:08:33'),
-('txn_wYj10Qu', 22, 'Bijoy_Sharani', 'Shahbagh', 64.00, '', '2025-03-04 12:47:19'),
-('txn_XaFpGi6', 22, 'Uttara_North', 'Kazi_Para', 33.00, '', '2025-03-06 13:07:44'),
-('txn_ywWz8S4', 22, 'Agargaon', 'Dhaka_University', 55.00, '', '2025-03-04 12:45:28'),
-('txn_Zgk4ceb', 22, 'Uttara_South', 'Dhaka_University', 17.00, '', '2025-03-07 19:15:20');
+INSERT INTO `transactions` (`transaction_id`, `user_id`, `start_location`, `end_location`, `fare`, `created_at`) VALUES
+('txn_0XzJdWB', 22, 'Mirpur_11', 'Bijoy_Sharani', 24.00, '2025-03-24 00:22:35'),
+('txn_31FfJXN', 22, 'Pallabi', 'Farmgate', 63.00, '2025-03-04 17:47:59'),
+('txn_3Bn6EVW', 22, 'Motijheel', 'ShewraPara', 83.00, '2025-03-23 23:50:14'),
+('txn_53qmAby', 20, 'Uttara_South', 'Dhaka_University', 17.00, '2025-02-24 17:15:59'),
+('txn_5pD37rO', 20, 'Uttara_South', 'Dhaka_University', 17.00, '2025-02-24 17:09:17'),
+('txn_6zVFCu3', 22, 'Motijheel', 'ShewraPara', 83.00, '2025-03-23 23:47:04'),
+('txn_7LHOiln', 24, 'Kazi_Para', 'ShewraPara', 17.00, '2025-03-09 21:17:10'),
+('txn_7WbkYxU', 22, 'Motijheel', 'ShewraPara', 83.00, '2025-03-23 23:48:43'),
+('txn_AgKetL9', 22, 'Pallabi', 'Dhaka_University', 59.00, '2025-03-07 20:56:48'),
+('txn_Bb6tRom', 22, 'Uttara_South', 'Mirpur_10', 52.00, '2025-03-04 12:34:34'),
+('txn_dwyFT6Q', 22, 'Uttara_South', 'Mirpur_11', 57.00, '2025-03-04 12:38:30'),
+('txn_Er1qnBH', 20, 'Uttara_Center', 'Shahbagh', 58.00, '2025-02-24 17:00:47'),
+('txn_fJNeZ1i', 22, 'Mirpur_10', 'Uttara_North', 57.00, '2025-03-23 22:45:56'),
+('txn_gtyiX96', 24, 'Kazi_Para', 'ShewraPara', 17.00, '2025-03-09 21:13:06'),
+('txn_gw9yfqT', 22, 'Kazi_Para', 'Secretariat', 98.00, '2025-03-07 21:00:55'),
+('txn_H3Jrtmh', 20, 'Uttara_South', 'Dhaka_University', 17.00, '2025-02-24 17:07:41'),
+('txn_HWQgXCF', 22, 'Kawran_Bazar', 'Uttara_North', 31.00, '2025-03-23 22:52:01'),
+('txn_HZVKjOm', 20, 'Uttara_Center', 'Dhaka_University', 15.00, '2025-02-24 17:06:35'),
+('txn_iAs6uY8', 22, 'Bijoy_Sharani', 'Farmgate', 31.00, '2025-03-24 00:25:32'),
+('txn_kGrmNI1', 20, 'Uttara_Center', 'Shahbagh', 58.00, '2025-02-24 17:06:05'),
+('txn_MGmYKTl', 20, 'Uttara_Center', 'Pallabi', 78.00, '2025-03-04 11:55:59'),
+('txn_OGNFBhk', 22, 'Motijheel', 'ShewraPara', 83.00, '2025-03-23 23:43:27'),
+('txn_OVYBxiv', 22, 'Agargaon', 'Bijoy_Sharani', 21.00, '2025-03-23 22:48:02'),
+('txn_OzjUuHV', 22, 'Motijheel', 'ShewraPara', 83.00, '2025-03-23 23:50:00'),
+('txn_PworgQF', 22, 'Mirpur_11', 'Farmgate', 55.00, '2025-03-24 00:19:37'),
+('txn_qIeMSvn', 22, 'Uttara_Center', 'ShewraPara', 56.00, '2025-03-04 12:11:34'),
+('txn_qvQi8Ib', 20, 'Uttara_South', 'Dhaka_University', 17.00, '2025-02-24 17:10:52'),
+('txn_sHhundK', 22, 'Mirpur_11', 'Secretariat', 27.00, '2025-03-07 19:25:36'),
+('txn_TcZH8bi', 22, 'Mirpur_10', 'Uttara_North', 57.00, '2025-03-23 22:09:07'),
+('txn_TZjKkpi', 22, 'Uttara_North', 'Bijoy_Sharani', 43.00, '2025-03-06 13:08:33'),
+('txn_wYj10Qu', 22, 'Bijoy_Sharani', 'Shahbagh', 64.00, '2025-03-04 12:47:19'),
+('txn_XaFpGi6', 22, 'Uttara_North', 'Kazi_Para', 33.00, '2025-03-06 13:07:44'),
+('txn_YQypz2A', 22, 'Motijheel', 'ShewraPara', 83.00, '2025-03-23 23:42:25'),
+('txn_ywWz8S4', 22, 'Agargaon', 'Dhaka_University', 55.00, '2025-03-04 12:45:28'),
+('txn_Zgk4ceb', 22, 'Uttara_South', 'Dhaka_University', 17.00, '2025-03-07 19:15:20');
 
 -- --------------------------------------------------------
 
@@ -494,7 +533,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `email`, `password`, `google_id`, `name`, `profile_image`, `phone`, `Address`) VALUES
 (19, 'faiyanswapnil@gmail.com', '$2y$10$D5ayv7Y7C.p5RCpkmIyc4Om7nbDBPZmQdybmoVuHR/zRHSpQHdaXO', NULL, 'Faiyan Islam Swapnil', 'uploaded_profile_images/1f0e3dad99908345f7439f8ffabdffc4.jpg', '01711111111', 'Thanar Mor'),
-(22, 'ibrahimsiddik007@gmail.com', '', '114164509074598760418', 'Ibrahim', 'uploaded_profile_images/b6d767d2f8ed5d21a44b0e5886680cb9.jpg', '01700000000', 'Dhaka,Bashundhara R/A,House-28');
+(22, 'ibrahimsiddik007@gmail.com', '', '114164509074598760418', 'Ibrahim', 'uploaded_profile_images/b6d767d2f8ed5d21a44b0e5886680cb9.jpg', '01700000000', 'Dhaka,Bashundhara R/A,House-28'),
+(24, 'kalamama@gmail.com', '$2y$10$vZt2M0GZaqKEEi683NMvPeRu0VXNzpcgScT9tDko9HpALXLs/CjIa', NULL, 'Kala Mama', 'images\\default_profile_account_photo.jpg', '01711111111', 'Uttara');
 
 --
 -- Indexes for dumped tables
@@ -571,7 +611,7 @@ ALTER TABLE `admin_users`
 -- AUTO_INCREMENT for table `chat_messages`
 --
 ALTER TABLE `chat_messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `contacts`
@@ -607,7 +647,7 @@ ALTER TABLE `ticket_routes`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- Constraints for dumped tables

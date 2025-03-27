@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         body {
             color: #fff;
             animation: fadeIn 2s ease-in-out;
+            font-family: Arial, sans-serif;
         }
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -81,10 +82,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <p><strong>Start Location:</strong> <?= htmlspecialchars($startLocation) ?></p>
                     <p><strong>End Location:</strong> <?= htmlspecialchars($endLocation) ?></p>
                     <p><strong>Fare:</strong> <?= htmlspecialchars($fare) ?> BDT</p>
-                    <div class="text-center">
+                    <form action="payment.php" method="POST" class="text-center">
+                        <input type="hidden" name="startLocation" value="<?= htmlspecialchars($startLocation) ?>">
+                        <input type="hidden" name="endLocation" value="<?= htmlspecialchars($endLocation) ?>">
+                        <input type="hidden" name="fare" value="<?= htmlspecialchars($fare) ?>">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Proceed to Payment</button>
                         <a href="metro.php" class="btn btn-danger"><i class="fas fa-times"></i> Cancel</a>
-                        <a href="payment.php?startLocation=<?= urlencode($startLocation) ?>&endLocation=<?= urlencode($endLocation) ?>&fare=<?= urlencode($fare) ?>" class="btn btn-primary"><i class="fas fa-check"></i> Proceed to Payment</a>
-                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
                 </div>
             </div>
         </div>

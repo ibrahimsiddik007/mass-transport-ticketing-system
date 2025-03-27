@@ -10,7 +10,7 @@ if (!isset($_SESSION['transaction_id'])) {
 $transaction_id = $_SESSION['transaction_id'];
 
 // Fetch transaction details
-$stmt = $conn2->prepare("SELECT t.*, tr.train_name, tr.start_point, tr.end_point, r.compartment_id, r.seat_number, r.reservation_date, tr.train_name 
+$stmt = $conn2->prepare("SELECT t.*, tr.train_name, tr.start_point, tr.end_point, r.compartment_id, t.seats, r.reservation_date, tr.train_name 
                          FROM train_transactions t
                          JOIN reservations r ON t.train_id = r.train_id
                          JOIN trains tr ON r.train_id = tr.train_id
@@ -128,7 +128,7 @@ if (!$transaction) {
                         <p class="card-text"><strong>Start Point:</strong> <?php echo htmlspecialchars($transaction['start_point']); ?></p>
                         <p class="card-text"><strong>End Point:</strong> <?php echo htmlspecialchars($transaction['end_point']); ?></p>
                         <p class="card-text"><strong>Compartment Number:</strong> <?php echo htmlspecialchars($transaction['compartment_id']); ?></p>
-                        <p class="card-text"><strong>Seat Numbers:</strong> <?php echo htmlspecialchars($transaction['seat_number']); ?></p>
+                        <p class="card-text"><strong>Seat Numbers:</strong> <?php echo htmlspecialchars($transaction['seats']); ?></p>
                         <p class="card-text"><strong>Reservation Date:</strong> <?php echo htmlspecialchars($transaction['reservation_date']); ?></p>
                         <p class="card-text"><strong>Amount Paid:</strong> BDT <?php echo htmlspecialchars($transaction['amount']); ?></p>
                         <p class="card-text"><strong>Payment Time:</strong> <?php echo htmlspecialchars($transaction['payment_time']); ?></p>

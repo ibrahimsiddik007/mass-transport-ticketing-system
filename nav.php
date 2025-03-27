@@ -3,7 +3,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 ?>
-<nav class="navbar navbar-expand-lg" id="navbar">
+<nav class="navbar navbar-expand-lg navbar-light" id="navbar">
   <a class="navbar-brand" href="index.php" id="navbarTitle">Mass Transport Ticketing System</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -56,7 +56,9 @@ if (session_status() == PHP_SESSION_NONE) {
         </script>
       </li>
       <li class="nav-item <?php echo basename($_SERVER['PHP_SELF']) == 'chat.php' ? 'active' : ''; ?>">
-        <a class="nav-link" href="chat.php" id="chat-link">Live Chat</a>
+        <a class="nav-link" href="chat.php" id="chat-link">
+          Live Chat <span id="chat-notification" class="badge badge-danger" style="display: none;">0</span>
+        </a>
         <script>
           document.getElementById('chat-link').addEventListener('click', function(event) {
             event.preventDefault();
@@ -148,6 +150,19 @@ if (session_status() == PHP_SESSION_NONE) {
     --nav-link-light: var(--nav-link-dark);
   }
 
+  .dark-mode .navbar {
+    background-color: var(--navbar-bg-dark);
+  }
+
+  .dark-mode .navbar .nav-link {
+    color: var(--nav-link-dark);
+  }
+
+  .dark-mode .navbar .nav-link:hover,
+  .dark-mode .navbar .nav-item.active .nav-link {
+    color: var(--nav-link-hover);
+  }
+
   .profile-img {
     width: 30px;
     height: 30px;
@@ -182,5 +197,28 @@ if (session_status() == PHP_SESSION_NONE) {
         localStorage.setItem('theme', theme);
       });
     }
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    function checkNewMessages() {
+        fetch('check_new_messages.php')
+            .then(response => response.json())
+            .then(data => {
+                const chatNotification = document.getElementById('chat-notification');
+                if (data.new_messages > 0) {
+                    chatNotification.textContent = data.new_messages;
+                    chatNotification.style.display = 'inline-block';
+                } else {
+                    chatNotification.style.display = 'none';
+                }
+            })
+            .catch(error => console.error('Error checking new messages:', error));
+    }
+
+    // Check for new messages every 10 seconds
+    setInterval(checkNewMessages, 5000);
+
+    // Initial check when the page loads
+    checkNewMessages();
   });
 </script>

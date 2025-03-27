@@ -160,7 +160,7 @@ if (!isset($_SESSION['user_id'])) {
                         data.forEach(function(message) {
                             const messageElement = `
                                 <div class="chat-message ${message.is_admin ? 'admin-message' : 'user-message'}">
-                                    <div class="username">${message.is_admin ? 'system' : message.name}</div>
+                                    <div class="username">${message.is_admin ? 'System' : message.name}</div>
                                     <div class="message">${message.message}</div>
                                     <div class="timestamp">${new Date(message.created_at).toLocaleString()}</div>
                                 </div>

@@ -35,6 +35,9 @@ if (!$user) {
 }
 
 $phone = $user['phone'];
+// Calculate valid till time
+$createdAt = new DateTime($transaction['created_at']);
+$validTill = $createdAt->add(new DateInterval('PT8H'))->format('Y-m-d H:i:s');
 
 // Prepare data for QR code
 $qrData = "Transaction ID: {$transaction['transaction_id']}\n";
@@ -43,15 +46,14 @@ $qrData .= "End Location: {$transaction['end_location']}\n";
 $qrData .= "Fare: {$transaction['fare']} BDT\n";
 $qrData .= "Created At: {$transaction['created_at']}\n";
 $qrData .= "User Name: {$user_name}\n";
-$qrData .= "Phone: {$user['phone']}";
+$qrData .= "Phone: {$user['phone']}\n";
+$qrData .= "Valid Till: {$validTill}";
 
 // Generate QR code
 $qrFile = 'qrcodes/' . $transaction_id . '.png';
 QRcode::png($qrData, $qrFile, QR_ECLEVEL_L, 3);
 
-// Calculate valid till time
-$createdAt = new DateTime($transaction['created_at']);
-$validTill = $createdAt->add(new DateInterval('PT8H'))->format('Y-m-d H:i:s');
+
 
 // Create PDF receipt
 class PDF extends FPDF

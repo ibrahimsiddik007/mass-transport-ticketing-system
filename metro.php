@@ -52,6 +52,7 @@ if ($result->num_rows > 0) {
         body {
             color: #fff;
             animation: fadeIn 1.5s ease-in-out;
+            font-family: Arial, sans-serif;
         }
         @keyframes fadeIn {
             from { opacity: 0; }

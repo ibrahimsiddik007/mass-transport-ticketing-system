@@ -19,6 +19,12 @@ if ($user_id !== null) {
               ORDER BY chat_messages.created_at ASC";
     $stmt = $conn1->prepare($query);
     $stmt->bind_param("ii", $user_id, $user_id);
+
+    // Mark messages as read for the user
+    $update_query = "UPDATE chat_messages SET is_read = 1 WHERE user_id = ? AND is_read = 0 AND is_admin = 1";
+    $update_stmt = $conn1->prepare($update_query);
+    $update_stmt->bind_param("i", $user_id);
+    $update_stmt->execute();
 } elseif ($admin_id !== null && isset($_GET['user_id'])) {
     // Fetch messages for a specific user when the admin is logged in
     $target_user_id = $_GET['user_id'];
@@ -30,8 +36,8 @@ if ($user_id !== null) {
     $stmt = $conn1->prepare($query);
     $stmt->bind_param("ii", $target_user_id, $target_user_id);
 
-    // Mark messages as read
-    $update_query = "UPDATE chat_messages SET is_read = 1 WHERE user_id = ? AND is_admin = 0";
+    // Mark messages as read for the admin
+    $update_query = "UPDATE chat_messages SET is_read = 1 WHERE user_id = ? AND is_read = 0 AND is_admin = 0";
     $update_stmt = $conn1->prepare($update_query);
     $update_stmt->bind_param("i", $target_user_id);
     $update_stmt->execute();

@@ -96,37 +96,92 @@ usort($receipts, function($a, $b) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-family: 'Arial', sans-serif;
         }
+
         .profile-card {
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
+
         .profile-card:hover {
             transform: scale(1.05);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
         }
+
         .profile-image {
-            transition: opacity 0.3s ease-in-out;
+            border: 5px solid #fff;
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease-in-out;
         }
+
+        .profile-image:hover {
+            transform: scale(1.1);
+        }
+
+        .btn-toggle {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+            color: #fff;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+        .btn-toggle:hover {
+            background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
+            transform: scale(1.05);
+        }
+
         .receipt-table {
             display: none;
             margin-top: 20px;
             animation: fadeIn 0.5s ease-in-out;
+            border-radius: 15px; /* Add rounded corners */
+            overflow: hidden; /* Ensure the rounded corners apply to the table content */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
         }
+
+        .receipt-table thead {
+            border-radius: 15px 15px 0 0; /* Rounded corners for the table header */
+            background-color: #6a11cb; /* Header background color */
+            color: #fff; /* Header text color */
+        }
+
+        .receipt-table tbody tr {
+            background-color: #f8f9fa; /* Light background for rows */
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .receipt-table tbody tr:hover {
+            background-color: #e9ecef; /* Slightly darker background on hover */
+        }
+
         .receipt-section {
             margin-top: 30px;
         }
-        .btn-toggle {
-            margin-top: 20px;
-            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+
+        .btn-light {
+            background: #fff;
+            color: #6a11cb;
+            border: 2px solid #6a11cb;
+            border-radius: 25px;
+            transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+
+        .btn-light:hover {
+            background: #6a11cb;
             color: #fff;
-            border: none;
         }
-        .btn-toggle:hover {
-            background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
-        }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -134,7 +189,7 @@ usort($receipts, function($a, $b) {
 
         /* Dark mode styles */
         body.dark-mode {
-            background-color: #121212;
+            background: linear-gradient(135deg, #121212 0%, #1f1f1f 100%);
             color: #ffffff;
         }
 
@@ -174,6 +229,7 @@ usort($receipts, function($a, $b) {
                 receiptTable.style.display = 'none';
             }
         }
+
         function toggleEditForm() {
             var profileInfo = document.getElementById('profile-info');
             var editForm = document.getElementById('edit-form');
@@ -201,14 +257,14 @@ usort($receipts, function($a, $b) {
                 <div class="card mb-4 profile-card">
                     <div class="card-body text-center" id="profile-info">
                         <?php if ($profile_image): ?>
-                            <img src="<?php echo $profile_image; ?>" class="rounded-circle mb-3 profile-image" width="150" height="150" alt="Profile Image">
+                            <img src="<?php echo $profile_image; ?>" class="profile-image" alt="Profile Image">
                         <?php else: ?>
-                            <img src="images\default_profile_account_photo.jpg" class="rounded-circle mb-3 profile-image" width="150" height="150" alt="Default Profile Image">
+                            <img src="images/default_profile_account_photo.jpg" class="profile-image" alt="Default Profile Image">
                         <?php endif; ?>
-                        <h4>Name: <?php echo htmlspecialchars($username); ?></h4>
+                        <h4><?php echo htmlspecialchars($username); ?></h4>
                         <p>Email: <?php echo htmlspecialchars($email); ?></p>
                         <p>Address: <?php echo htmlspecialchars($address); ?></p>
-                        <p>Phone Number: <?php echo htmlspecialchars($phone_number); ?></p>
+                        <p>Phone: <?php echo htmlspecialchars($phone_number); ?></p>
                         <button class="btn btn-light" onclick="toggleEditForm()"><i class="fas fa-edit"></i> Edit</button>
                     </div>
                     <div class="card-body edit-form" id="edit-form" style="display: none;">
@@ -216,6 +272,9 @@ usort($receipts, function($a, $b) {
                             <div class="form-group">
                                 <label for="profile_image">Profile Image</label>
                                 <input type="file" class="form-control" id="profile_image" name="profile_image">
+
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($username); ?>" required>
 
                                 <label for="address">Address</label>
                                 <input type="text" class="form-control" name="address" id="address" value="<?php echo htmlspecialchars($address); ?>" required>
@@ -228,8 +287,12 @@ usort($receipts, function($a, $b) {
                     </div>
                 </div>
             </div>
+            <div class="col-md-12 text-center">
+                <button class="btn btn-toggle btn-block mx-auto" style="max-width: 300px;" onclick="toggleReceipts()">
+                    <i class="fas fa-receipt"></i> Show Receipts
+                </button>
+            </div>
             <div class="col-md-6">
-                <button class="btn btn-toggle btn-block" onclick="toggleReceipts()"><i class="fas fa-receipt"></i> Show Receipts</button>
                 <div class="receipt-section">
                     <table class="table table-striped receipt-table" id="receipt-table">
                         <thead class="thead-dark">

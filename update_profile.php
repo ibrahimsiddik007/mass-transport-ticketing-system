@@ -37,6 +37,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->execute();
     }
 
+    if (isset($_POST['name'])) {
+        $name = $_POST['name'];
+        $stmt = $conn1->prepare("UPDATE users SET name = ? WHERE id = ?");
+        $stmt->bind_param("si", $name, $_SESSION['user_id']);
+        $stmt->execute();
+    }
+
     if (isset($_POST['phone_number'])) {
         $phone_number = $_POST['phone_number'];
         $stmt = $conn1->prepare("UPDATE users SET phone = ? WHERE id = ?");
