@@ -1,3 +1,5 @@
+
+
 <?php
 session_start();
 include 'db.php'; // Include your database connection file
@@ -23,6 +25,73 @@ if (!$transaction) {
     echo 'error: transaction not found';
     exit;
 }
+
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Include PHPMailer for sending emails
+require 'vendor/autoload.php';
+
+// Generate QR Code
+include 'phpqrcode/qrlib.php';
+$qrCodeData = "Transaction ID: " . $transaction['transaction_id'] . "\n" .
+              "User Name: " . $_SESSION['user_name'] . "\n" .
+              "Train: " . $transaction['train_name'] . "\n" .
+              "Start Point: " . $transaction['start_point'] . "\n" .
+              "End Point: " . $transaction['end_point'] . "\n" .
+              "Compartment Number: " . $transaction['compartment_id'] . "\n" .
+              "Seat Numbers: " . $transaction['seats'] . "\n" .
+              "Reservation Date: " . $transaction['reservation_date'] . "\n" .
+              "Amount Paid: BDT " . $transaction['amount'] . "\n" .
+              "Payment Time: " . $transaction['payment_time'];
+
+$qrCodeFile = 'qrcodes/' . $transaction['transaction_id'] . '.png';
+QRcode::png($qrCodeData, $qrCodeFile, QR_ECLEVEL_L, 4);
+
+// Send Email
+$mail = new PHPMailer(true);
+
+try {
+    $mail->isSMTP();
+    $mail->Host = 'smtp.gmail.com'; // Replace with your SMTP server
+    $mail->SMTPAuth = true;
+    $mail->Username = 'masstransportsystem@gmail.com'; // Replace with your email
+    $mail->Password = 'vsez xczk yqfm mdbx'; // Replace with your email password
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port = 587;
+
+    $mail->setFrom('masstransportsystem@gmail.com', 'Mass Transport Ticketing System');
+    $mail->addAddress($_SESSION['email']); // User's email from session
+
+    $mail->isHTML(true);
+    $mail->Subject = 'Payment Confirmation - Transaction ID: ' . $transaction['transaction_id'];
+    $mail->Body = '<h3>Payment Confirmation</h3>
+                   <p>Dear ' . htmlspecialchars($_SESSION['user_name']) . ',</p>
+                   <p>Your payment has been successfully processed. Please find the details below:</p>
+                   <ul>
+                       <li><strong>Transaction ID:</strong> ' . htmlspecialchars($transaction['transaction_id']) . '</li>
+                       <li><strong>Train:</strong> ' . htmlspecialchars($transaction['train_name']) . '</li>
+                       <li><strong>Start Point:</strong> ' . htmlspecialchars($transaction['start_point']) . '</li>
+                       <li><strong>End Point:</strong> ' . htmlspecialchars($transaction['end_point']) . '</li>
+                       <li><strong>Compartment Number:</strong> ' . htmlspecialchars($transaction['compartment_id']) . '</li>
+                       <li><strong>Seat Numbers:</strong> ' . htmlspecialchars($transaction['seats']) . '</li>
+                       <li><strong>Reservation Date:</strong> ' . htmlspecialchars($transaction['reservation_date']) . '</li>
+                       <li><strong>Amount Paid:</strong> BDT ' . htmlspecialchars($transaction['amount']) . '</li>
+                       <li><strong>Payment Time:</strong> ' . htmlspecialchars($transaction['payment_time']) . '</li>
+                   </ul>
+                   <p>Please find your QR code attached for verification purposes.</p>
+                   <p>If you have any questions or concerns, feel free to contact us.</p>
+                   <p>Thank you for using our service!</p>';
+
+    $mail->addAttachment($qrCodeFile, 'Transaction_QR_Code.png');
+
+    $mail->send();
+} catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+}
+
+
 ?>
 
 <!DOCTYPE html>

@@ -2,6 +2,13 @@
 session_start();
 include 'db.php'; // Include your database connection file
 
+// Include PHPMailer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Load Composer's autoloader (if using Composer)
+require 'vendor/autoload.php';
+
 // Check if the user is not logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -23,11 +30,28 @@ if (!$transaction) {
     exit;
 }
 
+// Fetch user email from the database
+$user_id = $_SESSION['user_id'];
+$userQuery = "SELECT email, name FROM users WHERE id = ?";
+$userStmt = $conn1->prepare($userQuery);
+$userStmt->bind_param("i", $user_id);
+$userStmt->execute();
+$userResult = $userStmt->get_result();
+$user = $userResult->fetch_assoc();
+
+if (!$user) {
+    echo "User not found.";
+    exit;
+}
+
+$userEmail = $user['email'];
+$userName = $user['name'];
+
 // Generate QR code
 require 'phpqrcode/qrlib.php';
 
 $qrContent = 'Transaction ID: ' . $transaction['transaction_id'] . "\n" .
-             'Name: ' . $_SESSION['user_name'] . "\n" .
+             'Name: ' . $userName . "\n" .
              'Fare: ' . $transaction['amount'] . " BDT\n" .
              'Origin: ' . $transaction['origin'] . "\n" .
              'Destination: ' . $transaction['destination'] . "\n" .
@@ -36,8 +60,53 @@ $qrContent = 'Transaction ID: ' . $transaction['transaction_id'] . "\n" .
 $qrFilePath = 'qrcodes/' . $transaction_id . '.png';
 QRcode::png($qrContent, $qrFilePath, QR_ECLEVEL_L, 5);
 
-
 $_SESSION['payment_completed'] = true;
+
+// Send confirmation email using PHPMailer
+$mail = new PHPMailer(true);
+
+try {
+    // Server settings
+    $mail->isSMTP();
+    $mail->Host = 'smtp.gmail.com';
+    $mail->SMTPSecure = 'tls';
+    $mail->Port = 587;
+    $mail->SMTPAuth = true;
+    $mail->Username = 'masstransportsystem@gmail.com';
+    $mail->Password = 'vsez xczk yqfm mdbx'; // App Password
+
+
+    $mail->setFrom('masstransportsystem@gmail.com', 'Mass Transport Ticketing System');
+    $mail->addAddress($userEmail);
+
+    // Content
+    $mail->isHTML(true);
+    $mail->Subject = 'Payment Confirmation - Mass Transport Ticketing System';
+    $mail->Body = "
+        <h1>Payment Confirmation</h1>
+        <p>Dear {$_SESSION['user_name']},</p>
+        <p>Your payment has been successfully processed. Below are the details:</p>
+        <ul>
+            <li><strong>Transaction ID:</strong> {$transaction['transaction_id']}</li>
+            <li><strong>Bus:</strong> {$transaction['bus_name']}</li>
+            <li><strong>Fare:</strong> {$transaction['amount']} BDT</li>
+            <li><strong>Origin:</strong> {$transaction['origin']}</li>
+            <li><strong>Destination:</strong> {$transaction['destination']}</li>
+        </ul>
+        <p>Attached is your QR code for the transaction. Please keep it safe.</p>
+        <p>If you have any questions or concerns, feel free to contact us.</p>
+        <p>Thank you for using the Mass Transport Ticketing System.</p>
+    
+    ";
+
+    // Attach QR Code
+    $mail->addAttachment($qrFilePath);
+
+    // Send the email
+    $mail->send();
+} catch (Exception $e) {
+    echo "Email could not be sent. Mailer Error: {$mail->ErrorInfo}";
+}
 ?>
 
 <!DOCTYPE html>
@@ -156,6 +225,7 @@ $_SESSION['payment_completed'] = true;
                 <p class="card-text">Destination: <?php echo htmlspecialchars($transaction['destination']); ?></p>
                 <img src="qrcodes/<?php echo htmlspecialchars($transaction['transaction_id']); ?>.png" alt="QR Code">
                 <a href="bus_download_receipt.php?transaction_id=<?php echo htmlspecialchars($transaction['transaction_id']); ?>" class="btn btn-primary">Download Receipt</a>
+                <p>An email with QR Code is also sent to your email address.Kindly Check Mail Inbox.</p>
             </div>
         </div>
     </div>
