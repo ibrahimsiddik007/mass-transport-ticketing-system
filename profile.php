@@ -17,6 +17,19 @@ $stmt->close();
 
 $needs_completion = empty($address) || empty($phone_number);
 
+// Fetch balances for all payment methods
+$balances = [];
+$stmt = $conn1->prepare("SELECT account_type, balance FROM demo_accounts");
+$stmt->execute();
+$stmt->bind_result($accountType, $balance);
+while ($stmt->fetch()) {
+    $balances[] = [
+        'account_type' => $accountType,
+        'balance' => $balance
+    ];
+}
+$stmt->close();
+
 // Fetch user receipts for metro transactions
 $receipts = [];
 $stmt = $conn1->prepare("SELECT transaction_id, start_location, end_location, fare, created_at FROM transactions WHERE user_id = ? ORDER BY created_at DESC");
@@ -100,7 +113,7 @@ usort($receipts, function($a, $b) {
             font-family: 'Arial', sans-serif;
         }
 
-        .profile-card {
+        .profile-card, .balance-card {
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: #fff;
             border-radius: 15px;
@@ -108,7 +121,7 @@ usort($receipts, function($a, $b) {
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
 
-        .profile-card:hover {
+        .profile-card:hover, .balance-card:hover {
             transform: scale(1.05);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
         }
@@ -219,6 +232,23 @@ usort($receipts, function($a, $b) {
         .dark-mode .receipt-table tbody tr:hover {
             background-color: #333333;
         }
+
+        .balance-card h4 {
+            font-size: 1.5rem;
+        }
+
+        .balance-card p {
+            font-size: 1.25rem;
+        }
+
+        .balance-card i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .row {
+            margin-top: 30px;
+        }
     </style>
     <script>
         function toggleReceipts() {
@@ -253,6 +283,7 @@ usort($receipts, function($a, $b) {
             </div>
         <?php endif; ?>
         <div class="row">
+            <!-- Profile Details Card -->
             <div class="col-md-6">
                 <div class="card mb-4 profile-card">
                     <div class="card-body text-center" id="profile-info">
@@ -287,6 +318,23 @@ usort($receipts, function($a, $b) {
                     </div>
                 </div>
             </div>
+
+            <!-- Combined Balance Card -->
+            <div class="col-md-6">
+                <div class="card mb-4 balance-card">
+                    <div class="card-body text-center">
+                        <h4>Demo Account Balances (For All Users)</h4>
+                        <?php foreach ($balances as $balance): ?>
+                            <p>
+                                <i class="<?php echo $balance['account_type'] === 'bKash' ? 'fas fa-mobile-alt' : ($balance['account_type'] === 'Rocket' ? 'fas fa-wallet' : 'fas fa-credit-card'); ?>"></i>
+                                <strong><?php echo htmlspecialchars($balance['account_type']); ?>:</strong>
+                                <?php echo number_format($balance['balance'], 2); ?> BDT
+                            </p>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-md-12 text-center">
                 <button class="btn btn-toggle btn-block mx-auto" style="max-width: 300px;" onclick="toggleReceipts()">
                     <i class="fas fa-receipt"></i> Show Receipts
