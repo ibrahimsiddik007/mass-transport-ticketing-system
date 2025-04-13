@@ -103,22 +103,29 @@ if (session_status() == PHP_SESSION_NONE) {
 <style>
   :root {
     --navbar-bg-light: #ffffff;
-    --navbar-bg-dark: #2c2c2c;
+    --navbar-bg-dark: #1a1a1a;
     --nav-link-light: #000000;
-    --nav-link-dark: #e0e0e0;
-    --nav-link-hover: #007bff;
+    --nav-link-dark: #ffffff;
+    --nav-link-hover: #4a00e0;
+    --nav-link-active: #8e2de2;
+    --navbar-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --toggler-color: #000000;
   }
 
   .navbar {
     background-color: var(--navbar-bg-light);
-    transition: background-color 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    box-shadow: var(--navbar-shadow);
+    padding: 1rem 2rem;
   }
 
   .navbar .nav-link {
     color: var(--nav-link-light);
     position: relative;
-    transition: color 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
     margin-right: 15px;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
   }
 
   .navbar .nav-link:hover,
@@ -134,9 +141,10 @@ if (session_status() == PHP_SESSION_NONE) {
     bottom: -5px;
     width: 100%;
     height: 3px;
-    background-color: var(--nav-link-hover);
+    background: linear-gradient(90deg, var(--nav-link-hover), var(--nav-link-active));
     transform: scaleX(0);
     transition: transform 0.3s ease-in-out;
+    border-radius: 2px;
   }
 
   .navbar .nav-link:hover::after,
@@ -145,55 +153,111 @@ if (session_status() == PHP_SESSION_NONE) {
   }
 
   /* Dark Mode */
-  .dark-mode {
+  body.dark-mode {
     --navbar-bg-light: var(--navbar-bg-dark);
     --nav-link-light: var(--nav-link-dark);
+    --navbar-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    --toggler-color: #ffffff;
   }
 
-  .dark-mode .navbar {
+  body.dark-mode .navbar {
     background-color: var(--navbar-bg-dark);
   }
 
-  .dark-mode .navbar .nav-link {
+  body.dark-mode .navbar .nav-link {
     color: var(--nav-link-dark);
   }
 
-  .dark-mode .navbar .nav-link:hover,
-  .dark-mode .navbar .nav-item.active .nav-link {
+  body.dark-mode .navbar .nav-link:hover,
+  body.dark-mode .navbar .nav-item.active .nav-link {
     color: var(--nav-link-hover);
   }
 
+  body.dark-mode .navbar-toggler {
+    color: var(--toggler-color);
+    border-color: var(--toggler-color);
+  }
+
+  body.dark-mode .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  }
+
   .profile-img {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
     margin-right: 10px;
+    border: 2px solid var(--nav-link-hover);
+    transition: all 0.3s ease-in-out;
+  }
+
+  body.dark-mode .profile-img {
+    border-color: var(--nav-link-hover);
   }
 
   /* Navbar Title */
   #navbarTitle {
     color: var(--nav-link-light);
-    transition: color 0.3s ease-in-out;
+    font-weight: 600;
+    font-size: 1.5rem;
+    transition: all 0.3s ease-in-out;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
   }
 
-  .dark-mode #navbarTitle {
+  body.dark-mode #navbarTitle {
     color: var(--nav-link-dark);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Theme Toggle Button */
+  #theme-toggle {
+    background: linear-gradient(135deg, var(--nav-link-hover), var(--nav-link-active));
+    border: none;
+    color: white;
+    padding: 0.5rem 1.5rem;
+    border-radius: 25px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  #theme-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Badge Notification */
+  .badge-danger {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    border-radius: 10px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  /* Active state for nav items */
+  .nav-item.active .nav-link {
+    color: var(--nav-link-hover);
+    font-weight: 600;
+  }
+
+  body.dark-mode .nav-item.active .nav-link {
+    color: var(--nav-link-hover);
   }
 </style>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const currentTheme = localStorage.getItem('theme') || 'light';
+    const body = document.body;
 
     if (currentTheme === 'dark') {
-      document.body.classList.add('dark-mode');
+      body.classList.add('dark-mode');
     }
 
     const themeToggle = document.getElementById('theme-toggle');
     if (themeToggle) {
       themeToggle.addEventListener('click', function() {
-        document.body.classList.toggle('dark-mode');
-        const theme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+        body.classList.toggle('dark-mode');
+        const theme = body.classList.contains('dark-mode') ? 'dark' : 'light';
         localStorage.setItem('theme', theme);
       });
     }

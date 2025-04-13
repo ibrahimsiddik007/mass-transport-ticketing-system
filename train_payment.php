@@ -165,123 +165,186 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         body {
             background: url('images/Railway Background Image.jpg') no-repeat center center fixed;
             background-size: cover;
-            color: #000000; /* Default light mode text color */
+            color: #000000;
             font-family: Arial, sans-serif;
             animation: fadeIn 2s ease-in-out;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         body.dark-mode {
             background-color: #121212;
-            color: #ffffff; /* Dark mode text color */
+            color: #ffffff;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
         }
         .card {
-            margin: 20px auto;
+            margin: 20px;
             animation: fadeIn 2s ease-in-out;
             transition: transform 0.3s, box-shadow 0.3s;
-            background: rgba(172, 187, 107, 0.8); /* Slightly transparent background */
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        .card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 123, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            width: 100%;
         }
         body.dark-mode .card {
-            background: #1e1e1e; /* Solid dark background color */
+            background: rgba(30, 30, 30, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .card-body {
-            color: #000000; /* Light mode card text */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
         }
-        body.dark-mode .card-body {
-            color: #ffffff; /* Dark mode card text */
+        .card-title {
+            color: #2c3e50;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            padding-bottom: 0.5rem;
+        }
+        body.dark-mode .card-title {
+            color: #ecf0f1;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        .card-text {
+            margin-bottom: 1rem;
+            color: #34495e;
+        }
+        body.dark-mode .card-text {
+            color: #bdc3c7;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 10px 15px;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: none;
+        }
+        body.dark-mode .form-control {
+            background: rgba(0, 0, 0, 0.2);
+            color: #ecf0f1;
         }
         .btn-primary {
-            background-color:rgb(67, 97, 58);
-            border-color: #007bff;
-            transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
         }
         .btn-primary:hover {
-            background-color:rgb(8, 116, 13);
-            border-color: #0056b3;
-            transform: scale(1.05);
+            background: linear-gradient(45deg, #3498db, #2c3e50);
+            transform: translateY(-2px);
         }
-
         .btn-secondary {
-            background-color:rgb(182, 37, 44);
-            border-color:rgb(184, 48, 66);
-            transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
         }
         .btn-secondary:hover {
-            background-color:rgb(250, 0, 0);
-            border-color:rgb(155, 12, 12);
-            transform: scale(1.05);
+            background: linear-gradient(45deg, #c0392b, #e74c3c);
+            transform: translateY(-2px);
         }
-        body.dark-mode .btn-primary {
-            background-color: #bb86fc;
-            border-color: #bb86fc;
+        .payment-method-label {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
-        body.dark-mode .btn-primary:hover {
-            background-color: #9a67ea;
-            border-color: #9a67ea;
-            transform: scale(1.05);
+        .payment-method-label:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .payment-method-label input[type="radio"] {
+            margin-right: 10px;
         }
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
     <?php include 'nav.php'; ?>
-    <div class="container mt-5">
+    <div class="container">
         <?php if (isset($error_message)): ?>
             <div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> <?php echo $error_message; ?></div>
         <?php endif; ?>
-        <div class="row justify-content-start"> <!-- Changed justify-content-center to justify-content-start -->
-            <div class="col-md-5">
+        <div class="row w-100">
+            <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
-                        <h3 class="card-title"><i class="fas fa-train"></i> Payment Information</h3>
+                        <h3 class="card-title"><i class="fas fa-train"></i> Journey Details</h3>
                         <p class="card-text"><strong><i class="fas fa-train"></i> Train:</strong> <?php echo $reservation['train_name']; ?></p>
                         <p class="card-text"><strong><i class="fas fa-th"></i> Compartment Number:</strong> <?php echo $reservation['compartment_id']; ?></p>
                         <p class="card-text"><strong><i class="fas fa-chair"></i> Seat Numbers:</strong> <?php echo $seat_numbers_str; ?></p>
                         <p class="card-text"><strong><i class="fas fa-map-marker-alt"></i> Start Point:</strong> <?php echo $reservation['start_point']; ?></p>
                         <p class="card-text"><strong><i class="fas fa-map-marker-alt"></i> End Point:</strong> <?php echo $reservation['end_point']; ?></p>
                         <p class="card-text"><strong><i class="fas fa-money-bill-wave"></i> Fare:</strong> BDT <?php echo number_format($reservation['fare'], 2); ?></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title"><i class="fas fa-credit-card"></i> Payment Details</h3>
                         <form method="POST">
-                            <h4>Select Payment Method</h4>
                             <div class="form-group">
-                                <label>
-                                    <input type="radio" name="payment_method" value="bkash" required> bKash
+                                <h4>Select Payment Method</h4>
+                                <label class="payment-method-label">
+                                    <input type="radio" name="payment_method" value="bkash" required> 
+                                    <i class="fas fa-mobile-alt"></i> bKash
                                 </label>
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    <input type="radio" name="payment_method" value="rocket" required> Rocket
+                                <label class="payment-method-label">
+                                    <input type="radio" name="payment_method" value="rocket" required> 
+                                    <i class="fas fa-rocket"></i> Rocket
                                 </label>
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    <input type="radio" name="payment_method" value="card" required> Card
+                                <label class="payment-method-label">
+                                    <input type="radio" name="payment_method" value="card" required> 
+                                    <i class="fas fa-credit-card"></i> Card
                                 </label>
                             </div>
 
                             <div id="bkash-rocket-fields" style="display: none;">
                                 <div class="form-group">
                                     <label for="account_number">Account Number</label>
-                                    <input type="number" class="form-control" id="account_number" name="account_number">
+                                    <input type="number" class="form-control" id="account_number" name="account_number" placeholder="Enter your account number">
                                 </div>
                                 <div class="form-group">
                                     <label for="pin">PIN</label>
-                                    <input type="password" class="form-control" id="pin" name="pin">
+                                    <input type="password" class="form-control" id="pin" name="pin" placeholder="Enter your PIN">
                                 </div>
                             </div>
 
                             <div id="card-fields" style="display: none;">
                                 <div class="form-group">
                                     <label for="card_number">Card Number</label>
-                                    <input type="number" class="form-control" id="card_number" name="card_number">
+                                    <input type="number" class="form-control" id="card_number" name="card_number" placeholder="Enter your card number">
                                 </div>
                                 <div class="form-group">
                                     <label for="expiry_date">Expiry Date</label>
@@ -289,12 +352,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                                 <div class="form-group">
                                     <label for="cvv">CVV</label>
-                                    <input type="number" class="form-control" id="cvv" name="cvv">
+                                    <input type="number" class="form-control" id="cvv" name="cvv" placeholder="Enter CVV">
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-credit-card"></i> Pay Now</button>
-                            <a href="train.php" class="btn btn-secondary btn-block"><i class="fas fa-times"></i> Cancel</a>
+                            <div class="form-group mt-4">
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-credit-card"></i> Pay Now
+                                </button>
+                                <a href="train.php" class="btn btn-secondary btn-block mt-2">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                            </div>
                         </form>
                     </div>
                 </div>

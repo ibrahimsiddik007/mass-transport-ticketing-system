@@ -112,72 +112,132 @@ $qrCodePath = 'qrcodes/' . $transaction_id . '.png';
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #50c878;
+            --accent-color: #ff6b6b;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+        }
+
         body {
-            background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
-            animation: fadeIn 2s ease-in-out;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            animation: fadeIn 0.8s ease-out;
         }
-        body.dark-mode {
-            background-color: #121212;
-            color: #ffffff;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
         .card {
-            margin: 20px auto;
-            animation: fadeIn 2s ease-in-out;
-            transition: transform 0.3s, box-shadow 0.3s;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            transition: all var(--transition-speed);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            animation: slideIn 0.6s ease-out forwards;
         }
-        body.dark-mode .card {
-            background: rgba(18, 18, 18, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--secondary-color);
+            border-radius: 2px;
+        }
+
         .success-checkmark {
             width: 80px;
             height: 80px;
             margin: 0 auto;
             border-radius: 50%;
-            background-color: #28a745;
+            background-color: var(--success-color);
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: scaleUp 0.5s ease-in-out;
+            animation: scaleUp 0.5s ease-in-out, pulse 2s infinite;
         }
-        .success-checkmark i {
-            color: white;
-            font-size: 40px;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+
         @keyframes scaleUp {
             from { transform: scale(0); }
             to { transform: scale(1); }
         }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .success-checkmark i {
+            color: white;
+            font-size: 40px;
+            animation: checkmark 0.5s ease-in-out;
+        }
+
+        @keyframes checkmark {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
         .ticket {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
             position: relative;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 2rem;
+            animation: slideIn 0.6s ease-out forwards;
+            border: 1px solid rgba(74, 144, 226, 0.1);
         }
-        body.dark-mode .ticket {
-            background: #2a2a2a;
-        }
+
         .ticket:before,
         .ticket:after {
             content: '';
@@ -185,28 +245,123 @@ $qrCodePath = 'qrcodes/' . $transaction_id . '.png';
             left: -4px;
             width: 8px;
             height: 8px;
-            background: #f8f9fa;
+            background: var(--background-color);
             border-radius: 50%;
+            z-index: 1;
         }
+
         .ticket:before {
             top: -4px;
         }
+
         .ticket:after {
             bottom: -4px;
         }
+
         .ticket-header {
-            border-bottom: 1px dashed #ddd;
-            padding-bottom: 10px;
-            margin-bottom: 10px;
+            border-bottom: 2px dashed rgba(74, 144, 226, 0.2);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
         }
+
         .ticket-body {
-            padding: 10px 0;
+            padding: 1rem 0;
         }
+
         .ticket-footer {
-            border-top: 1px dashed #ddd;
-            padding-top: 10px;
-            margin-top: 10px;
+            border-top: 2px dashed rgba(74, 144, 226, 0.2);
+            padding-top: 1rem;
+            margin-top: 1rem;
             font-size: 0.9em;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all var(--transition-speed);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            background-color: #357abd;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all var(--transition-speed);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+        }
+
+        .qr-code {
+            border-radius: 8px;
+            padding: 1rem;
+            background: white;
+            box-shadow: var(--card-shadow);
+            transition: transform var(--transition-speed);
+        }
+
+        .qr-code:hover {
+            transform: scale(1.02);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .card-body {
+                padding: 1.25rem;
+            }
+            
+            .ticket {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Dark Mode Support */
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        body.dark-mode .card,
+        body.dark-mode .ticket {
+            background-color: #1e1e1e;
+            border-color: #333;
+        }
+
+        body.dark-mode .ticket:before,
+        body.dark-mode .ticket:after {
+            background-color: #121212;
+        }
+
+        body.dark-mode .ticket-header,
+        body.dark-mode .ticket-footer {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .qr-code {
+            background-color: #2d2d2d;
         }
     </style>
 </head>
@@ -287,18 +442,51 @@ $qrCodePath = 'qrcodes/' . $transaction_id . '.png';
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     
     <script>
-        // Dark mode toggle
+        // Dark mode toggle functionality
         function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('dark-mode') === 'true') {
-                document.body.classList.add('dark-mode');
+            const body = document.body;
+            const isDarkMode = body.classList.contains('dark-mode');
+            
+            if (isDarkMode) {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
             }
             
-            document.getElementById('dark-mode-toggle')?.addEventListener('click', toggleDarkMode);
+            // Update icon
+            const icon = document.querySelector('.dark-mode-toggle i');
+            if (icon) {
+                icon.className = isDarkMode ? 'fas fa-moon' : 'fas fa-sun';
+            }
+        }
+
+        // Check for saved theme preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const body = document.body;
+            
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+            } else {
+                body.classList.remove('dark-mode');
+            }
+
+            // Add dark mode toggle button if it doesn't exist
+            if (!document.querySelector('.dark-mode-toggle')) {
+                const toggleButton = document.createElement('button');
+                toggleButton.className = 'dark-mode-toggle';
+                toggleButton.innerHTML = '<i class="fas fa-moon"></i>';
+                toggleButton.onclick = toggleDarkMode;
+                document.body.appendChild(toggleButton);
+            }
+
+            // Update initial icon
+            const icon = document.querySelector('.dark-mode-toggle i');
+            if (icon) {
+                icon.className = body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
+            }
         });
     </script>
 </body>

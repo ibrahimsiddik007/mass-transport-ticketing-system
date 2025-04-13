@@ -52,6 +52,7 @@ if ($result->num_rows > 0) {
     <title>Train Reservation</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <style>
         :root {
             --bg-light: #ffffff;
@@ -63,6 +64,8 @@ if ($result->num_rows > 0) {
             --card-bg-dark: rgba(58, 58, 58, 0.8);
             --footer-bg-dark: #3a3a3a;
             --notice-bg-dark: #444444;
+            --primary-gradient: linear-gradient(135deg, #007bff, #00bfff);
+            --secondary-gradient: linear-gradient(135deg, #6c757d, #343a40);
         }
 
         body::before {
@@ -74,145 +77,147 @@ if ($result->num_rows > 0) {
             height: 100%;
             background: url("images/Railway Background Image.jpg");
             background-size: cover;
-            background-color: rgba(0, 0, 0, 0.9); /* Add a black overlay with 50% opacity */
+            background-position: center;
+            background-attachment: fixed;
+            background-color: rgba(0, 0, 0, 0.7);
             z-index: -1;
+            animation: fadeIn 2s ease-in-out;
         }
+
         body {
             color: #fff;
             animation: fadeIn 1.5s ease-in-out;
-        }
-        .dark-mode {
-            --bg-light: var(--bg-dark);
-            --text-light: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .card {
-            transition: transform 0.9s, margin 0.9s;
-            background-color: var(--card-bg-dark);
-            color: var(--text-dark);
-            border: none;
+            transition: all 0.5s ease;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 123, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
         }
 
         .card:hover {
-            transform: scale(1.07);
-            transition: transform 0.7s;
-            box-shadow: 0 0 30px rgba(0, 123, 255, 0.4);
-        }
-
-        .dark-mode .card {
-            background-color: var(--card-bg-dark);
-            color: var(--text-dark);
-        }
-
-        .footer {
-            background-color: #343a40;
-            color: #ffffff;
-        }
-
-        .footer.dark-mode {
-            background-color: var(--footer-bg-dark);
-            color: var(--text-dark);
-        }
-
-        .text-center.mt-5 {
-            margin-bottom: 30px;
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.5);
         }
 
         .form-control {
-            transition: box-shadow 0.3s ease-in-out;
-            background-color: rgba(255, 255, 255, 0.8);
-            border: none;
-            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            transition: all 0.3s ease;
         }
 
         .form-control:focus {
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
-            background-color: rgba(255, 255, 255, 1);
+            background: rgba(0, 0, 0, 0.4);
+            border-color: #007bff;
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
+            transform: scale(1.02);
         }
 
         .btn-primary {
-            transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
-            border-radius: 10px;
+            background: var(--primary-gradient);
+            border: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .btn-primary:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 123, 255, 0.3);
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .btn-primary:hover::after {
+            transform: translateX(100%);
+        }
+
+        .notice-container {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            margin: 20px 0;
+            animation: slideInDown 1s ease-out;
+        }
+
+        .notice {
+            display: inline-block;
+            animation: scroll 15s linear infinite;
+            padding: 15px;
+            color: #fff;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .form-group label {
+            color: #fff;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .form-group:focus-within label {
+            color: #007bff;
+            transform: translateY(-5px);
+        }
+
+        select.form-control option {
+            background: #2c2c2c;
+            color: #fff;
+        }
+
+        .container {
+            animation: fadeInUp 1s ease-out;
         }
 
         .navbar {
-            background-color: var(--bg-light);
-            transition: background-color 0.3s ease-in-out;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideInDown 1s ease-out;
         }
 
-        .navbar .nav-link {
-            color: var(--text-light);
+        .nav-link {
             position: relative;
-            transition: color 0.3s ease-in-out;
-            margin-right: 15px;
+            transition: all 0.3s ease;
         }
 
-        .navbar .nav-link:hover,
-        .navbar .nav-item.active .nav-link {
-            color: var(--hover-light);
-        }
-
-        .navbar .nav-link::after {
+        .nav-link::after {
             content: '';
             position: absolute;
-            left: 0;
             bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #007bff;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
             width: 100%;
-            height: 3px;
-            background-color: var(--hover-light);
-            transform: scaleX(0);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .navbar .nav-link:hover::after,
-        .navbar .nav-item.active .nav-link::after {
-            transform: scaleX(1);
-        }
-
-        .dark-mode .navbar {
-            background-color: var(--bg-dark);
-        }
-
-        .dark-mode .navbar .nav-link {
-            color: var(--text-dark);
-        }
-
-        .dark-mode .navbar .nav-link:hover,
-        .dark-mode .navbar .nav-item.active .nav-link {
-            color: var(--hover-dark);
-        }
-
-        .dark-mode .navbar .nav-link::after {
-            background-color: var(--hover-dark);
-        }
-
-        .profile-img {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
-
-        #navbarTitle {
-            color: var(--text-light);
-            transition: color 0.3s ease-in-out;
-        }
-
-        .dark-mode #navbarTitle {
-            color: var(--text-dark);
-        }
-
-
-        .timer {
-            font-size: 1.5rem;
-            color: #dc3545;
         }
 
         @keyframes fadeIn {
@@ -220,25 +225,58 @@ if ($result->num_rows > 0) {
             to { opacity: 1; }
         }
 
-        .notice {
-            display: inline-block;
-            animation: scroll 15s linear infinite;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .notice-container {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 10px;
-            overflow: hidden;
-            position: relative;
-            white-space: nowrap;
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
-        @keyframes scroll {
-            0% { transform: translateX(125%); }
-            100% { transform: translateX(-100%); }
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: fadeIn 1s ease-out;
         }
 
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .footer {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: auto;
+            animation: fadeInUp 1s ease-out;
+        }
     </style>
 </head>
 <body>

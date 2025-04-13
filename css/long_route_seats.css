@@ -1,0 +1,207 @@
+/* Bus layout styles */
+.bus-layout {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    animation: fadeIn 1s ease-out;
+}
+
+.bus-front {
+    width: 80%;
+    height: 60px;
+    margin: 0 auto 30px;
+    border-radius: 20px 20px 0 0;
+    position: relative;
+    background: linear-gradient(135deg, #0d47a1, #1a73e8);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: rotateX(15deg);
+    transform-origin: bottom;
+    transition: transform 0.3s;
+}
+
+.bus-front::before {
+    content: "🚌";
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.bus-layout:hover .bus-front {
+    transform: rotateX(0deg);
+}
+
+.seat-row {
+    margin-bottom: 15px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: slideIn 0.5s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Apply staggered animation to rows */
+.seat-row:nth-child(1) { animation-delay: 0.1s; }
+.seat-row:nth-child(2) { animation-delay: 0.15s; }
+.seat-row:nth-child(3) { animation-delay: 0.2s; }
+.seat-row:nth-child(4) { animation-delay: 0.25s; }
+.seat-row:nth-child(5) { animation-delay: 0.3s; }
+.seat-row:nth-child(6) { animation-delay: 0.35s; }
+.seat-row:nth-child(7) { animation-delay: 0.4s; }
+.seat-row:nth-child(8) { animation-delay: 0.45s; }
+.seat-row:nth-child(9) { animation-delay: 0.5s; }
+.seat-row:nth-child(10) { animation-delay: 0.55s; }
+.seat-row:nth-child(11) { animation-delay: 0.6s; }
+
+.row-number {
+    width: 24px;
+    height: 24px;
+    margin-right: 15px;
+    font-weight: bold;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+body.dark-mode .row-number {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.seat {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.seat::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    z-index: 0;
+    transition: all 0.3s;
+}
+
+.seat-available {
+    background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    color: #333;
+    border: 2px solid #ddd;
+}
+
+.seat-available:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border-color: #1a73e8;
+}
+
+.seat-available:active {
+    transform: translateY(0) scale(0.95);
+}
+
+body.dark-mode .seat-available {
+    background: linear-gradient(145deg, #3c3c3c, #292929);
+    color: #e8eaed;
+    border: 2px solid #5f6368;
+}
+
+.seat-selected {
+    background: linear-gradient(145deg, #34a853, #2d9348);
+    color: white;
+    border: 2px solid #2d9348;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(52, 168, 83, 0.4);
+}
+
+.seat-selected:hover {
+    background: linear-gradient(145deg, #2d9348, #34a853);
+}
+
+.seat-booked {
+    background: linear-gradient(145deg, #ea4335, #d93025);
+    color: white;
+    border: 2px solid #d93025;
+    opacity: 0.8;
+    cursor: not-allowed;
+    pointer-events: none;
+    transform: scale(0.95);
+}
+
+.aisle {
+    width: 20px;
+    display: inline-block;
+}
+
+.seat-info {
+    background: rgba(0, 0, 0, 0.03);
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 25px;
+    animation: fadeIn 1s ease-out 1s forwards;
+    opacity: 0;
+}
+
+body.dark-mode .seat-info {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.seat-info .seat {
+    width: 40px;
+    height: 40px;
+    font-size: 12px;
+    margin-right: 10px;
+    transform: none !important;
+}
+
+/* Booking summary animation */
+#booking-form {
+    animation: slideInUp 0.8s ease-out 0.5s forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes slideInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Flash effect when selecting a seat */
+@keyframes seatFlash {
+    0% { box-shadow: 0 0 0 rgba(52, 168, 83, 0); }
+    50% { box-shadow: 0 0 30px rgba(52, 168, 83, 0.8); }
+    100% { box-shadow: 0 0 0 rgba(52, 168, 83, 0); }
+}
+
+.seat-flash {
+    animation: seatFlash 0.6s ease-out;
+}

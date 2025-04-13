@@ -108,146 +108,337 @@ usort($receipts, function($a, $b) {
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            /* Light theme variables */
+            --primary-color: #4a00e0;
+            --secondary-color: #8e2de2;
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --text-primary: #2c3e50;
+            --text-secondary: #34495e;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #c0392b;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --hover-color: rgba(0, 0, 0, 0.05);
+            --btn-text: #ffffff;
+            --btn-bg: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        }
+
         body {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
             font-family: 'Arial', sans-serif;
+            color: var(--text-primary);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('images/profile_bg.jpg') center/cover no-repeat;
+            opacity: 0.05;
+            z-index: -1;
+        }
+
+        .container {
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
         }
 
         .profile-card, .balance-card {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--glass-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::before, .balance-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(74, 0, 224, 0.03) 0%, rgba(142, 45, 226, 0.03) 100%);
+            z-index: -1;
         }
 
         .profile-card:hover, .balance-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
         .profile-image {
-            border: 5px solid #fff;
-            border-radius: 50%;
             width: 150px;
             height: 150px;
+            border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 15px;
-            transition: transform 0.3s ease-in-out;
+            border: 3px solid var(--glass-border);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
         }
 
         .profile-image:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-title {
+            color: var(--text-primary);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-text {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
         }
 
         .btn-toggle {
-            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-            color: #fff;
+            background: var(--btn-bg);
+            color: var(--btn-text);
             border: none;
             border-radius: 25px;
-            padding: 10px 20px;
-            transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-toggle::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-toggle:hover::before {
+            left: 100%;
         }
 
         .btn-toggle:hover {
-            background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
-            transform: scale(1.05);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
         }
 
         .receipt-table {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--glass-shadow);
             display: none;
             margin-top: 20px;
-            animation: fadeIn 0.5s ease-in-out;
-            border-radius: 15px; /* Add rounded corners */
-            overflow: hidden; /* Ensure the rounded corners apply to the table content */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+            animation: fadeIn 0.5s ease-out;
         }
 
         .receipt-table thead {
-            border-radius: 15px 15px 0 0; /* Rounded corners for the table header */
-            background-color: #6a11cb; /* Header background color */
-            color: #fff; /* Header text color */
+            background: var(--btn-bg);
+            color: var(--btn-text);
+        }
+
+        .receipt-table th {
+            font-weight: 600;
+            padding: 15px;
+            text-align: center;
+            color: var(--btn-text);
+        }
+
+        .receipt-table td {
+            padding: 12px;
+            text-align: center;
+            vertical-align: middle;
+            color: var(--text-primary);
+            font-weight: 500;
         }
 
         .receipt-table tbody tr {
-            background-color: #f8f9fa; /* Light background for rows */
-            transition: background-color 0.3s ease-in-out;
+            transition: background-color 0.3s ease;
+            background-color: var(--card-bg);
         }
 
         .receipt-table tbody tr:hover {
-            background-color: #e9ecef; /* Slightly darker background on hover */
+            background-color: var(--hover-color);
         }
 
-        .receipt-section {
-            margin-top: 30px;
+        .receipt-table .btn-primary {
+            background: var(--btn-bg);
+            color: var(--btn-text);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .receipt-table .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .btn-light {
-            background: #fff;
-            color: #6a11cb;
-            border: 2px solid #6a11cb;
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
             border-radius: 25px;
-            transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
         }
 
         .btn-light:hover {
-            background: #6a11cb;
-            color: #fff;
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .alert-warning {
+            background: rgba(243, 156, 18, 0.1);
+            border: 1px solid var(--warning-color);
+            color: var(--warning-color);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
         }
 
-        /* Dark mode styles */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        /* Dark theme styles */
         body.dark-mode {
-            background: linear-gradient(135deg, #121212 0%, #1f1f1f 100%);
-            color: #ffffff;
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --glass-bg: rgba(0, 0, 0, 0.3);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --text-primary: #ecf0f1;
+            --text-secondary: #bdc3c7;
+            --card-bg: rgba(44, 62, 80, 0.9);
+            --hover-color: rgba(255, 255, 255, 0.05);
+            --btn-text: #ffffff;
+            --btn-bg: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
         }
 
-        .dark-mode .profile-card {
-            background: linear-gradient(135deg, #333333 0%, #444444 100%);
-            color: #ffffff;
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c3e50 100%);
         }
 
-        .dark-mode .btn-toggle {
-            background: linear-gradient(135deg, #ff4b2b 0%, #ff416c 100%);
-            color: #ffffff;
+        body.dark-mode::before {
+            opacity: 0.1;
         }
 
-        .dark-mode .receipt-table {
-            background-color: #1f1f1f;
-            color: #ffffff;
+        .dark-mode .profile-card::before,
+        .dark-mode .balance-card::before {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(41, 128, 185, 0.1) 100%);
         }
 
-        .dark-mode .receipt-table thead {
-            background-color: #333333;
+        .dark-mode .btn-light {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--text-primary);
         }
 
-        .dark-mode .receipt-table tbody tr {
-            background-color: #1f1f1f;
+        .dark-mode .btn-light:hover {
+            background: var(--text-primary);
+            color: var(--primary-color);
         }
 
-        .dark-mode .receipt-table tbody tr:hover {
-            background-color: #333333;
+        .dark-mode .profile-image {
+            border-color: rgba(255, 255, 255, 0.2);
         }
 
         .balance-card h4 {
-            font-size: 1.5rem;
+            color: var(--text-primary);
         }
 
         .balance-card p {
-            font-size: 1.25rem;
+            color: var(--text-secondary);
         }
 
         .balance-card i {
-            font-size: 2rem;
-            margin-bottom: 10px;
+            color: var(--text-primary);
         }
 
-        .row {
-            margin-top: 30px;
+        /* Dark mode specific adjustments */
+        .dark-mode .receipt-table {
+            background: var(--card-bg);
+        }
+
+        .dark-mode .receipt-table td {
+            color: var(--text-primary);
+        }
+
+        .dark-mode .receipt-table tbody tr {
+            background-color: var(--card-bg);
+        }
+
+        .dark-mode .receipt-table tbody tr:hover {
+            background-color: var(--hover-color);
+        }
+
+        .dark-mode .receipt-table .btn-primary {
+            background: var(--btn-bg);
+            color: var(--btn-text);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .profile-card, .balance-card {
+                padding: 20px;
+            }
+
+            .profile-image {
+                width: 120px;
+                height: 120px;
+            }
+
+            .card-title {
+                font-size: 1.5rem;
+            }
+
+            .card-text {
+                font-size: 1rem;
+            }
         }
     </style>
     <script>

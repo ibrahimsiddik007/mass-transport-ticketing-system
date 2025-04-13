@@ -69,65 +69,566 @@ $user = $user_result->fetch_assoc();
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        body {
-            background-color: #f8f9fa;
-            font-family: Arial, sans-serif;
-            animation: fadeIn 2s ease-in-out;
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #50c878;
+            --accent-color: #ff6b6b;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --button-hover-scale: 1.05;
+            --button-active-scale: 0.95;
+            --dark-bg: #121212;
+            --dark-card-bg: #1e1e1e;
+            --dark-text: #ffffff;
+            --dark-border: #333;
+            --dark-input-bg: #2d2d2d;
+            --dark-hover: #3d3d3d;
+            --dark-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --dark-glow: 0 0 15px rgba(74, 144, 226, 0.3);
+            --dark-gradient: linear-gradient(135deg, #1a1a1a, #2d2d2d);
         }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            animation: fadeIn 0.8s ease-out;
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         body.dark-mode {
-            background-color: #121212;
+            background: var(--dark-gradient);
+            color: var(--dark-text);
+        }
+
+        body.dark-mode .card {
+            background-color: var(--dark-card-bg);
+            border-color: var(--dark-border);
+            box-shadow: var(--dark-shadow);
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--dark-glow);
+        }
+
+        body.dark-mode .card-title {
+            color: var(--dark-text);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .card-title::after {
+            background: var(--primary-color);
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        body.dark-mode .payment-method {
+            background-color: var(--dark-card-bg);
+            border-color: var(--dark-border);
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode .payment-method:hover {
+            background-color: var(--dark-hover);
+            border-color: var(--primary-color);
+            transform: translateX(5px) scale(1.02);
+            box-shadow: var(--dark-glow);
+        }
+
+        body.dark-mode .payment-method.selected {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.2), rgba(74, 144, 226, 0.3));
+            border-color: var(--primary-color);
+            box-shadow: var(--dark-glow);
+        }
+
+        body.dark-mode .form-control {
+            background-color: var(--dark-input-bg);
+            border-color: var(--dark-border);
+            color: var(--dark-text);
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode .form-control:focus {
+            background-color: var(--dark-input-bg);
+            border-color: var(--primary-color);
+            color: var(--dark-text);
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+        }
+
+        body.dark-mode .btn-primary {
+            background: linear-gradient(135deg, #357abd, var(--primary-color));
+            color: var(--dark-text);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode .btn-primary:hover {
+            background: linear-gradient(135deg, #2d6a9d, #357abd);
+            transform: translateY(-3px) scale(var(--button-hover-scale));
+            box-shadow: var(--dark-glow);
+        }
+
+        body.dark-mode .btn-secondary {
+            background: linear-gradient(135deg, #5a6268, #6c757d);
+            color: var(--dark-text);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode .btn-secondary:hover {
+            background: linear-gradient(135deg, #4a5258, #5a6268);
+            transform: translateY(-3px) scale(var(--button-hover-scale));
+            box-shadow: var(--dark-glow);
+        }
+
+        body.dark-mode .important-notes {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 107, 107, 0.15));
+            border-left: 4px solid var(--accent-color);
+            box-shadow: var(--dark-shadow);
+        }
+
+        body.dark-mode .total-amount {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(74, 144, 226, 0.2));
+            color: var(--dark-text);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        body.dark-mode hr {
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .text-muted {
+            color: #b0b0b0 !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Enhanced Dark Mode Toggle Button */
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1) rotate(180deg);
+            box-shadow: var(--dark-glow);
+        }
+
+        body.dark-mode .dark-mode-toggle {
+            background: var(--secondary-color);
+            box-shadow: var(--dark-glow);
+        }
+
+        body.dark-mode .dark-mode-toggle:hover {
+            background: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .dark-mode-toggle {
+                width: 40px;
+                height: 40px;
+                bottom: 15px;
+                right: 15px;
+            }
+        }
+
+        /* Smooth Mode Transition */
+        body.dark-mode * {
+            transition: background-color var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1),
+                       color var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1),
+                       border-color var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1),
+                       box-shadow var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1),
+                       transform var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            transition: all var(--transition-speed);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            animation: slideIn 0.6s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--secondary-color);
+            border-radius: 2px;
+        }
+
+        .payment-method {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-speed) cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-method::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(74, 144, 226, 0.05), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .payment-method:hover::before {
+            transform: translateX(100%);
+        }
+
+        .payment-method:hover {
+            border-color: var(--primary-color);
+            transform: translateX(5px) scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-method.selected {
+            border-color: var(--primary-color);
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(74, 144, 226, 0.1));
+            transform: translateX(5px);
+        }
+
+        .payment-method img {
+            height: 35px;
+            margin-right: 1rem;
+            transition: transform var(--transition-speed);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .payment-method:hover img {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .btn {
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition-speed) cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #357abd);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(var(--button-hover-scale));
+            box-shadow: 0 6px 12px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0) scale(var(--button-active-scale));
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px) scale(var(--button-hover-scale));
+            box-shadow: 0 6px 12px rgba(108, 117, 125, 0.3);
+        }
+
+        .btn-secondary:active {
+            transform: translateY(0) scale(var(--button-active-scale));
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            padding: 0.75rem 1rem;
+            transition: all var(--transition-speed) cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .important-notes {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.05), rgba(255, 107, 107, 0.1));
+            border-left: 4px solid var(--accent-color);
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .important-notes li {
+            margin-bottom: 0.75rem;
+            position: relative;
+            padding-left: 2rem;
+            transition: transform var(--transition-speed);
+        }
+
+        .important-notes li:hover {
+            transform: translateX(5px);
+        }
+
+        .important-notes li::before {
+            content: '⚠️';
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .total-amount {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(74, 144, 226, 0.1));
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            animation: pulse 2s infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .total-amount::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .card {
+            animation: cardAppear 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            transform-origin: center;
+        }
+
+        @keyframes cardAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        body.dark-mode .btn-primary {
+            background: linear-gradient(135deg, #357abd, var(--primary-color));
+        }
+
+        body.dark-mode .btn-secondary {
+            background: linear-gradient(135deg, #5a6268, #6c757d);
+        }
+
+        body.dark-mode .payment-method {
+            background: #2d2d2d;
+            border-color: #333;
+        }
+
+        body.dark-mode .payment-method.selected {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(74, 144, 226, 0.2));
+        }
+
+        body.dark-mode .form-control {
+            background: #2d2d2d;
+            border-color: #333;
+            color: white;
+        }
+
+        body.dark-mode .important-notes {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(255, 107, 107, 0.15));
+        }
+
+        body.dark-mode .total-amount {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(74, 144, 226, 0.2));
+        }
+
+        body.dark-mode .btn-primary {
+            background: linear-gradient(135deg, #357abd, var(--primary-color));
+            border: none;
+        }
+
+        body.dark-mode .btn-primary:hover {
+            background: linear-gradient(135deg, #2d6a9d, #357abd);
+            transform: translateY(-3px) scale(var(--button-hover-scale));
+        }
+
+        body.dark-mode .btn-secondary {
+            background: linear-gradient(135deg, #5a6268, #6c757d);
+            border: none;
+        }
+
+        body.dark-mode .btn-secondary:hover {
+            background: linear-gradient(135deg, #4a5258, #5a6268);
+            transform: translateY(-3px) scale(var(--button-hover-scale));
+        }
+
+        body.dark-mode .text-muted {
+            color: #b0b0b0 !important;
+        }
+
+        body.dark-mode hr {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .card-body p {
             color: #ffffff;
         }
-        .card {
-            margin: 20px auto;
-            animation: fadeIn 2s ease-in-out;
-            transition: transform 0.3s, box-shadow 0.3s;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+        body.dark-mode .card-body strong {
+            color: #ffffff;
         }
-        body.dark-mode .card {
-            background: rgba(18, 18, 18, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .payment-method {
-            cursor: pointer;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            transition: all 0.3s;
-        }
-        .payment-method:hover, .payment-method.selected {
-            border-color: #007bff;
-            background-color: rgba(0, 123, 255, 0.1);
-        }
-        body.dark-mode .payment-method:hover, 
-        body.dark-mode .payment-method.selected {
-            border-color: #bb86fc;
-            background-color: rgba(187, 134, 252, 0.1);
-        }
-        .payment-method img {
-            height: 30px;
-            margin-right: 10px;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
-        body.dark-mode .btn-primary {
-            background-color: #bb86fc;
-            border-color: #bb86fc;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+
+        @media (max-width: 768px) {
+            .btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .payment-method {
+                padding: 1rem;
+            }
+
+            .payment-method img {
+                height: 30px;
+            }
+
+            .total-amount {
+                font-size: 1.5rem;
+                padding: 1.25rem;
+            }
         }
     </style>
 </head>
@@ -177,7 +678,6 @@ $user = $user_result->fetch_assoc();
                                 <div class="payment-method d-flex align-items-center" data-method="bkash">
                                     <input type="radio" name="payment_method" value="bkash" id="bkash" required>
                                     <label for="bkash" class="mb-0 ml-2 d-flex align-items-center">
-                                        <img src="images/bkash.png" alt="bKash">
                                         bKash
                                     </label>
                                 </div>
@@ -185,7 +685,7 @@ $user = $user_result->fetch_assoc();
                                 <div class="payment-method d-flex align-items-center" data-method="rocket">
                                     <input type="radio" name="payment_method" value="rocket" id="rocket" required>
                                     <label for="rocket" class="mb-0 ml-2 d-flex align-items-center">
-                                        <img src="images/rocket.png" alt="Rocket">
+                                       
                                         Rocket
                                     </label>
                                 </div>
@@ -193,7 +693,7 @@ $user = $user_result->fetch_assoc();
                                 <div class="payment-method d-flex align-items-center" data-method="card">
                                     <input type="radio" name="payment_method" value="card" id="card" required>
                                     <label for="card" class="mb-0 ml-2 d-flex align-items-center">
-                                        <img src="images/card.png" alt="Card">
+                                       
                                         Card
                                     </label>
                                 </div>
@@ -266,18 +766,51 @@ $user = $user_result->fetch_assoc();
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     
     <script>
-        // Dark mode toggle
+        // Dark mode toggle functionality
         function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            if (localStorage.getItem('dark-mode') === 'true') {
-                document.body.classList.add('dark-mode');
+            const body = document.body;
+            const isDarkMode = body.classList.contains('dark-mode');
+            
+            if (isDarkMode) {
+                body.classList.remove('dark-mode');
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark-mode');
+                localStorage.setItem('theme', 'dark');
             }
             
-            document.getElementById('dark-mode-toggle')?.addEventListener('click', toggleDarkMode);
+            // Update icon
+            const icon = document.querySelector('.dark-mode-toggle i');
+            if (icon) {
+                icon.className = isDarkMode ? 'fas fa-moon' : 'fas fa-sun';
+            }
+        }
+
+        // Check for saved theme preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const body = document.body;
+            
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-mode');
+            } else {
+                body.classList.remove('dark-mode');
+            }
+
+            // Add dark mode toggle button if it doesn't exist
+            if (!document.querySelector('.dark-mode-toggle')) {
+                const toggleButton = document.createElement('button');
+                toggleButton.className = 'dark-mode-toggle';
+                toggleButton.innerHTML = '<i class="fas fa-moon"></i>';
+                toggleButton.onclick = toggleDarkMode;
+                document.body.appendChild(toggleButton);
+            }
+
+            // Update initial icon
+            const icon = document.querySelector('.dark-mode-toggle i');
+            if (icon) {
+                icon.className = body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
+            }
             
             // Payment method selection
             $('.payment-method').click(function() {

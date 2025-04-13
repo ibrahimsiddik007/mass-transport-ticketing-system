@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 13, 2025 at 04:01 PM
+-- Generation Time: Apr 13, 2025 at 08:13 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -266,14 +266,28 @@ CREATE TABLE `long_route_transactions` (
   `transaction_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `bus_id` int(11) NOT NULL,
-  `journey_date` date DEFAULT NULL,
   `seat_numbers` text NOT NULL,
   `amount` decimal(10,2) NOT NULL,
   `payment_method` varchar(255) NOT NULL,
   `payment_time` datetime DEFAULT current_timestamp(),
-  `payment_status` varchar(20) DEFAULT 'completed',
-  `payment_transaction_id` varchar(100) DEFAULT NULL
+  `payment_status` varchar(20) DEFAULT '''completed''',
+  `payment_transaction_id` varchar(100) DEFAULT NULL,
+  `journey_date` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `long_route_transactions`
+--
+
+INSERT INTO `long_route_transactions` (`transaction_id`, `user_id`, `bus_id`, `seat_numbers`, `amount`, `payment_method`, `payment_time`, `payment_status`, `payment_transaction_id`, `journey_date`) VALUES
+(19, 22, 6, '\n                                    A7                                ,\n                                    B7                                ', 700.00, 'bkash', '2025-04-13 20:03:03', 'completed', 'txn-CCB9FB', NULL),
+(20, 22, 6, '\n                                    A6                                ,\n                                    B6                                ', 700.00, 'bkash', '2025-04-13 20:13:53', 'completed', 'txn-263A5E', NULL),
+(21, 22, 6, '\n                                    A7                                ,\n                                    B7                                ', 700.00, 'bkash', '2025-04-13 20:17:57', 'completed', 'txn-65CF07', '2025-04-15'),
+(22, 22, 6, '\n                                    C7                                ,\n                                    D7                                ', 700.00, 'bkash', '2025-04-13 20:29:19', 'completed', 'txn-065D15', '2025-04-15'),
+(23, 22, 6, '\n                                    A8                                ,\n                                    B8                                ', 700.00, 'bkash', '2025-04-13 21:31:34', 'completed', 'txn-DB099B', '2025-04-15'),
+(24, 22, 6, '\n                                    C8                                ,\n                                    D8                                ', 700.00, 'bkash', '2025-04-13 23:33:46', 'completed', 'txn-6FA315', '2025-04-15'),
+(25, 22, 6, '\n                                    C9                                ,\n                                    D9                                ', 700.00, 'bkash', '2025-04-14 00:11:16', 'completed', 'txn-CD4390', '2025-04-15'),
+(26, 22, 6, '\n                                    B9                                ,\n                                    A9                                ', 700.00, 'bkash', '2025-04-14 00:12:11', 'completed', 'txn-0DA8B8', '2025-04-15');
 
 -- --------------------------------------------------------
 
@@ -377,7 +391,7 @@ ALTER TABLE `long_route_seats`
 -- AUTO_INCREMENT for table `long_route_transactions`
 --
 ALTER TABLE `long_route_transactions`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `reservations`

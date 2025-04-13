@@ -37,57 +37,104 @@ $stmt->close();
             background-image: url('images/Railway Background Image.jpg');
             background-size: cover;
             background-position: center;
+            background-attachment: fixed;
             color: #fff;
             font-family: 'Arial', sans-serif;
+            min-height: 100vh;
         }
 
         .card {
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.8);
             border: none;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 123, 255, 0.2);
-            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0, 123, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 123, 255, 0.4);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 0 40px rgba(0, 123, 255, 0.5);
         }
 
         .timer {
-            font-size: 2rem;
-            color: #dc3545;
-            animation: pulse 1s infinite;
+            font-size: 2.5rem;
+            color: #ff6b6b;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+            animation: pulse 1.5s infinite;
+            font-family: 'Digital', monospace;
         }
 
         @keyframes pulse {
             0% {
                 transform: scale(1);
+                text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
             }
             50% {
                 transform: scale(1.1);
+                text-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
             }
             100% {
                 transform: scale(1);
+                text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
             }
         }
 
         .btn-primary, .btn-secondary {
-            border-radius: 10px;
-            transition: background-color 0.3s, transform 0.3s;
+            border-radius: 15px;
+            padding: 12px 30px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
         }
 
         .btn-primary:hover, .btn-secondary:hover {
-            transform: scale(1.05);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-primary:active, .btn-secondary:active {
+            transform: translateY(1px);
         }
 
         .container {
             margin-top: 100px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal-content {
-            background-color: rgba(0, 0, 0, 0.8);
+            background-color: rgba(0, 0, 0, 0.9);
             color: #fff;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
 
         .modal-header, .modal-footer {
@@ -96,10 +143,42 @@ $stmt->close();
 
         .modal-title {
             font-size: 1.5rem;
+            font-weight: bold;
         }
 
         .close {
             color: #fff;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .close:hover {
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+
+        .card-body {
+            padding: 2.5rem;
+        }
+
+        .card-body h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #fff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-body p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .mt-3 {
+            margin-top: 2rem !important;
         }
     </style>
 </head>
