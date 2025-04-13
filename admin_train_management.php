@@ -65,7 +65,7 @@ $transactions_offset = ($transactions_page - 1) * $transactions_rows_per_page;
 
 // Fetch transactions with pagination
 $transactions = [];
-$query = "SELECT SQL_CALC_FOUND_ROWS * FROM train_transactions LIMIT $transactions_rows_per_page OFFSET $transactions_offset";
+$query = "SELECT SQL_CALC_FOUND_ROWS * FROM train_transactions ORDER BY payment_time DESC LIMIT $transactions_rows_per_page OFFSET $transactions_offset";
 error_log($query);
 $result = $conn2->query($query);
 while ($row = $result->fetch_assoc()) {

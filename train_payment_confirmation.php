@@ -1,5 +1,3 @@
-
-
 <?php
 session_start();
 include 'db.php'; // Include your database connection file
@@ -48,48 +46,6 @@ $qrCodeData = "Transaction ID: " . $transaction['transaction_id'] . "\n" .
 
 $qrCodeFile = 'qrcodes/' . $transaction['transaction_id'] . '.png';
 QRcode::png($qrCodeData, $qrCodeFile, QR_ECLEVEL_L, 4);
-
-// Send Email
-$mail = new PHPMailer(true);
-
-try {
-    $mail->isSMTP();
-    $mail->Host = 'smtp.gmail.com'; // Replace with your SMTP server
-    $mail->SMTPAuth = true;
-    $mail->Username = 'masstransportsystem@gmail.com'; // Replace with your email
-    $mail->Password = 'vsez xczk yqfm mdbx'; // Replace with your email password
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port = 587;
-
-    $mail->setFrom('masstransportsystem@gmail.com', 'Mass Transport Ticketing System');
-    $mail->addAddress($_SESSION['email']); // User's email from session
-
-    $mail->isHTML(true);
-    $mail->Subject = 'Payment Confirmation - Transaction ID: ' . $transaction['transaction_id'];
-    $mail->Body = '<h3>Payment Confirmation</h3>
-                   <p>Dear ' . htmlspecialchars($_SESSION['user_name']) . ',</p>
-                   <p>Your payment has been successfully processed. Please find the details below:</p>
-                   <ul>
-                       <li><strong>Transaction ID:</strong> ' . htmlspecialchars($transaction['transaction_id']) . '</li>
-                       <li><strong>Train:</strong> ' . htmlspecialchars($transaction['train_name']) . '</li>
-                       <li><strong>Start Point:</strong> ' . htmlspecialchars($transaction['start_point']) . '</li>
-                       <li><strong>End Point:</strong> ' . htmlspecialchars($transaction['end_point']) . '</li>
-                       <li><strong>Compartment Number:</strong> ' . htmlspecialchars($transaction['compartment_id']) . '</li>
-                       <li><strong>Seat Numbers:</strong> ' . htmlspecialchars($transaction['seats']) . '</li>
-                       <li><strong>Reservation Date:</strong> ' . htmlspecialchars($transaction['reservation_date']) . '</li>
-                       <li><strong>Amount Paid:</strong> BDT ' . htmlspecialchars($transaction['amount']) . '</li>
-                       <li><strong>Payment Time:</strong> ' . htmlspecialchars($transaction['payment_time']) . '</li>
-                   </ul>
-                   <p>Please find your QR code attached for verification purposes.</p>
-                   <p>If you have any questions or concerns, feel free to contact us.</p>
-                   <p>Thank you for using our service!</p>';
-
-    $mail->addAttachment($qrCodeFile, 'Transaction_QR_Code.png');
-
-    $mail->send();
-} catch (Exception $e) {
-    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-}
 
 
 ?>
@@ -186,7 +142,8 @@ try {
     <?php include 'nav.php'; ?>
     <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
+            <!-- First Card: Payment Details -->
+            <div class="col-md-6">
                 <div class="card">
                     <div class="card-body text-center">
                         <h3 class="card-title"><i class="fas fa-check-circle"></i> Payment Successful</h3>
@@ -205,11 +162,24 @@ try {
                         <a href="train.php" class="btn btn-secondary btn-block"><i class="fas fa-arrow-left"></i> Back to Train</a>
                     </div>
                 </div>
-                <div class="card review-card mt-4">
+            </div>
+
+            <!-- Second Card: Review Section -->
+            <div class="col-md-6">
+                <div class="card review-card">
                     <div class="card-body text-center">
                         <h5 class="card-title">Like our service?</h5>
                         <p class="card-text">Please leave a review and let us know your thoughts.</p>
                         <a href="review.php" class="btn btn-success btn-block"><i class="fas fa-star"></i> Leave a Review</a>
+                    </div>
+                </div>
+
+                <!-- QR Code Section -->
+                <div class="card mt-3">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Please Scan the QR Code</h5>
+                        <p class="card-text">Use the QR code below to verify your ticket details.</p>
+                        <img src="<?php echo htmlspecialchars($qrCodeFile); ?>" alt="QR Code" class="img-fluid" style="max-width: 300px;">
                     </div>
                 </div>
             </div>

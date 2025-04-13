@@ -58,6 +58,7 @@ if (isset($_GET['logout'])) {
             <h3 class="text-center">Admin Dashboard</h3>
             <div class="list-group">
                 <a href="admin_bus.php" class="list-group-item list-group-item-action">Bus Management</a>
+                <a href="bus_admin_long_route.php" class="list-group-item list-group-item-action">Long Route Bus Management</a>
                 <a href="admin_train_management.php" class="list-group-item list-group-item-action">Train Management</a>
                 <a href="admin_metro.php" class="list-group-item list-group-item-action">Metro Management</a>
                 <a href="admin_chat.php" class="list-group-item list-group-item-action">Chat</a>

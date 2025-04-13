@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 24, 2025 at 04:32 AM
+-- Generation Time: Apr 13, 2025 at 04:01 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -54,7 +54,13 @@ INSERT INTO `bus_transactions` (`id`, `transaction_id`, `user_id`, `amount`, `se
 (6, 'txn_8ridr2f', 22, 20, 0, '2025-03-09 05:10:07', 'Gabtoli', 'Savar', 'Soukhin Paribahan', 'local', 'rocket'),
 (7, 'txn_9o89uz3', 22, 38, 0, '2025-03-09 05:17:33', 'Motijheel', 'Mirpur-10', 'Mirpur Super Link', 'local', 'bkash'),
 (8, 'txn_pwel728', 22, 10, 0, '2025-03-09 05:21:46', 'Malibagh', 'Rampura', 'Salsabil Paribahan', 'local', 'card'),
-(9, 'txn_ir44wsl', 22, 25, 0, '2025-03-24 06:38:38', 'Uttara', 'Farmgate', 'Shyamoli Paribahan', 'local', 'bkash');
+(9, 'txn_ir44wsl', 22, 25, 0, '2025-03-24 06:38:38', 'Uttara', 'Farmgate', 'Shyamoli Paribahan', 'local', 'bkash'),
+(10, 'txn_8s4t2x2', 22, 25, 0, '2025-03-24 14:43:14', 'Farmgate', 'Uttara', 'Shyamoli Paribahan', 'local', 'rocket'),
+(11, 'txn_ccyccle', 22, 38, 0, '2025-04-07 15:49:01', 'Motijheel', 'Mirpur-10', 'Mirpur Super Link', 'local', 'rocket'),
+(12, 'txn_86zct38', 22, 12, 0, '2025-04-07 15:51:32', 'Mirpur-10', 'Mirpur-1', 'Victor Paribahan', 'local', 'rocket'),
+(13, 'txn_1bzit1c', 22, 20, 0, '2025-04-07 16:31:39', 'Gabtoli', 'Savar', 'Soukhin Paribahan', 'local', 'bkash'),
+(14, 'txn_c1u3y8g', 22, 38, 0, '2025-04-07 16:55:15', 'Motijheel', 'Mirpur-10', 'Mirpur Super Link', 'local', 'bkash'),
+(15, 'txn_2nm38sp', 25, 20, 0, '2025-04-08 12:14:36', 'Uttara', 'Kuril', 'Suvastu Paribahan', 'local', 'bkash');
 
 -- --------------------------------------------------------
 
@@ -169,6 +175,109 @@ INSERT INTO `local_routes` (`id`, `origin`, `destination`, `distance`, `fare`) V
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `long_route_buses`
+--
+
+CREATE TABLE `long_route_buses` (
+  `bus_id` int(11) NOT NULL,
+  `bus_name` varchar(100) NOT NULL,
+  `from_location` varchar(100) NOT NULL,
+  `to_location` varchar(100) NOT NULL,
+  `departure_time` time NOT NULL,
+  `journey_date` date NOT NULL,
+  `fare` decimal(10,2) NOT NULL,
+  `total_seats` int(11) NOT NULL DEFAULT 40,
+  `bus_type` varchar(50) DEFAULT 'AC'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `long_route_buses`
+--
+
+INSERT INTO `long_route_buses` (`bus_id`, `bus_name`, `from_location`, `to_location`, `departure_time`, `journey_date`, `fare`, `total_seats`, `bus_type`) VALUES
+(6, 'Zenin', 'Sirajganj', 'Dhaka', '17:00:00', '0000-00-00', 350.00, 40, 'Non-AC');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `long_route_seats`
+--
+
+CREATE TABLE `long_route_seats` (
+  `seat_id` int(11) NOT NULL,
+  `bus_id` int(11) NOT NULL,
+  `seat_number` varchar(10) NOT NULL,
+  `status` enum('available','booked') DEFAULT 'available'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `long_route_seats`
+--
+
+INSERT INTO `long_route_seats` (`seat_id`, `bus_id`, `seat_number`, `status`) VALUES
+(41, 6, 'A1', 'available'),
+(42, 6, 'A2', 'available'),
+(43, 6, 'A3', 'available'),
+(44, 6, 'A4', 'available'),
+(45, 6, 'A5', 'available'),
+(46, 6, 'A6', 'available'),
+(47, 6, 'A7', 'available'),
+(48, 6, 'A8', 'available'),
+(49, 6, 'A9', 'available'),
+(50, 6, 'A10', 'available'),
+(51, 6, 'B1', 'available'),
+(52, 6, 'B2', 'available'),
+(53, 6, 'B3', 'available'),
+(54, 6, 'B4', 'available'),
+(55, 6, 'B5', 'available'),
+(56, 6, 'B6', 'available'),
+(57, 6, 'B7', 'available'),
+(58, 6, 'B8', 'available'),
+(59, 6, 'B9', 'available'),
+(60, 6, 'B10', 'available'),
+(61, 6, 'C1', 'available'),
+(62, 6, 'C2', 'available'),
+(63, 6, 'C3', 'available'),
+(64, 6, 'C4', 'available'),
+(65, 6, 'C5', 'available'),
+(66, 6, 'C6', 'available'),
+(67, 6, 'C7', 'available'),
+(68, 6, 'C8', 'available'),
+(69, 6, 'C9', 'available'),
+(70, 6, 'C10', 'available'),
+(71, 6, 'D1', 'available'),
+(72, 6, 'D2', 'available'),
+(73, 6, 'D3', 'available'),
+(74, 6, 'D4', 'available'),
+(75, 6, 'D5', 'available'),
+(76, 6, 'D6', 'available'),
+(77, 6, 'D7', 'available'),
+(78, 6, 'D8', 'available'),
+(79, 6, 'D9', 'available'),
+(80, 6, 'D10', 'available');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `long_route_transactions`
+--
+
+CREATE TABLE `long_route_transactions` (
+  `transaction_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `bus_id` int(11) NOT NULL,
+  `journey_date` date DEFAULT NULL,
+  `seat_numbers` text NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `payment_method` varchar(255) NOT NULL,
+  `payment_time` datetime DEFAULT current_timestamp(),
+  `payment_status` varchar(20) DEFAULT 'completed',
+  `payment_transaction_id` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `reservations`
 --
 
@@ -204,6 +313,26 @@ ALTER TABLE `local_routes`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `long_route_buses`
+--
+ALTER TABLE `long_route_buses`
+  ADD PRIMARY KEY (`bus_id`);
+
+--
+-- Indexes for table `long_route_seats`
+--
+ALTER TABLE `long_route_seats`
+  ADD PRIMARY KEY (`seat_id`),
+  ADD KEY `bus_id` (`bus_id`);
+
+--
+-- Indexes for table `long_route_transactions`
+--
+ALTER TABLE `long_route_transactions`
+  ADD PRIMARY KEY (`transaction_id`),
+  ADD KEY `bus_id` (`bus_id`);
+
+--
 -- Indexes for table `reservations`
 --
 ALTER TABLE `reservations`
@@ -218,7 +347,7 @@ ALTER TABLE `reservations`
 -- AUTO_INCREMENT for table `bus_transactions`
 --
 ALTER TABLE `bus_transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `local_buses`
@@ -233,6 +362,24 @@ ALTER TABLE `local_routes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
+-- AUTO_INCREMENT for table `long_route_buses`
+--
+ALTER TABLE `long_route_buses`
+  MODIFY `bus_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `long_route_seats`
+--
+ALTER TABLE `long_route_seats`
+  MODIFY `seat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
+
+--
+-- AUTO_INCREMENT for table `long_route_transactions`
+--
+ALTER TABLE `long_route_transactions`
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
 -- AUTO_INCREMENT for table `reservations`
 --
 ALTER TABLE `reservations`
@@ -241,6 +388,12 @@ ALTER TABLE `reservations`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `long_route_transactions`
+--
+ALTER TABLE `long_route_transactions`
+  ADD CONSTRAINT `long_route_transactions_ibfk_1` FOREIGN KEY (`bus_id`) REFERENCES `long_route_buses` (`bus_id`);
 
 --
 -- Constraints for table `reservations`

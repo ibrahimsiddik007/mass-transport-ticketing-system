@@ -10,6 +10,10 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require 'vendor/autoload.php';
+
 $user_id = $_SESSION['user_id'];
 
 // Fetch reservation details for the user
@@ -42,36 +46,111 @@ $seat_numbers_str = implode(', ', $seat_numbers);
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $payment_method = $_POST['payment_method'];
+    $account_number = $_POST['account_number'] ?? null;
+    $pin = $_POST['pin'] ?? null;
+    $card_number = $_POST['card_number'] ?? null;
+    $expiry_date = $_POST['expiry_date'] ?? null;
+    $cvv = $_POST['cvv'] ?? null;
+
     $amount = $reservation['fare'];
 
-    // Process payment (dummy processing for demonstration)
-    $payment_success = true; // Assume payment is successful
+    // Validate payment details
+    if ($payment_method === 'bkash' || $payment_method === 'rocket') {
+        if (!$account_number || !$pin) {
+            $error_message = "Account number and PIN are required for $payment_method.";
+        }
+    } elseif ($payment_method === 'card') {
+        if (!$card_number || !$expiry_date || !$cvv) {
+            $error_message = "Card details are required for card payment.";
+        }
+    }
 
-    if ($payment_success) {
-        // Update reservation status to 'paid'
-        $update_stmt = $conn2->prepare("UPDATE reservations SET status = 'paid' WHERE user_id = ? AND status = 'pending'");
-        $update_stmt->bind_param("i", $user_id);
-        $update_stmt->execute();
+    if (!isset($error_message)) {
+        // Process payment (dummy processing for demonstration)
+        $payment_success = true; // Assume payment is successful
 
-        // Insert transaction details into transactions table
-        $transaction_id = 'txn_' .substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 7);
-        $payment_time = date('Y-m-d H:i:s'); // Get the current date and time
-        $amount = $reservation['fare'];
-        $compartment_ID = $reservation['compartment_id'];
-        $train_id = $reservation['train_id'];
-        $seats = $seat_numbers_str;
-        $departure_time = $reservation['departure_time'];
+        if ($payment_success) {
+            // Update reservation status to 'paid'
+            $update_stmt = $conn2->prepare("UPDATE reservations SET status = 'paid' WHERE user_id = ? AND status = 'pending'");
+            $update_stmt->bind_param("i", $user_id);
+            $update_stmt->execute();
 
-        $insert_stmt = $conn2->prepare("INSERT INTO train_transactions (transaction_id, user_id, amount, compartment_ID, train_ID, seats, payment_time, departure_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $insert_stmt->bind_param("siiiisss", $transaction_id, $user_id, $amount, $compartment_ID, $train_id, $seats, $payment_time, $departure_time);
-        $insert_stmt->execute();
+            // Insert transaction details into transactions table
+            $transaction_id = 'txn_' . substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 7);
+            $payment_time = date('Y-m-d H:i:s'); // Get the current date and time
+            $compartment_ID = $reservation['compartment_id'];
+            $train_id = $reservation['train_id'];
+            $seats = $seat_numbers_str;
 
-        $_SESSION['payment_completed'] = true;
-        $_SESSION['transaction_id'] = $transaction_id;
-        header('Location: train_payment_confirmation.php?success=true');
-        exit;
-    } else {
-        $error_message = "Payment failed. Please try again.";
+            $insert_stmt = $conn2->prepare("INSERT INTO train_transactions (transaction_id, user_id, amount, compartment_ID, train_ID, seats, payment_time, payment_method) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $insert_stmt->bind_param("siiiisss", $transaction_id, $user_id, $amount, $compartment_ID, $train_id, $seats, $payment_time, $payment_method);
+            $insert_stmt->execute();
+
+            // Generate QR Code
+            include 'phpqrcode/qrlib.php';
+            $qrCodeData = "Transaction ID: $transaction_id\n" .
+                          "Seats: $seats\n" .
+                          "Train: {$reservation['train_name']}\n" .
+                          "From: {$reservation['start_point']}\n" .
+                          "To: {$reservation['end_point']}\n" .
+                          "Date: " . date('l, F j, Y', strtotime($reservation['departure_time'])) . "\n" .
+                          "Amount Paid: BDT " . number_format($amount, 2);
+            $qrCodePath = 'qrcodes/' . $transaction_id . '.png';
+            QRcode::png($qrCodeData, $qrCodePath, QR_ECLEVEL_H, 5);
+
+            // Send email confirmation
+
+
+            $mail = new PHPMailer(true);
+            try {
+                // Server settings
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'masstransportsystem@gmail.com'; // Replace with your email
+                $mail->Password   = 'vsez xczk yqfm mdbx';           // Replace with your email password
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port       = 587;
+
+                // Recipients
+                $mail->setFrom('masstransportsystem@gmail.com', 'Mass Transport Ticketing System');
+                $mail->addAddress($_SESSION['email']); // User's email from session
+
+                // Attachments
+                $mail->addAttachment($qrCodePath, 'Transaction_QR_Code.png');
+
+                // Content
+                $mail->isHTML(true);
+                $mail->Subject = 'Payment Confirmation - Transaction ID: ' . $transaction_id;
+                $mail->Body    = '<h3>Payment Confirmation</h3>
+                                  <p>Dear ' . htmlspecialchars($_SESSION['user_name']) . ',</p>
+                                  <p>Your payment has been successfully processed. Please find the details below:</p>
+                                  <ul>
+                                      <li><strong>Transaction ID:</strong> ' . htmlspecialchars($transaction_id) . '</li>
+                                      <li><strong>Train:</strong> ' . htmlspecialchars($reservation['train_name']) . '</li>
+                                      <li><strong>Start Point:</strong> ' . htmlspecialchars($reservation['start_point']) . '</li>
+                                      <li><strong>End Point:</strong> ' . htmlspecialchars($reservation['end_point']) . '</li>
+                                      <li><strong>Compartment Number:</strong> ' . htmlspecialchars($reservation['compartment_id']) . '</li>
+                                      <li><strong>Seat Numbers:</strong> ' . htmlspecialchars($seats) . '</li>
+                                      <li><strong>Amount Paid:</strong> BDT ' . number_format($amount, 2) . '</li>
+                                      <li><strong>Payment Time:</strong> ' . htmlspecialchars($payment_time) . '</li>
+                                  </ul>
+                                  <p>Please find your QR code attached for verification purposes.</p>
+                                  <p>Thank you for using our service!</p>';
+
+                $mail->send();
+            } catch (Exception $e) {
+                error_log("Email could not be sent. Mailer Error: {$mail->ErrorInfo}");
+            }
+
+            $_SESSION['payment_completed'] = true;
+            $_SESSION['transaction_id'] = $transaction_id;
+            header('Location: train_payment_confirmation.php?success=true');
+            exit;
+        } else {
+            $error_message = "Payment failed. Please try again.";
+        }
     }
 }
 ?>
@@ -171,6 +250,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <p class="card-text"><strong><i class="fas fa-map-marker-alt"></i> End Point:</strong> <?php echo $reservation['end_point']; ?></p>
                         <p class="card-text"><strong><i class="fas fa-money-bill-wave"></i> Fare:</strong> BDT <?php echo number_format($reservation['fare'], 2); ?></p>
                         <form method="POST">
+                            <h4>Select Payment Method</h4>
+                            <div class="form-group">
+                                <label>
+                                    <input type="radio" name="payment_method" value="bkash" required> bKash
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="radio" name="payment_method" value="rocket" required> Rocket
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <input type="radio" name="payment_method" value="card" required> Card
+                                </label>
+                            </div>
+
+                            <div id="bkash-rocket-fields" style="display: none;">
+                                <div class="form-group">
+                                    <label for="account_number">Account Number</label>
+                                    <input type="number" class="form-control" id="account_number" name="account_number">
+                                </div>
+                                <div class="form-group">
+                                    <label for="pin">PIN</label>
+                                    <input type="password" class="form-control" id="pin" name="pin">
+                                </div>
+                            </div>
+
+                            <div id="card-fields" style="display: none;">
+                                <div class="form-group">
+                                    <label for="card_number">Card Number</label>
+                                    <input type="number" class="form-control" id="card_number" name="card_number">
+                                </div>
+                                <div class="form-group">
+                                    <label for="expiry_date">Expiry Date</label>
+                                    <input type="text" class="form-control" id="expiry_date" name="expiry_date" placeholder="MM/YY">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cvv">CVV</label>
+                                    <input type="number" class="form-control" id="cvv" name="cvv">
+                                </div>
+                            </div>
+
                             <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-credit-card"></i> Pay Now</button>
                             <a href="train.php" class="btn btn-secondary btn-block"><i class="fas fa-times"></i> Cancel</a>
                         </form>
@@ -181,19 +303,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
 
     <script>
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            localStorage.setItem('dark-mode', document.body.classList.contains('dark-mode'));
-        }
+        document.addEventListener('DOMContentLoaded', function () {
+            const paymentMethods = document.querySelectorAll('input[name="payment_method"]');
+            const bkashRocketFields = document.getElementById('bkash-rocket-fields');
+            const cardFields = document.getElementById('card-fields');
 
-        document.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('dark-mode') === 'true') {
-                document.body.classList.add('dark-mode');
-            }
+            paymentMethods.forEach(method => {
+                method.addEventListener('change', function () {
+                    if (this.value === 'bkash' || this.value === 'rocket') {
+                        bkashRocketFields.style.display = 'block';
+                        cardFields.style.display = 'none';
+                    } else if (this.value === 'card') {
+                        bkashRocketFields.style.display = 'none';
+                        cardFields.style.display = 'block';
+                    }
+                });
+            });
         });
-
-        // Note: Ensure there's an element with ID 'dark-mode-toggle' in nav.php or elsewhere
-        document.getElementById('dark-mode-toggle')?.addEventListener('click', toggleDarkMode);
     </script>
 </body>
 </html>
