@@ -82,9 +82,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $compartment_ID = $reservation['compartment_id'];
             $train_id = $reservation['train_id'];
             $seats = $seat_numbers_str;
+            $total_amount = $reservation['fare'] * count($seat_numbers); // Calculate total amount
 
             $insert_stmt = $conn2->prepare("INSERT INTO train_transactions (transaction_id, user_id, amount, compartment_ID, train_ID, seats, payment_time, payment_method) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $insert_stmt->bind_param("siiiisss", $transaction_id, $user_id, $amount, $compartment_ID, $train_id, $seats, $payment_time, $payment_method);
+            $insert_stmt->bind_param("siiiisss", $transaction_id, $user_id, $total_amount, $compartment_ID, $train_id, $seats, $payment_time, $payment_method);
             $insert_stmt->execute();
 
             // Generate QR Code
@@ -95,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                           "From: {$reservation['start_point']}\n" .
                           "To: {$reservation['end_point']}\n" .
                           "Date: " . date('l, F j, Y', strtotime($reservation['departure_time'])) . "\n" .
-                          "Amount Paid: BDT " . number_format($amount, 2);
+                          "Amount Paid: BDT " . number_format($total_amount, 2);
             $qrCodePath = 'qrcodes/' . $transaction_id . '.png';
             QRcode::png($qrCodeData, $qrCodePath, QR_ECLEVEL_H, 5);
 
@@ -133,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                       <li><strong>End Point:</strong> ' . htmlspecialchars($reservation['end_point']) . '</li>
                                       <li><strong>Compartment Number:</strong> ' . htmlspecialchars($reservation['compartment_id']) . '</li>
                                       <li><strong>Seat Numbers:</strong> ' . htmlspecialchars($seats) . '</li>
-                                      <li><strong>Amount Paid:</strong> BDT ' . number_format($amount, 2) . '</li>
+                                      <li><strong>Amount Paid:</strong> BDT ' . number_format($total_amount, 2) . '</li>
                                       <li><strong>Payment Time:</strong> ' . htmlspecialchars($payment_time) . '</li>
                                   </ul>
                                   <p>Please find your QR code attached for verification purposes.</p>
@@ -217,9 +218,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         .card-text {
             margin-bottom: 1rem;
             color: #34495e;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
         body.dark-mode .card-text {
             color: #bdc3c7;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .card-text:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .total-fare {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 1rem;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: pulse 2s infinite;
+        }
+        body.dark-mode .total-fare {
+            color: #ecf0f1;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        .ticket-count {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-left: 10px;
+        }
+        body.dark-mode .ticket-count {
+            color: #95a5a6;
         }
         .form-group {
             margin-bottom: 1.5rem;
@@ -300,12 +341,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="card">
                     <div class="card-body">
                         <h3 class="card-title"><i class="fas fa-train"></i> Journey Details</h3>
-                        <p class="card-text"><strong><i class="fas fa-train"></i> Train:</strong> <?php echo $reservation['train_name']; ?></p>
-                        <p class="card-text"><strong><i class="fas fa-th"></i> Compartment Number:</strong> <?php echo $reservation['compartment_id']; ?></p>
-                        <p class="card-text"><strong><i class="fas fa-chair"></i> Seat Numbers:</strong> <?php echo $seat_numbers_str; ?></p>
-                        <p class="card-text"><strong><i class="fas fa-map-marker-alt"></i> Start Point:</strong> <?php echo $reservation['start_point']; ?></p>
-                        <p class="card-text"><strong><i class="fas fa-map-marker-alt"></i> End Point:</strong> <?php echo $reservation['end_point']; ?></p>
-                        <p class="card-text"><strong><i class="fas fa-money-bill-wave"></i> Fare:</strong> BDT <?php echo number_format($reservation['fare'], 2); ?></p>
+                        <p class="card-text">
+                            <span><i class="fas fa-train"></i> Train:</span>
+                            <span><?php echo $reservation['train_name']; ?></span>
+                        </p>
+                        <p class="card-text">
+                            <span><i class="fas fa-th"></i> Compartment Number:</span>
+                            <span><?php echo $reservation['compartment_id']; ?></span>
+                        </p>
+                        <p class="card-text">
+                            <span><i class="fas fa-chair"></i> Seat Numbers:</span>
+                            <span><?php echo $seat_numbers_str; ?></span>
+                        </p>
+                        <p class="card-text">
+                            <span><i class="fas fa-map-marker-alt"></i> Start Point:</span>
+                            <span><?php echo $reservation['start_point']; ?></span>
+                        </p>
+                        <p class="card-text">
+                            <span><i class="fas fa-map-marker-alt"></i> End Point:</span>
+                            <span><?php echo $reservation['end_point']; ?></span>
+                        </p>
+                        <p class="card-text">
+                            <span><i class="fas fa-ticket-alt"></i> Number of Tickets:</span>
+                            <span><?php echo count($seat_numbers); ?> <span class="ticket-count">(<?php echo implode(', ', $seat_numbers); ?>)</span></span>
+                        </p>
+                        <p class="card-text">
+                            <span><i class="fas fa-money-bill-wave"></i> Fare per Ticket:</span>
+                            <span>BDT <?php echo number_format($reservation['fare'], 2); ?></span>
+                        </p>
+                        <div class="total-fare">
+                            <span>Total Amount to Pay:</span>
+                            <span>BDT <?php echo number_format($reservation['fare'] * count($seat_numbers), 2); ?></span>
+                        </div>
                     </div>
                 </div>
             </div>

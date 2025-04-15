@@ -214,32 +214,343 @@ if (isset($_POST['download_csv'])) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #50c878;
+            --accent-color: #ff6b6b;
+            --background-color: #f8f9fa;
+            --text-color: #2c3e50;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --dark-bg: #121212;
+            --dark-card-bg: #1e1e1e;
+            --dark-text: #ffffff;
+            --dark-border: #333;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .container {
-            margin-top: 50px;
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 20px;
         }
+
         .card {
-            margin-bottom: 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            transition: all var(--transition-speed);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            animation: slideIn 0.6s ease-out forwards;
+            border: none;
         }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .card-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            position: relative;
+            padding-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--secondary-color);
+            border-radius: 2px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            padding: 0.75rem 1rem;
+            transition: all var(--transition-speed);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all var(--transition-speed);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .btn:hover::before {
+            transform: translateX(100%);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #357abd);
+            border: none;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--accent-color), #d93025);
+            border: none;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            border: none;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(108, 117, 125, 0.3);
+        }
+
+        .table {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .table thead th {
+            background: linear-gradient(135deg, var(--primary-color), #357abd);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(74, 144, 226, 0.05);
+        }
+
         .pagination {
             display: flex;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 2rem;
+            gap: 0.5rem;
         }
-        .pagination a {
-            margin: 0 5px;
-            padding: 8px 12px;
-            border: 1px solid #007bff;
-            color: #007bff;
+
+        .pagination-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: white;
+            color: var(--primary-color);
             text-decoration: none;
-            border-radius: 5px;
+            font-weight: 600;
+            transition: all var(--transition-speed);
+            box-shadow: var(--card-shadow);
         }
-        .pagination a.active {
-            background-color: #007bff;
-            color: #fff;
+
+        .pagination-link:hover {
+            transform: translateY(-3px);
+            background: var(--primary-color);
+            color: white;
         }
-        .pagination a:hover {
-            background-color: #0056b3;
-            color: #fff;
+
+        .pagination-link.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Dark Mode Support */
+        body.dark-mode {
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+        }
+
+        body.dark-mode .card {
+            background-color: var(--dark-card-bg);
+            border-color: var(--dark-border);
+        }
+
+        body.dark-mode .form-control {
+            background-color: #2d2d2d;
+            border-color: #333;
+            color: var(--dark-text);
+        }
+
+        body.dark-mode .form-control:focus {
+            background-color: #2d2d2d;
+            border-color: var(--primary-color);
+            color: var(--dark-text);
+        }
+
+        body.dark-mode .table {
+            color: var(--dark-text);
+        }
+
+        body.dark-mode .table tbody tr:hover {
+            background-color: rgba(74, 144, 226, 0.1);
+        }
+
+        body.dark-mode .pagination-link {
+            background-color: var(--dark-card-bg);
+            color: var(--dark-text);
+        }
+
+        body.dark-mode .pagination-link:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .card-body {
+                padding: 1.5rem;
+            }
+            
+            .table-responsive {
+                border-radius: 12px;
+                overflow: hidden;
+            }
+            
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Custom styles for train management specific elements */
+        .train-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(74, 144, 226, 0.05);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .train-info i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .compartment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .compartment-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: var(--card-shadow);
+            transition: all var(--transition-speed);
+        }
+
+        .compartment-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .station-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .station-tag {
+            background: rgba(74, 144, 226, 0.1);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
     </style>
 </head>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 13, 2025 at 08:13 PM
+-- Generation Time: Apr 16, 2025 at 12:14 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -61,45 +61,21 @@ CREATE TABLE `chat_messages` (
 --
 
 INSERT INTO `chat_messages` (`id`, `user_id`, `message`, `created_at`, `is_admin`, `is_read`, `name`) VALUES
-(1, 19, 'hello', '2025-03-07 23:09:33', 0, 1, 'Faiyan Islam Swapnil'),
-(2, 19, 'hi', '2025-03-07 23:09:49', 1, 0, 'system'),
-(3, 22, 'hello', '2025-03-08 23:14:32', 0, 1, 'Ibrahim'),
-(4, 22, 'hii', '2025-03-08 23:24:58', 1, 1, 'system'),
-(5, 22, 'tell me what are you doing?', '2025-03-09 00:04:38', 1, 1, 'system'),
-(6, 22, 'is everything okay on your end?', '2025-03-09 00:04:55', 0, 1, 'Ibrahim'),
-(7, 22, 'yeah it is okay', '2025-03-09 00:05:02', 1, 1, 'system'),
-(8, 22, 'thank you for saying that', '2025-03-09 00:05:11', 1, 1, 'system'),
-(9, 22, 'i have successfully implemented the file', '2025-03-09 00:05:27', 0, 1, 'Ibrahim'),
-(10, 22, 'yeahhhhhhhhh', '2025-03-09 00:05:34', 1, 1, 'system'),
-(11, 22, 'kudos', '2025-03-09 00:05:41', 1, 1, 'system'),
-(12, 22, 'wowww', '2025-03-09 00:07:02', 0, 1, 'Ibrahim'),
-(13, 19, 'lalal', '2025-03-09 00:07:17', 1, 0, 'system'),
-(14, 22, 'hehehe', '2025-03-09 00:07:25', 0, 1, 'Ibrahim'),
-(15, 22, 'hello', '2025-03-24 00:26:56', 1, 1, 'system'),
-(16, 22, 'hi', '2025-03-24 00:27:03', 0, 1, 'Ibrahim'),
-(17, 22, 'how to do this', '2025-03-24 00:27:11', 0, 1, 'Ibrahim'),
-(18, 22, 'test done', '2025-03-24 00:27:23', 1, 1, 'system'),
-(19, 22, 'test done', '2025-03-24 00:35:42', 0, 1, 'Ibrahim'),
-(20, 22, 'again', '2025-03-24 00:36:04', 1, 1, 'system'),
-(21, 22, 'test', '2025-03-24 00:36:41', 1, 1, 'system'),
-(22, 22, 'hi', '2025-03-24 00:37:00', 0, 1, 'Ibrahim'),
-(23, 22, 'hi', '2025-03-24 00:53:39', 1, 1, 'system'),
-(24, 22, 'test', '2025-03-24 00:53:56', 1, 1, 'system'),
-(25, 22, 'test 2', '2025-03-24 00:54:14', 1, 1, 'system'),
-(26, 22, 'test 3', '2025-03-24 00:55:05', 1, 1, 'system'),
-(27, 22, 'thanks', '2025-03-24 00:56:06', 0, 1, 'Ibrahim'),
-(28, 22, 'welcome', '2025-03-24 00:56:13', 1, 1, 'system'),
-(29, 22, 'again welcome', '2025-03-24 00:56:29', 1, 1, 'system'),
-(30, 22, 'hello', '2025-03-24 08:44:56', 1, 1, 'system'),
-(31, 22, 'hi', '2025-03-24 08:45:08', 0, 1, 'Ibrahim'),
-(32, 22, 'hello', '2025-03-24 08:45:21', 1, 1, 'system'),
-(33, 25, 'hi', '2025-04-08 06:17:51', 0, 1, 'Oli Ahmed'),
-(34, 25, 'hello', '2025-04-08 06:18:09', 1, 1, 'system'),
-(35, 25, 'noti besssa', '2025-04-08 06:18:59', 0, 1, 'Oli Ahmed'),
-(36, 25, 'tai naki?', '2025-04-08 06:19:42', 1, 1, 'system'),
-(37, 25, 'hae re notir baccha', '2025-04-08 06:19:51', 0, 1, 'Oli Ahmed'),
-(38, 22, 'hii', '2025-04-13 15:47:02', 0, 0, 'Ibrahim'),
-(39, 22, 'chudi', '2025-04-13 18:12:41', 0, 0, 'Ibrahim');
+(1, 22, 'hi', '2025-04-15 18:04:36', 0, 1, ''),
+(2, 22, 'hello', '2025-04-15 18:04:43', 1, 1, ''),
+(3, 26, 'hi', '2025-04-15 18:06:31', 0, 1, ''),
+(4, 26, 'hello', '2025-04-15 18:10:52', 0, 1, ''),
+(5, 26, 'hmm', '2025-04-15 18:11:01', 1, 1, ''),
+(6, 22, 'hm', '2025-04-15 18:11:04', 1, 1, ''),
+(7, 22, 'hm', '2025-04-15 18:17:14', 1, 1, ''),
+(8, 26, 'la', '2025-04-15 18:18:07', 1, 1, ''),
+(9, 26, 'hm', '2025-04-15 18:22:32', 1, 1, ''),
+(10, 22, 'hm', '2025-04-15 18:24:35', 0, 1, ''),
+(11, 22, 'hm', '2025-04-15 18:24:46', 1, 1, ''),
+(12, 22, 'ok\\', '2025-04-15 18:26:19', 1, 1, ''),
+(13, 26, 'hm', '2025-04-15 18:26:29', 1, 0, ''),
+(14, 22, 'hm', '2025-04-15 18:26:53', 0, 1, ''),
+(15, 22, 'hey', '2025-04-15 21:12:40', 1, 1, '');
 
 -- --------------------------------------------------------
 
@@ -148,7 +124,7 @@ CREATE TABLE `demo_accounts` (
 
 INSERT INTO `demo_accounts` (`id`, `account_type`, `account_number`, `pin`, `balance`) VALUES
 (1, 'bkash', '01601750278', '1234', 3653.00),
-(2, 'rocket', '01601750278', '1234', 17669.00),
+(2, 'rocket', '01601750278', '1234', 16208.00),
 (3, 'card', '12345678', '123', 19966.00);
 
 -- --------------------------------------------------------
@@ -159,30 +135,31 @@ INSERT INTO `demo_accounts` (`id`, `account_type`, `account_number`, `pin`, `bal
 
 CREATE TABLE `metro_stations` (
   `id` int(11) NOT NULL,
-  `s_name` varchar(255) NOT NULL
+  `s_name` varchar(255) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `metro_stations`
 --
 
-INSERT INTO `metro_stations` (`id`, `s_name`) VALUES
-(1, 'Uttara_North'),
-(2, 'Uttara_Center'),
-(3, 'Uttara_South'),
-(4, 'Pallabi'),
-(5, 'Mirpur_11'),
-(6, 'Mirpur_10'),
-(7, 'Kazi_Para'),
-(8, 'ShewraPara'),
-(9, 'Agargaon'),
-(10, 'Bijoy_Sharani'),
-(11, 'Farmgate'),
-(12, 'Kawran_Bazar'),
-(13, 'Shahbagh'),
-(14, 'Dhaka_University'),
-(15, 'Secretariat'),
-(16, 'Motijheel');
+INSERT INTO `metro_stations` (`id`, `s_name`, `active`) VALUES
+(1, 'Uttara_North', 1),
+(2, 'Uttara_Center', 1),
+(3, 'Uttara_South', 1),
+(4, 'Pallabi', 1),
+(5, 'Mirpur_11', 1),
+(6, 'Mirpur_10', 1),
+(7, 'Kazi_Para', 1),
+(8, 'ShewraPara', 1),
+(9, 'Agargaon', 1),
+(10, 'Bijoy_Sharani', 1),
+(11, 'Farmgate', 1),
+(12, 'Kawran_Bazar', 1),
+(13, 'Shahbagh', 1),
+(14, 'Dhaka_University', 1),
+(15, 'Secretariat', 1),
+(16, 'Motijheel', 1);
 
 -- --------------------------------------------------------
 
@@ -277,7 +254,7 @@ INSERT INTO `ticket_routes` (`id`, `start_point`, `end_point`, `fare`) VALUES
 (49, 'Pallabi', 'Mirpur_11', 85.00),
 (50, 'Pallabi', 'Mirpur_10', 55.00),
 (51, 'Pallabi', 'Kazi_Para', 87.00),
-(52, 'Pallabi', 'ShewraPara', 92.00),
+(52, 'Pallabi', 'ShewraPara', 50.00),
 (53, 'Pallabi', 'Agargaon', 91.00),
 (54, 'Pallabi', 'Bijoy_Sharani', 86.00),
 (55, 'Pallabi', 'Farmgate', 63.00),
@@ -465,7 +442,37 @@ INSERT INTO `ticket_routes` (`id`, `start_point`, `end_point`, `fare`) VALUES
 (237, 'Motijheel', 'Kawran_Bazar', 43.00),
 (238, 'Motijheel', 'Shahbagh', 15.00),
 (239, 'Motijheel', 'Dhaka_University', 18.00),
-(240, 'Motijheel', 'Secretariat', 85.00);
+(240, 'Motijheel', 'Secretariat', 85.00),
+(271, '20', '2', 43.00),
+(272, '2', '20', 30.00),
+(273, '20', '3', 31.00),
+(274, '3', '20', 42.00),
+(275, '20', '4', 30.00),
+(276, '4', '20', 41.00),
+(277, '20', '5', 29.00),
+(278, '5', '20', 17.00),
+(279, '20', '6', 18.00),
+(280, '6', '20', 47.00),
+(281, '20', '7', 48.00),
+(282, '7', '20', 17.00),
+(283, '20', '8', 16.00),
+(284, '8', '20', 30.00),
+(285, '20', '9', 29.00),
+(286, '9', '20', 16.00),
+(287, '20', '10', 23.00),
+(288, '10', '20', 31.00),
+(289, '20', '11', 47.00),
+(290, '11', '20', 39.00),
+(291, '20', '12', 24.00),
+(292, '12', '20', 34.00),
+(293, '20', '13', 19.00),
+(294, '13', '20', 20.00),
+(295, '20', '14', 24.00),
+(296, '14', '20', 44.00),
+(297, '20', '15', 15.00),
+(298, '15', '20', 22.00),
+(299, '20', '16', 41.00),
+(300, '16', '20', 34.00);
 
 -- --------------------------------------------------------
 
@@ -492,6 +499,7 @@ INSERT INTO `transactions` (`transaction_id`, `user_id`, `start_location`, `end_
 ('txn_31FfJXN', 22, 'Pallabi', 'Farmgate', 63.00, '2025-03-04 17:47:59', NULL),
 ('txn_328AmuH', 22, 'Mirpur_10', 'Motijheel', 99.00, '2025-04-10 18:00:30', NULL),
 ('txn_3Bn6EVW', 22, 'Motijheel', 'ShewraPara', 83.00, '2025-03-23 23:50:14', NULL),
+('txn_3OKtI6s', 22, 'Uttara_Center', 'Farmgate', 23.00, '2025-04-15 21:38:37', '2025-04-16 21:38:37'),
 ('txn_53qmAby', 20, 'Uttara_South', 'Dhaka_University', 17.00, '2025-02-24 17:15:59', NULL),
 ('txn_5pD37rO', 20, 'Uttara_South', 'Dhaka_University', 17.00, '2025-02-24 17:09:17', NULL),
 ('txn_6zVFCu3', 22, 'Motijheel', 'ShewraPara', 83.00, '2025-03-23 23:47:04', NULL),
@@ -560,10 +568,10 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `google_id`, `name`, `profile_image`, `phone`, `Address`) VALUES
-(19, 'faiyanswapnil@gmail.com', '$2y$10$D5ayv7Y7C.p5RCpkmIyc4Om7nbDBPZmQdybmoVuHR/zRHSpQHdaXO', NULL, 'Faiyan Islam Swapnil', 'uploaded_profile_images/1f0e3dad99908345f7439f8ffabdffc4.jpg', '01711111111', 'Thanar Mor'),
 (22, 'ibrahimsiddik007@gmail.com', '', '114164509074598760418', 'Ibrahim', 'uploaded_profile_images/b6d767d2f8ed5d21a44b0e5886680cb9.jpg', '01700000000', 'Dhaka,Bashundhara R/A,House-28'),
 (24, 'kalamama@gmail.com', '$2y$10$vZt2M0GZaqKEEi683NMvPeRu0VXNzpcgScT9tDko9HpALXLs/CjIa', NULL, 'Kala Mama', 'images\\default_profile_account_photo.jpg', '01711111111', 'Uttara'),
-(25, 'oliahmedsarker@gmail.com', '$2y$10$XqoQIJM5NZRZqfr8kY3rLeHEfe4DYIoFO0TxViW/PKs0oZHeGv.WC', NULL, 'Oli Ahmed', 'images\\default_profile_account_photo.jpg', '01753927290', 'Mirpur');
+(25, 'oliahmedsarker@gmail.com', '$2y$10$XqoQIJM5NZRZqfr8kY3rLeHEfe4DYIoFO0TxViW/PKs0oZHeGv.WC', NULL, 'Oli Ahmed', 'images\\default_profile_account_photo.jpg', '01753927290', 'Mirpur'),
+(26, 'faiyanswapnil@gmail.com', '$2y$10$o4ZZ1.rqc2OcvN7p5kWR3OKqy1X/k7Q3lsPW0KkxcNMptptTYFLLe', NULL, 'Faiyan Islam Swapnil', 'images\\default_profile_account_photo.jpg', '01711111111', '28,Road No- 1, Bashundhara R/A');
 
 --
 -- Indexes for dumped tables
@@ -640,7 +648,7 @@ ALTER TABLE `admin_users`
 -- AUTO_INCREMENT for table `chat_messages`
 --
 ALTER TABLE `chat_messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `contacts`
@@ -658,7 +666,7 @@ ALTER TABLE `demo_accounts`
 -- AUTO_INCREMENT for table `metro_stations`
 --
 ALTER TABLE `metro_stations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `reviews`
@@ -670,13 +678,13 @@ ALTER TABLE `reviews`
 -- AUTO_INCREMENT for table `ticket_routes`
 --
 ALTER TABLE `ticket_routes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=241;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=301;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- Constraints for dumped tables

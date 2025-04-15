@@ -15,9 +15,19 @@ if (!isset($_SESSION['user_id'])) {
 // Reset payment completed flag
 $_SESSION['payment_completed'] = false;
 
-// Fetch station names
+// Check if active column exists in metro_stations table
+$checkColumnQuery = "SHOW COLUMNS FROM metro_stations LIKE 'active'";
+$columnResult = $conn1->query($checkColumnQuery);
+
+// If active column doesn't exist, add it
+if ($columnResult->num_rows == 0) {
+    $alterQuery = "ALTER TABLE metro_stations ADD COLUMN active TINYINT(1) NOT NULL DEFAULT 1";
+    $conn1->query($alterQuery);
+}
+
+// Fetch only ACTIVE station names
 $stations = [];
-$sql = "SELECT s_name FROM metro_stations";
+$sql = "SELECT s_name FROM metro_stations WHERE active = 1";
 $result = $conn1->query($sql);
 if ($result->num_rows > 0) {
     while($row = $result->fetch_assoc()) {
@@ -34,6 +44,7 @@ if ($result->num_rows > 0) {
     <title>Purchase Metro Ticket</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="assets/css/nav.css">
     <link rel="stylesheet" href="assets/css/metro_ticket.css">
     <style>
@@ -176,20 +187,10 @@ if ($result->num_rows > 0) {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid var(--glass-border);
             border-radius: 12px;
-            padding: 15px 45px 15px 20px;
+            padding: 15px 20px;
             color: #fff;
             font-size: 1.1rem;
             transition: all 0.3s ease;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 20px;
-            height: auto;
-            min-height: 50px;
-            line-height: 1.5;
         }
 
         .form-control:focus {
@@ -202,26 +203,6 @@ if ($result->num_rows > 0) {
 
         .form-control::placeholder {
             color: rgba(255, 255, 255, 0.6);
-        }
-
-        /* Dropdown Menu Styles */
-        .form-control option {
-            background-color: var(--dropdown-bg);
-            color: var(--dropdown-text);
-            padding: 12px 15px;
-            font-size: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .form-control option:hover {
-            background-color: var(--dropdown-hover);
-            color: #fff;
-        }
-
-        .form-control option:checked {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: bold;
         }
 
         .btn-primary {
@@ -290,6 +271,40 @@ if ($result->num_rows > 0) {
             animation: pulse 1s infinite;
         }
 
+        /* UI Autocomplete Styling */
+        .ui-autocomplete {
+            background: rgba(30, 30, 30, 0.95) !important;
+            border-radius: 12px !important;
+            border: 1px solid var(--glass-border) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+            padding: 10px !important;
+            max-height: 250px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .ui-autocomplete .ui-menu-item {
+            padding: 5px !important;
+        }
+
+        .ui-autocomplete .ui-menu-item-wrapper {
+            padding: 10px 15px !important;
+            color: #fff !important;
+            border-radius: 8px !important;
+            transition: all 0.2s ease;
+        }
+
+        .ui-autocomplete .ui-menu-item-wrapper.ui-state-active {
+            background: var(--primary-color) !important;
+            border: none !important;
+            margin: 0 !important;
+            color: white !important;
+        }
+
+        .ui-helper-hidden-accessible {
+            display: none !important;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             .ticket-form {
@@ -342,41 +357,6 @@ if ($result->num_rows > 0) {
             background-color: rgba(255, 255, 255, 0.2);
             color: #fff;
         }
-
-        body.dark-mode .form-control option {
-            background-color: #2a2a2a;
-            color: #fff;
-        }
-
-        body.dark-mode .form-control option:hover {
-            background-color: #3a3a3a;
-            color: #fff;
-        }
-
-        /* Custom Select Styling */
-        select.form-control {
-            cursor: pointer;
-            color: #fff !important;
-            text-shadow: 0 0 0 #fff;
-            -webkit-text-fill-color: #fff;
-        }
-
-        select.form-control:focus {
-            background-color: #2a2a2a;
-            color: #fff;
-        }
-
-        /* Ensure dropdown is above other elements */
-        select.form-control {
-            z-index: 1;
-        }
-
-        /* Make sure the dropdown text is visible */
-        select.form-control option {
-            color: #fff;
-            background-color: #2a2a2a;
-            padding: 12px 15px;
-        }
     </style>
 </head>
 <body>
@@ -390,19 +370,11 @@ if ($result->num_rows > 0) {
                     <form action="confirm_metro_ticket.php" method="POST">
                         <div class="form-group">
                             <label for="startLocation"><i class="fas fa-map-marker-alt"></i> Start Location</label>
-                            <select class="form-control" id="startLocation" name="startLocation" required>
-                                <?php foreach ($stations as $station): ?>
-                                    <option value="<?= $station ?>"><?= $station ?></option>
-                                <?php endforeach; ?>
-                            </select>
+                            <input type="text" class="form-control" id="startLocation" name="startLocation" placeholder="Type to search stations..." required autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="endLocation"><i class="fas fa-map-marker-alt"></i> End Location</label>
-                            <select class="form-control" id="endLocation" name="endLocation" required>
-                                <?php foreach ($stations as $station): ?>
-                                    <option value="<?= $station ?>"><?= $station ?></option>
-                                <?php endforeach; ?>
-                            </select>
+                            <input type="text" class="form-control" id="endLocation" name="endLocation" placeholder="Type to search stations..." required autocomplete="off">
                         </div>
                         <div class="form-group">
                             <label for="fare"><i class="fas fa-money-bill-wave"></i> Fare</label>
@@ -419,14 +391,38 @@ if ($result->num_rows > 0) {
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
         $(document).ready(function() {
+            // Create an array of available stations for autocomplete
+            var availableStations = <?php echo json_encode($stations); ?>;
+
+            // Initialize autocomplete for start location input
+            $("#startLocation").autocomplete({
+                source: availableStations,
+                minLength: 1,
+                select: function(event, ui) {
+                    updateFare();
+                }
+            });
+
+            // Initialize autocomplete for end location input
+            $("#endLocation").autocomplete({
+                source: availableStations,
+                minLength: 1,
+                select: function(event, ui) {
+                    updateFare();
+                }
+            });
+
+            // Function to update the fare when start or end locations change
             function updateFare() {
                 var startLocation = $('#startLocation').val();
                 var endLocation = $('#endLocation').val();
-                if (startLocation && endLocation) {
+                
+                if (startLocation && endLocation && availableStations.includes(startLocation) && availableStations.includes(endLocation)) {
                     $.ajax({
                         url: 'get_metro_fare.php',
                         type: 'POST',
@@ -444,7 +440,43 @@ if ($result->num_rows > 0) {
                 }
             }
 
-            $('#startLocation, #endLocation').change(updateFare);
+            // Call updateFare when inputs change
+            $('#startLocation, #endLocation').on('change keyup', function() {
+                updateFare();
+            });
+            
+            // Validate form on submit
+            $('form').submit(function(e) {
+                var startLocation = $('#startLocation').val();
+                var endLocation = $('#endLocation').val();
+                
+                // Check if entered stations are valid
+                if (!availableStations.includes(startLocation)) {
+                    alert('Please select a valid start station from the suggestions');
+                    e.preventDefault();
+                    return false;
+                }
+                
+                if (!availableStations.includes(endLocation)) {
+                    alert('Please select a valid end station from the suggestions');
+                    e.preventDefault();
+                    return false;
+                }
+                
+                if (startLocation === endLocation) {
+                    alert('Start and end stations cannot be the same');
+                    e.preventDefault();
+                    return false;
+                }
+                
+                if (!$('#fare').val()) {
+                    alert('Unable to calculate fare. Please try again.');
+                    e.preventDefault();
+                    return false;
+                }
+                
+                return true;
+            });
         });
     </script>
 </body>

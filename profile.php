@@ -93,6 +93,32 @@ while ($stmt->fetch()) {
 }
 $stmt->close();
 
+$stmt = $conn3->prepare("
+    SELECT t.transaction_id, 
+           b.from_location as origin, 
+           b.to_location as destination, 
+           t.amount, 
+           t.payment_time 
+    FROM long_route_transactions t
+    JOIN long_route_buses b ON t.bus_id = b.bus_id
+    WHERE t.user_id = ?
+    ORDER BY t.payment_time DESC
+");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->bind_result($transactionId, $origin, $destination, $amount, $paymentTime);
+while ($stmt->fetch()) {
+    $receipts[] = [
+        'transaction_id' => $transactionId,
+        'start_location' => $origin,
+        'end_location' => $destination,
+        'fare' => $amount,
+        'created_at' => $paymentTime,
+        'type' => 'InterCity Bus'
+    ];
+}
+$stmt->close();
+
 // Sort receipts by created_at in descending order
 usort($receipts, function($a, $b) {
     return strtotime($b['created_at']) - strtotime($a['created_at']);
@@ -561,6 +587,8 @@ usort($receipts, function($a, $b) {
                                             <a href="train_generate_receipt.php?transaction_id=<?php echo htmlspecialchars($receipt['transaction_id']); ?>" download class="btn btn-primary"><i class="fas fa-download"></i> Download</a>
                                         <?php elseif ($receipt['type'] == 'Local Bus'): ?>
                                             <a href="bus_download_receipt.php?transaction_id=<?php echo htmlspecialchars($receipt['transaction_id']); ?>" download class="btn btn-primary"><i class="fas fa-download"></i> Download</a>
+                                        <?php elseif ($receipt['type'] == 'InterCity Bus'): ?>
+                                            <a href="long_route_generate_receipt.php?transaction_id=<?php echo htmlspecialchars($receipt['transaction_id']); ?>" download class="btn btn-primary"><i class="fas fa-download"></i> Download</a>
                                         <?php endif; ?>
                                     </td>
                                 </tr>

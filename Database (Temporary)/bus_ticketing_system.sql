@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 13, 2025 at 08:13 PM
+-- Generation Time: Apr 16, 2025 at 12:13 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -60,7 +60,8 @@ INSERT INTO `bus_transactions` (`id`, `transaction_id`, `user_id`, `amount`, `se
 (12, 'txn_86zct38', 22, 12, 0, '2025-04-07 15:51:32', 'Mirpur-10', 'Mirpur-1', 'Victor Paribahan', 'local', 'rocket'),
 (13, 'txn_1bzit1c', 22, 20, 0, '2025-04-07 16:31:39', 'Gabtoli', 'Savar', 'Soukhin Paribahan', 'local', 'bkash'),
 (14, 'txn_c1u3y8g', 22, 38, 0, '2025-04-07 16:55:15', 'Motijheel', 'Mirpur-10', 'Mirpur Super Link', 'local', 'bkash'),
-(15, 'txn_2nm38sp', 25, 20, 0, '2025-04-08 12:14:36', 'Uttara', 'Kuril', 'Suvastu Paribahan', 'local', 'bkash');
+(15, 'txn_2nm38sp', 25, 20, 0, '2025-04-08 12:14:36', 'Uttara', 'Kuril', 'Suvastu Paribahan', 'local', 'bkash'),
+(16, 'txn_dznu1hi', 22, 38, 0, '2025-04-16 03:48:59', 'Mirpur-10', 'Motijheel', 'Mirpur Super Link', 'local', 'rocket');
 
 -- --------------------------------------------------------
 
@@ -99,8 +100,6 @@ INSERT INTO `local_buses` (`id`, `bus_name`, `capacity`, `origin`, `destination`
 (19, 'Shikhor Paribahan', 50, 'Kakoli', 'Banani'),
 (20, 'Salsabil Paribahan', 45, 'Rampura', 'Malibagh'),
 (21, 'Salsabil Paribahan', 45, 'Malibagh', 'Rampura'),
-(22, 'Savar Paribahan', 50, 'Shyamoli', 'Agargaon'),
-(23, 'Savar Paribahan', 50, 'Agargaon', 'Shyamoli'),
 (24, 'Mirpur Link', 45, 'Kuril', 'Bashundhara'),
 (25, 'Mirpur Link', 45, 'Bashundhara', 'Kuril'),
 (26, 'Super Sheba', 50, 'Gulistan', 'Motijheel'),
@@ -110,7 +109,8 @@ INSERT INTO `local_buses` (`id`, `bus_name`, `capacity`, `origin`, `destination`
 (30, 'Al-Makkah Paribahan', 50, 'Shahbagh', 'Farmgate'),
 (31, 'Al-Makkah Paribahan', 50, 'Farmgate', 'Shahbagh'),
 (32, 'Suvastu Paribahan', 50, 'Uttara', 'Kuril'),
-(33, 'Suvastu Paribahan', 50, 'Kuril', 'Uttara');
+(33, 'Suvastu Paribahan', 50, 'Kuril', 'Uttara'),
+(34, 'Savar Paribahan', 40, 'Savar', 'Gulistan');
 
 -- --------------------------------------------------------
 
@@ -159,8 +159,6 @@ INSERT INTO `local_routes` (`id`, `origin`, `destination`, `distance`, `fare`) V
 (26, 'Kakoli', 'Banani', 4, 12.00),
 (27, 'Rampura', 'Malibagh', 3, 10.00),
 (28, 'Malibagh', 'Rampura', 3, 10.00),
-(29, 'Shyamoli', 'Agargaon', 5, 15.00),
-(30, 'Agargaon', 'Shyamoli', 5, 15.00),
 (31, 'Kuril', 'Bashundhara', 2, 8.00),
 (32, 'Bashundhara', 'Kuril', 2, 8.00),
 (33, 'Gulistan', 'Motijheel', 2, 10.00),
@@ -170,7 +168,9 @@ INSERT INTO `local_routes` (`id`, `origin`, `destination`, `distance`, `fare`) V
 (37, 'Shahbagh', 'Farmgate', 5, 15.00),
 (38, 'Farmgate', 'Shahbagh', 5, 15.00),
 (39, 'Uttara', 'Kuril', 7, 20.00),
-(40, 'Kuril', 'Uttara', 7, 20.00);
+(40, 'Kuril', 'Uttara', 7, 20.00),
+(41, 'Savar', 'Gulistan', 10, 50.00),
+(42, 'Gulistan', 'Savar', 10, 50.00);
 
 -- --------------------------------------------------------
 
@@ -287,7 +287,9 @@ INSERT INTO `long_route_transactions` (`transaction_id`, `user_id`, `bus_id`, `s
 (23, 22, 6, '\n                                    A8                                ,\n                                    B8                                ', 700.00, 'bkash', '2025-04-13 21:31:34', 'completed', 'txn-DB099B', '2025-04-15'),
 (24, 22, 6, '\n                                    C8                                ,\n                                    D8                                ', 700.00, 'bkash', '2025-04-13 23:33:46', 'completed', 'txn-6FA315', '2025-04-15'),
 (25, 22, 6, '\n                                    C9                                ,\n                                    D9                                ', 700.00, 'bkash', '2025-04-14 00:11:16', 'completed', 'txn-CD4390', '2025-04-15'),
-(26, 22, 6, '\n                                    B9                                ,\n                                    A9                                ', 700.00, 'bkash', '2025-04-14 00:12:11', 'completed', 'txn-0DA8B8', '2025-04-15');
+(26, 22, 6, '\n                                    B9                                ,\n                                    A9                                ', 700.00, 'bkash', '2025-04-14 00:12:11', 'completed', 'txn-0DA8B8', '2025-04-15'),
+(27, 22, 6, '\n                                    C3                                ,\n                                    D3                                ', 700.00, 'rocket', '2025-04-16 03:47:33', 'completed', 'txn-668351', '2025-04-16'),
+(28, 22, 6, '\n                                    C5                                ,\n                                    D5                                ', 700.00, 'rocket', '2025-04-16 03:51:25', 'completed', 'txn-9BF591', '2025-04-16');
 
 -- --------------------------------------------------------
 
@@ -361,19 +363,19 @@ ALTER TABLE `reservations`
 -- AUTO_INCREMENT for table `bus_transactions`
 --
 ALTER TABLE `bus_transactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `local_buses`
 --
 ALTER TABLE `local_buses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `local_routes`
 --
 ALTER TABLE `local_routes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `long_route_buses`
@@ -391,7 +393,7 @@ ALTER TABLE `long_route_seats`
 -- AUTO_INCREMENT for table `long_route_transactions`
 --
 ALTER TABLE `long_route_transactions`
-  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `transaction_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `reservations`

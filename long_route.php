@@ -9,7 +9,23 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Get unique routes (from-to combinations)
+// Get unique from locations
+$from_locations_query = "SELECT DISTINCT from_location FROM long_route_buses ORDER BY from_location";
+$from_locations_result = $conn3->query($from_locations_query);
+$from_locations = [];
+while ($row = $from_locations_result->fetch_assoc()) {
+    $from_locations[] = $row['from_location'];
+}
+
+// Get unique to locations
+$to_locations_query = "SELECT DISTINCT to_location FROM long_route_buses ORDER BY to_location";
+$to_locations_result = $conn3->query($to_locations_query);
+$to_locations = [];
+while ($row = $to_locations_result->fetch_assoc()) {
+    $to_locations[] = $row['to_location'];
+}
+
+// Get unique routes (from-to combinations) - keep this for fallback
 $routes_query = "SELECT DISTINCT from_location, to_location FROM long_route_buses ORDER BY from_location";
 $routes_result = $conn3->query($routes_query);
 
@@ -27,6 +43,7 @@ $dates_result = $conn3->query($dates_query);
     <title>Long Route Bus</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <style>
         :root {
             --primary-color: #4a90e2;
@@ -431,6 +448,51 @@ $dates_result = $conn3->query($dates_query);
             border-top: 6px solid var(--primary-color);
             pointer-events: none;
         }
+        
+        /* UI Autocomplete Styling */
+        .ui-autocomplete {
+            background: var(--background-color) !important;
+            border-radius: 8px !important;
+            border: 1px solid #e9ecef !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+            padding: 10px !important;
+            max-height: 250px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 1050 !important;
+        }
+
+        body.dark-mode .ui-autocomplete {
+            background: #2d2d2d !important;
+            border-color: #333 !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .ui-autocomplete .ui-menu-item {
+            padding: 5px !important;
+        }
+
+        .ui-autocomplete .ui-menu-item-wrapper {
+            padding: 10px 15px !important;
+            color: var(--text-color) !important;
+            border-radius: 8px !important;
+            transition: all 0.2s ease;
+        }
+
+        body.dark-mode .ui-autocomplete .ui-menu-item-wrapper {
+            color: #e8eaed !important;
+        }
+
+        .ui-autocomplete .ui-menu-item-wrapper.ui-state-active {
+            background: var(--primary-color) !important;
+            border: none !important;
+            margin: 0 !important;
+            color: white !important;
+        }
+
+        .ui-helper-hidden-accessible {
+            display: none !important;
+        }
     </style>
 </head>
 <body>
@@ -444,16 +506,17 @@ $dates_result = $conn3->query($dates_query);
                     <h3 class="card-title">Select Route and Date</h3>
                     <form action="long_route_buses.php" method="GET">
                         <div class="form-group">
-                            <label for="route">Select Route:</label>
-                            <select class="form-control" id="route" name="route" required>
-                                <option value="">-- Select a Route --</option>
-                                <?php while ($route = $routes_result->fetch_assoc()): ?>
-                                    <option value="<?= $route['from_location'] ?>-<?= $route['to_location'] ?>">
-                                        <?= $route['from_location'] ?> to <?= $route['to_location'] ?>
-                                    </option>
-                                <?php endwhile; ?>
-                            </select>
+                            <label for="fromLocation"><i class="fas fa-map-marker-alt"></i> From:</label>
+                            <input type="text" class="form-control" id="fromLocation" name="fromLocation" placeholder="Type departure city..." required autocomplete="off">
                         </div>
+                        
+                        <div class="form-group">
+                            <label for="toLocation"><i class="fas fa-map-marker-alt"></i> To:</label>
+                            <input type="text" class="form-control" id="toLocation" name="toLocation" placeholder="Type destination city..." required autocomplete="off">
+                        </div>
+                        
+                        <!-- Hidden input to store the route format needed for backend -->
+                        <input type="hidden" id="route" name="route" value="">
                         
                         <!-- Add date selection for next 7 days -->
                         <div class="form-group">
@@ -494,6 +557,7 @@ $dates_result = $conn3->query($dates_query);
     </div>
     
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     
@@ -545,14 +609,42 @@ $dates_result = $conn3->query($dates_query);
             }
         });
 
-        // JavaScript for route selection UI enhancements
         $(document).ready(function() {
-            // Highlight available routes when selecting
-            $('#route').change(function() {
-                const selectedRoute = $(this).val();
-                if (selectedRoute) {
-                    console.log(`Route selected: ${selectedRoute}`);
+            // Create arrays of available locations for autocomplete
+            var fromLocations = <?php echo json_encode($from_locations); ?>;
+            var toLocations = <?php echo json_encode($to_locations); ?>;
+            
+            // Initialize autocomplete for from location
+            $("#fromLocation").autocomplete({
+                source: fromLocations,
+                minLength: 1,
+                select: function(event, ui) {
+                    updateRouteValue();
                 }
+            });
+            
+            // Initialize autocomplete for to location
+            $("#toLocation").autocomplete({
+                source: toLocations,
+                minLength: 1,
+                select: function(event, ui) {
+                    updateRouteValue();
+                }
+            });
+            
+            // Update the hidden route field when locations change
+            function updateRouteValue() {
+                var fromLocation = $('#fromLocation').val();
+                var toLocation = $('#toLocation').val();
+                
+                if (fromLocation && toLocation) {
+                    $('#route').val(fromLocation + '-' + toLocation);
+                }
+            }
+            
+            // Trigger updateRouteValue when inputs change
+            $('#fromLocation, #toLocation').on('change keyup', function() {
+                updateRouteValue();
             });
             
             // When journey date changes
@@ -561,47 +653,50 @@ $dates_result = $conn3->query($dates_query);
                 console.log(`Date selected: ${selectedDate}`);
             });
             
+            // Add route label click handlers
+            $('.list-group-item').click(function() {
+                var routeText = $(this).text();
+                var parts = routeText.split(' to ');
+                
+                if (parts.length === 2) {
+                    $('#fromLocation').val(parts[0].trim());
+                    $('#toLocation').val(parts[1].trim());
+                    updateRouteValue();
+                }
+            });
+            
             // Validate form before submission
-            $('form').submit(function() {
-                if (!$('#route').val()) {
-                    alert('Please select a route');
+            $('form').submit(function(e) {
+                var fromLocation = $('#fromLocation').val();
+                var toLocation = $('#toLocation').val();
+                
+                if (!fromLocation || !fromLocations.includes(fromLocation)) {
+                    alert('Please select a valid departure city');
+                    e.preventDefault();
                     return false;
                 }
-
+                
+                if (!toLocation || !toLocations.includes(toLocation)) {
+                    alert('Please select a valid destination city');
+                    e.preventDefault();
+                    return false;
+                }
+                
+                if (fromLocation === toLocation) {
+                    alert('Departure and destination cities cannot be the same');
+                    e.preventDefault();
+                    return false;
+                }
+                
                 if (!$('#journey_date').val()) {
                     alert('Please select a journey date');
+                    e.preventDefault();
                     return false;
                 }
-
-                return true; // Allow form submission
-            });
-        });
-
-        // JavaScript to populate departure times based on route
-        $(document).ready(function() {
-            // When route changes, update departure times
-            $('#route').change(function() {
-                const routeValue = $(this).val();
-                const journeyDate = $('#journey_date').val();
                 
-                if (routeValue) {
-                    // Parse the route value which is in format "from-to"
-                    const [fromLocation, toLocation] = routeValue.split('-');
-                    
-                    console.log(`Looking for buses from ${fromLocation} to ${toLocation} on ${journeyDate}`);
-                }
-            });
-
-            // Function to handle the View Seats button click
-            $(document).on('click', '.view-seats', function () {
-                const busId = $(this).data('bus-id');
-                const journeyDate = $('#journey_date').val(); // Get selected journey date
-                const busName = $(this).closest('tr').find('td:nth-child(2)').text();
-                
-                // Update modal title with bus name and date
-                $('#seatMapModalLabel').text(`Bus Seat Map - ${busName} (${journeyDate})`);
-                
-                $('#seatMapModal').modal('show'); // Show the modal
+                // Update the route value one final time before submission
+                $('#route').val(fromLocation + '-' + toLocation);
+                return true;
             });
         });
     </script>

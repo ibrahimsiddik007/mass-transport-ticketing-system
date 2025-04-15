@@ -39,90 +39,49 @@ $url = $client->createAuthUrl();
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             color: #fff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            animation: fadeIn 1.5s ease-out;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('images/login/login image.jpg') no-repeat center center fixed;
-            background-size: cover;
-            filter: brightness(0.4) contrast(1.2);
-            z-index: -2;
-        }
-
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9), rgba(22, 33, 62, 0.9));
-            z-index: -1;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            margin: 0;
         }
 
         .login-container {
-            min-height: 100vh;
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 2rem;
+            margin-top: 60px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .login-card {
-            background: var(--glass-bg);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 20px;
             padding: 40px;
-            box-shadow: var(--glass-shadow);
-            animation: slideIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             width: 100%;
-            max-width: 500px;
+            max-width: 400px;
+            transition: transform var(--transition-speed) ease;
         }
 
-        .login-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(80, 200, 120, 0.1));
-            pointer-events: none;
-            animation: shine 3s infinite linear;
-        }
-
-        @keyframes shine {
-            0% { background-position: -100% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(50px) scale(0.95); opacity: 0; }
-            to { transform: translateY(0) scale(1); opacity: 1; }
+        .login-card:hover {
+            transform: translateY(-5px);
         }
 
         .login-heading {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 600;
             margin-bottom: 30px;
             color: #fff;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            text-align: center;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -130,19 +89,17 @@ $url = $client->createAuthUrl();
         }
 
         .login-heading i {
-            font-size: 2.8rem;
+            font-size: 2.2rem;
             color: var(--secondary-color);
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
         }
 
         .form-group {
             margin-bottom: 25px;
-            position: relative;
+            transition: transform var(--transition-speed) ease;
+        }
+
+        .form-group:focus-within {
+            transform: translateX(5px);
         }
 
         .form-group label {
@@ -157,28 +114,24 @@ $url = $client->createAuthUrl();
         .form-group label i {
             color: var(--primary-color);
             font-size: 1.3rem;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
         }
 
         .form-control {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
             padding: 12px 20px;
             color: #fff;
             font-size: 1.1rem;
-            transition: all 0.3s ease;
+            width: 100%;
+            transition: all var(--transition-speed) ease;
         }
 
         .form-control:focus {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.3);
             border-color: var(--primary-color);
             box-shadow: 0 0 15px rgba(74, 144, 226, 0.3);
+            outline: none;
             transform: translateY(-2px);
         }
 
@@ -193,38 +146,20 @@ $url = $client->createAuthUrl();
             padding: 12px 30px;
             font-size: 1.1rem;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+            color: white;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all var(--transition-speed) ease;
         }
 
         .btn-primary:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
-        }
-
-        .btn-primary:hover::before {
-            transform: translateX(100%);
-        }
-
-        .btn-primary i {
-            margin-right: 10px;
-            animation: float 2s ease-in-out infinite;
+            background: linear-gradient(135deg, #357abd, var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
         }
 
         .google-signin-btn {
@@ -235,25 +170,25 @@ $url = $client->createAuthUrl();
             font-size: 1.1rem;
             font-weight: 600;
             color: white;
+            width: 100%;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 15px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(66, 133, 244, 0.3);
+            margin-top: 20px;
+            transition: all var(--transition-speed) ease;
         }
 
         .google-signin-btn:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(66, 133, 244, 0.4);
+            background: linear-gradient(135deg, #357ae8, #4285f4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.4);
         }
 
         .google-signin-btn img {
             width: 24px;
             height: 24px;
-            animation: pulse 2s infinite;
         }
 
         .alert {
@@ -266,7 +201,11 @@ $url = $client->createAuthUrl();
             animation: slideIn 0.5s ease-out;
         }
 
-        /* Responsive Design */
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
         @media (max-width: 768px) {
             .login-card {
                 padding: 30px;
@@ -274,7 +213,7 @@ $url = $client->createAuthUrl();
             }
 
             .login-heading {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
 
             .form-group label {
@@ -301,7 +240,7 @@ $url = $client->createAuthUrl();
             <h2 class="login-heading"><i class="fas fa-user-circle"></i> Login</h2>
             
             <?php if (isset($_SESSION['error'])): ?>
-                <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['error']) ?></div>
+                <div class="alert"><?= htmlspecialchars($_SESSION['error']) ?></div>
                 <?php unset($_SESSION['error']); ?>
             <?php endif; ?>
 
@@ -314,12 +253,12 @@ $url = $client->createAuthUrl();
                     <label for="password"><i class="fas fa-lock"></i> Password</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+                <button type="submit" class="btn-primary"><i class="fas fa-sign-in-alt"></i> Sign In</button>
             </form>
 
             <div class="mt-4">
                 <form action="<?= $url ?>" method="POST">
-                    <button type="submit" class="google-signin-btn btn-block">
+                    <button type="submit" class="google-signin-btn">
                         <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo">
                         Sign in with Google
                     </button>
@@ -330,14 +269,5 @@ $url = $client->createAuthUrl();
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentTheme = localStorage.getItem('theme') || 'light';
-            if (currentTheme === 'dark') {
-                document.body.classList.add('dark-mode');
-            }
-        });
-    </script>
 </body>
 </html>

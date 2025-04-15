@@ -225,7 +225,7 @@ try {
                 <p class="card-text">Destination: <?php echo htmlspecialchars($transaction['destination']); ?></p>
                 <img src="qrcodes/<?php echo htmlspecialchars($transaction['transaction_id']); ?>.png" alt="QR Code">
                 <a href="bus_download_receipt.php?transaction_id=<?php echo htmlspecialchars($transaction['transaction_id']); ?>" class="btn btn-primary">Download Receipt</a>
-                <p>An email with QR Code is also sent to your email address.Kindly Check Mail Inbox.</p>
+                <p>An email with QR Code is also sent to your email address. Kindly Check Mail Inbox.</p>
             </div>
         </div>
     </div>
