@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 16, 2025 at 12:14 AM
+-- Generation Time: Apr 17, 2025 at 12:58 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -75,7 +75,10 @@ INSERT INTO `chat_messages` (`id`, `user_id`, `message`, `created_at`, `is_admin
 (12, 22, 'ok\\', '2025-04-15 18:26:19', 1, 1, ''),
 (13, 26, 'hm', '2025-04-15 18:26:29', 1, 0, ''),
 (14, 22, 'hm', '2025-04-15 18:26:53', 0, 1, ''),
-(15, 22, 'hey', '2025-04-15 21:12:40', 1, 1, '');
+(15, 22, 'hey', '2025-04-15 21:12:40', 1, 1, ''),
+(16, 27, 'hi', '2025-04-16 13:36:41', 0, 1, ''),
+(17, 27, 'hello', '2025-04-16 13:37:07', 1, 1, ''),
+(18, 27, '...', '2025-04-16 13:37:18', 0, 1, '');
 
 -- --------------------------------------------------------
 
@@ -102,7 +105,8 @@ INSERT INTO `contacts` (`id`, `name`, `email`, `phone`, `message`, `created_at`)
 (3, 'MD Ibrahim Siddik', 'ibrahimsiddik007@gmail.com', '01601750278', 'test', '2025-03-07 15:48:09'),
 (4, 'Arafat', 'arafat@gmail.com', '01711111111', 'Testing', '2025-03-08 18:23:49'),
 (5, 'foysal ahmed', 'foysalhridoy@gmail.com', '23287647647683', 'fjhsiufsjfhsif', '2025-03-24 03:46:05'),
-(6, 'Oli', 'oliahmedsarker@gmail.com', '01753927290', 'How can I avail this service?\r\n', '2025-04-08 02:20:54');
+(6, 'Oli', 'oliahmedsarker@gmail.com', '01753927290', 'How can I avail this service?\r\n', '2025-04-08 02:20:54'),
+(7, 'Shimul', 'oshimul54@gmail.com', '01711111111', 'Hello,what is the process of payment!', '2025-04-16 09:48:38');
 
 -- --------------------------------------------------------
 
@@ -123,7 +127,7 @@ CREATE TABLE `demo_accounts` (
 --
 
 INSERT INTO `demo_accounts` (`id`, `account_type`, `account_number`, `pin`, `balance`) VALUES
-(1, 'bkash', '01601750278', '1234', 3653.00),
+(1, 'bkash', '01601750278', '1234', 2887.00),
 (2, 'rocket', '01601750278', '1234', 16208.00),
 (3, 'card', '12345678', '123', 19966.00);
 
@@ -182,8 +186,8 @@ CREATE TABLE `reviews` (
 
 INSERT INTO `reviews` (`id`, `user_id`, `rating`, `comment`, `created_at`, `display_order`) VALUES
 (2, 22, 4, 'test', '2025-03-07 15:57:28', 0),
-(4, 22, 5, 'The service was good!', '2025-04-08 06:25:19', 0),
-(5, 22, 5, 'Best Case Test', '2025-04-13 17:42:36', 0);
+(4, 22, 5, 'The service was good!', '2025-04-08 06:25:19', 1),
+(5, 22, 5, 'Best Case Test', '2025-04-13 17:42:36', 2);
 
 -- --------------------------------------------------------
 
@@ -510,6 +514,7 @@ INSERT INTO `transactions` (`transaction_id`, `user_id`, `start_location`, `end_
 ('txn_AgKetL9', 22, 'Pallabi', 'Dhaka_University', 59.00, '2025-03-07 20:56:48', NULL),
 ('txn_AGsaULu', 22, 'Uttara_Center', 'Mirpur_10', 22.00, '2025-04-08 06:25:04', NULL),
 ('txn_Bb6tRom', 22, 'Uttara_South', 'Mirpur_10', 52.00, '2025-03-04 12:34:34', NULL),
+('txn_CNLYudl', 27, 'Uttara_Center', 'Motijheel', 66.00, '2025-04-16 13:33:53', '2025-04-17 13:33:53'),
 ('txn_dwyFT6Q', 22, 'Uttara_South', 'Mirpur_11', 57.00, '2025-03-04 12:38:30', NULL),
 ('txn_Er1qnBH', 20, 'Uttara_Center', 'Shahbagh', 58.00, '2025-02-24 17:00:47', NULL),
 ('txn_fJNeZ1i', 22, 'Mirpur_10', 'Uttara_North', 57.00, '2025-03-23 22:45:56', NULL),
@@ -568,10 +573,11 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `google_id`, `name`, `profile_image`, `phone`, `Address`) VALUES
-(22, 'ibrahimsiddik007@gmail.com', '', '114164509074598760418', 'Ibrahim', 'uploaded_profile_images/b6d767d2f8ed5d21a44b0e5886680cb9.jpg', '01700000000', 'Dhaka,Bashundhara R/A,House-28'),
+(22, 'ibrahimsiddik007@gmail.com', '$2y$10$eEpcF5LCWG5SoG4MeMnNfePuom2gDxS9XMbisGydOp31gsU4Ijdx6', '114164509074598760418', 'Ibrahim', 'uploaded_profile_images/b6d767d2f8ed5d21a44b0e5886680cb9.jpg', '01601750278', 'Dhaka,Bashundhara R/A,House-28'),
 (24, 'kalamama@gmail.com', '$2y$10$vZt2M0GZaqKEEi683NMvPeRu0VXNzpcgScT9tDko9HpALXLs/CjIa', NULL, 'Kala Mama', 'images\\default_profile_account_photo.jpg', '01711111111', 'Uttara'),
 (25, 'oliahmedsarker@gmail.com', '$2y$10$XqoQIJM5NZRZqfr8kY3rLeHEfe4DYIoFO0TxViW/PKs0oZHeGv.WC', NULL, 'Oli Ahmed', 'images\\default_profile_account_photo.jpg', '01753927290', 'Mirpur'),
-(26, 'faiyanswapnil@gmail.com', '$2y$10$o4ZZ1.rqc2OcvN7p5kWR3OKqy1X/k7Q3lsPW0KkxcNMptptTYFLLe', NULL, 'Faiyan Islam Swapnil', 'images\\default_profile_account_photo.jpg', '01711111111', '28,Road No- 1, Bashundhara R/A');
+(26, 'faiyanswapnil@gmail.com', '$2y$10$o4ZZ1.rqc2OcvN7p5kWR3OKqy1X/k7Q3lsPW0KkxcNMptptTYFLLe', NULL, 'Faiyan Islam Swapnil', 'images\\default_profile_account_photo.jpg', '01711111111', '28,Road No- 1, Bashundhara R/A'),
+(27, 'oshimul54@gmail.com', '$2y$10$xiIFNLyuLqOf7dnZx6uGIOSjzp9c.zOLpgxy1FH9E5HuDv7SfQfuO', NULL, 'Shimul', 'images\\default_profile_account_photo.jpg', '01711111111', 'Badda');
 
 --
 -- Indexes for dumped tables
@@ -648,13 +654,13 @@ ALTER TABLE `admin_users`
 -- AUTO_INCREMENT for table `chat_messages`
 --
 ALTER TABLE `chat_messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `contacts`
 --
 ALTER TABLE `contacts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `demo_accounts`
@@ -684,7 +690,7 @@ ALTER TABLE `ticket_routes`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- Constraints for dumped tables

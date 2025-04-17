@@ -20,7 +20,7 @@
                     <li class="mb-2"><a href="index.php">Home</a></li>
                     <li class="mb-2"><a href="metro.php">Metro</a></li>
                     <li class="mb-2"><a href="train.php">Train</a></li>
-                    <li class="mb-2"><a href="bus.php">Bus</a></li>
+                    <li class="mb-2"><a href="bus_select_local_route.php">Local Bus</a></li>
                     <li class="mb-2"><a href="long_route.php">InterCity Bus</a></li>
                 </ul>
             </div>

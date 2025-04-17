@@ -78,7 +78,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Insert transaction details into transactions table
             $transaction_id = 'txn_' . substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 7);
-            $payment_time = date('Y-m-d H:i:s'); // Get the current date and time
+            date_default_timezone_set('Asia/Dhaka'); // Set appropriate timezone
+            $payment_time = date("Y-m-d H:i:s", time()); // Get the current date and time
             $compartment_ID = $reservation['compartment_id'];
             $train_id = $reservation['train_id'];
             $seats = $seat_numbers_str;
@@ -166,17 +167,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         body {
             background: url('images/Railway Background Image.jpg') no-repeat center center fixed;
             background-size: cover;
-            color: #000000;
             font-family: Arial, sans-serif;
-            animation: fadeIn 2s ease-in-out;
+            animation: fadeIn 1.5s ease-in-out;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
+        
         body.dark-mode {
             background-color: #121212;
             color: #ffffff;
         }
+        
         .container {
             flex: 1;
             display: flex;
@@ -184,40 +186,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             justify-content: center;
             padding: 2rem;
         }
+        
         .card {
             margin: 20px;
-            animation: fadeIn 2s ease-in-out;
+            animation: fadeIn 1.5s ease-in-out;
             transition: transform 0.3s, box-shadow 0.3s;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.92); /* More solid background */
             border-radius: 15px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.1);
             padding: 20px;
             width: 100%;
         }
+        
         body.dark-mode .card {
-            background: rgba(30, 30, 30, 0.7);
+            background: rgba(30, 30, 30, 0.95); /* More solid dark background */
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+        
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
         }
+        
         .card-title {
-            color: #2c3e50;
+            color: #1a2530;
             font-weight: bold;
             margin-bottom: 1.5rem;
-            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.15);
             padding-bottom: 0.5rem;
         }
+        
         body.dark-mode .card-title {
             color: #ecf0f1;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.15);
         }
+        
         .card-text {
             margin-bottom: 1rem;
-            color: #34495e;
+            color: #000000; /* Black text for better visibility */
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -225,105 +232,140 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
+        
         body.dark-mode .card-text {
-            color: #bdc3c7;
+            color: #ffffff; /* White text for dark mode */
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
+        
         .card-text:hover {
             transform: translateX(5px);
+            background: rgba(0, 0, 0, 0.05); /* Subtle hover effect */
+        }
+        
+        body.dark-mode .card-text:hover {
             background: rgba(255, 255, 255, 0.05);
         }
+        
         .total-fare {
             font-size: 1.5rem;
             font-weight: bold;
-            color: #2c3e50;
+            color: #1a2530;
             margin-top: 1rem;
             padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.05); /* Subtle background */
             border-radius: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            animation: pulse 2s infinite;
         }
+        
         body.dark-mode .total-fare {
             color: #ecf0f1;
+            background: rgba(255, 255, 255, 0.05);
         }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
+        
         .ticket-count {
             font-size: 0.9rem;
-            color: #7f8c8d;
+            color: #555555;
             margin-left: 10px;
         }
+        
         body.dark-mode .ticket-count {
-            color: #95a5a6;
+            color: #aaaaaa;
         }
+        
         .form-group {
             margin-bottom: 1.5rem;
         }
+        
         .form-control {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.8); /* More opaque background */
+            border: 1px solid rgba(0, 0, 0, 0.2);
             border-radius: 8px;
             padding: 10px 15px;
-            color: #2c3e50;
+            color: #000000; /* Black text for visibility */
             transition: all 0.3s ease;
         }
+        
         .form-control:focus {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: none;
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #2c3e50;
+            box-shadow: 0 0 5px rgba(44, 62, 80, 0.3);
         }
+        
         body.dark-mode .form-control {
-            background: rgba(0, 0, 0, 0.2);
-            color: #ecf0f1;
+            background: rgba(30, 30, 30, 0.8); /* More opaque background */
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
+        
+        body.dark-mode .form-control:focus {
+            background: rgba(30, 30, 30, 0.95);
+            border-color: #ecf0f1;
+        }
+        
         .btn-primary {
-            background: linear-gradient(45deg, #2c3e50, #3498db);
+            background: #2c3e50;
             border: none;
             border-radius: 8px;
             padding: 12px 25px;
             font-weight: bold;
             letter-spacing: 1px;
             transition: all 0.3s ease;
+            color: white;
         }
+        
         .btn-primary:hover {
-            background: linear-gradient(45deg, #3498db, #2c3e50);
+            background: #3498db;
             transform: translateY(-2px);
         }
+        
         .btn-secondary {
-            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            background: #c0392b;
             border: none;
             border-radius: 8px;
             padding: 12px 25px;
             font-weight: bold;
             letter-spacing: 1px;
             transition: all 0.3s ease;
+            color: white;
         }
+        
         .btn-secondary:hover {
-            background: linear-gradient(45deg, #c0392b, #e74c3c);
+            background: #e74c3c;
             transform: translateY(-2px);
         }
+        
         .payment-method-label {
             display: flex;
             align-items: center;
             padding: 10px;
             margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.05); /* Subtle background */
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
+            color: #000000; /* Black text */
         }
+        
+        body.dark-mode .payment-method-label {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff; /* White text */
+        }
+        
         .payment-method-label:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.1);
         }
+        
+        body.dark-mode .payment-method-label:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
         .payment-method-label input[type="radio"] {
             margin-right: 10px;
         }
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }

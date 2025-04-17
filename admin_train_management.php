@@ -65,7 +65,7 @@ $transactions_offset = ($transactions_page - 1) * $transactions_rows_per_page;
 
 // Fetch transactions with pagination
 $transactions = [];
-$query = "SELECT SQL_CALC_FOUND_ROWS * FROM train_transactions ORDER BY payment_time DESC LIMIT $transactions_rows_per_page OFFSET $transactions_offset";
+$query = "SELECT SQL_CALC_FOUND_ROWS transaction_id, user_id, amount, compartment_id, train_id, seats, DATE_FORMAT(payment_time, '%Y-%m-%d %H:%i:%s') AS payment_time, DATE_FORMAT(departure_time, '%Y-%m-%d %H:%i:%s') AS departure_time, payment_method FROM train_transactions ORDER BY payment_time DESC LIMIT $transactions_rows_per_page OFFSET $transactions_offset";
 error_log($query);
 $result = $conn2->query($query);
 while ($row = $result->fetch_assoc()) {
@@ -179,6 +179,7 @@ if (isset($_POST['add_compartments'])) {
 
 // Handle CSV download
 if (isset($_POST['download_csv'])) {
+    date_default_timezone_set('Asia/Dhaka');
     // Set headers for CSV download
     header('Content-Type: text/csv');
     header('Content-Disposition: attachment; filename="train_transactions_' . date('Y-m-d') . '.csv"');
@@ -187,10 +188,10 @@ if (isset($_POST['download_csv'])) {
     $output = fopen('php://output', 'w');
     
     // Add CSV headers
-    fputcsv($output, array('Transaction ID', 'User ID', 'Amount', 'Compartment ID', 'Train ID', 'Seats', 'Payment Time', 'Departure Time'));
+    fputcsv($output, array('Transaction ID', 'User ID', 'Amount', 'Compartment ID', 'Train ID', 'Seats', 'Payment Time', 'Departure Time','Payment Method'));
     
     // Fetch all transactions (not just paginated ones)
-    $query = "SELECT * FROM train_transactions";
+    $query = "SELECT * FROM train_transactions order by payment_time ASC";
     $result = $conn2->query($query);
     
     // Loop through data and output as CSV rows
@@ -692,6 +693,7 @@ if (isset($_POST['download_csv'])) {
                             <th>Seats</th>
                             <th>Payment Time</th>
                             <th>Departure Time</th>
+                            <th>Payment Method</th>
                         </tr>
                     </thead>
                     <tbody id="transactions-table-body">

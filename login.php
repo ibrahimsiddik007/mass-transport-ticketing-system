@@ -206,6 +206,30 @@ $url = $client->createAuthUrl();
             to { transform: translateX(0); opacity: 1; }
         }
 
+        .forgot-password {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .forgot-password a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all var(--transition-speed) ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .forgot-password a:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .forgot-password a i {
+            font-size: 1rem;
+        }
+
         @media (max-width: 768px) {
             .login-card {
                 padding: 30px;
@@ -229,6 +253,25 @@ $url = $client->createAuthUrl();
                 padding: 10px 20px;
                 font-size: 1rem;
             }
+
+            .forgot-password a {
+                font-size: 0.85rem;
+            }
+        }
+
+        .alert.success {
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            color: #fff;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .alert.success::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-right: 10px;
+            color: var(--secondary-color);
         }
     </style>
 </head>
@@ -244,6 +287,11 @@ $url = $client->createAuthUrl();
                 <?php unset($_SESSION['error']); ?>
             <?php endif; ?>
 
+            <?php if (isset($_SESSION['success'])): ?>
+                <div class="alert success"><?= htmlspecialchars($_SESSION['success']) ?></div>
+                <?php unset($_SESSION['success']); ?>
+            <?php endif; ?>
+
             <form action="manual_login.php" method="POST">
                 <div class="form-group">
                     <label for="email"><i class="fas fa-envelope"></i> Email address</label>
@@ -255,6 +303,10 @@ $url = $client->createAuthUrl();
                 </div>
                 <button type="submit" class="btn-primary"><i class="fas fa-sign-in-alt"></i> Sign In</button>
             </form>
+
+            <div class="forgot-password">
+                <a href="forgot_password.php"><i class="fas fa-question-circle"></i> Forgot Password?</a>
+            </div>
 
             <div class="mt-4">
                 <form action="<?= $url ?>" method="POST">

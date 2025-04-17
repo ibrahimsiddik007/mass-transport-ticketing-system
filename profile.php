@@ -50,7 +50,7 @@ $stmt->close();
 
 // Fetch user receipts for train transactions
 $stmt = $conn2->prepare("
-    SELECT tt.transaction_id, t.start_point, t.end_point, t.fare, tt.payment_time 
+    SELECT tt.transaction_id, t.start_point, t.end_point, tt.amount, tt.payment_time 
     FROM train_transactions tt 
     JOIN trains t ON tt.train_id = t.train_id 
     WHERE tt.user_id = ? 
@@ -94,7 +94,7 @@ while ($stmt->fetch()) {
 $stmt->close();
 
 $stmt = $conn3->prepare("
-    SELECT t.transaction_id, 
+    SELECT t.payment_transaction_id, 
            b.from_location as origin, 
            b.to_location as destination, 
            t.amount, 
